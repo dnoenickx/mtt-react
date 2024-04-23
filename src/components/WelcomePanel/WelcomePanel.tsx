@@ -1,12 +1,7 @@
 import React from 'react';
-
 import { Checkbox, Divider, Flex, Grid, Text, Title, Tooltip } from '@mantine/core';
-
-import classes from './WelcomePanel.module.css';
-
 import { SegmentStates } from '../../pages/TrailMap/TrailMap.config';
-
-// https://mantine.dev/core/button/#custom-variants
+import classes from './WelcomePanel.module.css';
 
 interface LayerOption {
   label: string;
@@ -39,6 +34,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
       {Object.entries(trailStates).map(([value, { label, color, visible, description }]) =>
         description ? (
           <Tooltip
+            key={value}
             label={description}
             multiline
             w={180}
@@ -49,7 +45,6 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
           >
             <Checkbox
               id={value}
-              key={value}
               classNames={classes}
               color={color}
               label={label}
@@ -81,6 +76,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         <Grid.Col span={6} key={label}>
           <Checkbox
             id={label}
+            key={label}
             classNames={classes}
             color="slate"
             label={label}

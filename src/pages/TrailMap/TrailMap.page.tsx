@@ -18,13 +18,6 @@ import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.
 import Subway from '@/components/MapLayers/Subway/Subway.layer';
 import SegmentsLayer, { segmentsLayerName } from '@/components/MapLayers/Segments/Segments.layer';
 
-// TODO: secure token (https://visgl.github.io/react-map-gl/docs/get-started/tips-and-tricks#securing-mapbox-token)
-
-// NOTE: if calculating features for a map, make use of useMemo so it doesn't recacluate on each map interaction
-
-const MAPBOX_TOKEN =
-  'pk.eyJ1IjoiZG5vZW4iLCJhIjoiY2xoNzg2bHo3MDZ2bjNmcXN2NXdtaG04ZiJ9.qyEXOJkb1eU1d7qecxjGJQ';
-
 export interface Hover {
   layer: string;
   id: string | number | undefined;
@@ -181,7 +174,7 @@ export function TrailMap() {
           onClick={onClickHandler}
           cursor={cursorStyle}
           interactiveLayerIds={[segmentsLayerName]}
-          mapboxAccessToken={MAPBOX_TOKEN}
+          mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
           // mapStyle="mapbox://styles/mapbox/light-v11"
           mapStyle="mapbox://styles/dnoen/clp8rwblo001001p84znz9viw"
           initialViewState={{
