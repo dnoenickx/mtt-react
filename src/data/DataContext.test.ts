@@ -1,5 +1,5 @@
-import { Segment } from '@/types';
 import { expect, test } from 'vitest';
+import { Segment } from '@/types';
 import { appReducer, AppState } from './DataContext';
 
 const emptyState = {
@@ -14,7 +14,7 @@ const segment1: Segment = {
   name: 'Segment 1',
   description: 'Description 1',
   state: 'paved',
-  trailIds: ['trail1'],
+  trailIds: [11],
   geometry: {
     type: 'LineString',
     coordinates: [[]],
@@ -26,7 +26,7 @@ const segment2: Segment = {
   name: 'Segment 2',
   description: 'Description 2',
   state: 'stoneDust',
-  trailIds: ['trail2'],
+  trailIds: [22],
   geometry: {
     type: 'MultiLineString',
     coordinates: [[[]]],

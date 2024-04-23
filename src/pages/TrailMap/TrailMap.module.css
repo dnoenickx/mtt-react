@@ -1,6 +1,7 @@
 .container {
   display: flex;
   height: calc(100vh - 60px);
+  
   @media (max-width: $mantine-breakpoint-sm) {
     flex-direction: column;
   }
@@ -25,6 +26,7 @@
   box-shadow:
     rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+
   @media (max-width: $mantine-breakpoint-sm) {
     max-width: none;
     width: 100%;
@@ -36,6 +38,7 @@
   background-color: #dceae1;
   flex-grow: 2;
   height: 100%;
+
   @media (max-width: $mantine-breakpoint-sm) {
     width: 100%;
     flex-grow: 1;

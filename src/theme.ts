@@ -1,4 +1,4 @@
-import { createTheme, MantineColorsTuple } from '@mantine/core';
+import { createTheme } from '@mantine/core';
 
 export const theme = createTheme({
   /** Put your mantine theme override here */
@@ -23,17 +23,17 @@ export const theme = createTheme({
       '#47664f',
     ],
     slate: [
-      "#f8fafc",
-      "#f1f5f9",
-      "#e2e8f0",
-      "#cbd5e1",
-      "#94a3b8",
-      "#64748b",
-      "#475569",
-      "#334155",
-      "#1e293b",
-      "#0f172a",
-      "#020617",
+      '#f8fafc',
+      '#f1f5f9',
+      '#e2e8f0',
+      '#cbd5e1',
+      '#94a3b8',
+      '#64748b',
+      '#475569',
+      '#334155',
+      '#1e293b',
+      '#0f172a',
+      '#020617',
     ],
   },
 });

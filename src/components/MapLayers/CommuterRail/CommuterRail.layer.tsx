@@ -1,13 +1,11 @@
 import { Layer, Source } from 'react-map-gl';
 import { lines, stations } from './CommuterRail';
 
-
 export interface CommuterRailProps {
   visible: boolean;
 }
 
 export default function CommuterRailLayer({ visible }: CommuterRailProps) {
-
   const visibility = visible ? 'visible' : 'none';
 
   return (
@@ -16,7 +14,7 @@ export default function CommuterRailLayer({ visible }: CommuterRailProps) {
       // @ts-ignore */}
       <Source type="geojson" data={lines}>
         <Layer
-          type={'line'}
+          type="line"
           layout={{ visibility }}
           paint={{
             'line-width': 1.5,
@@ -28,7 +26,7 @@ export default function CommuterRailLayer({ visible }: CommuterRailProps) {
       // @ts-ignore */}
       <Source type="geojson" data={stations}>
         <Layer
-          type={'circle'}
+          type="circle"
           layout={{ visibility }}
           paint={{
             'circle-radius': 2.75,

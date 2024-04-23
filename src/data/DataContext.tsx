@@ -39,7 +39,7 @@ export type Action =
 
 export const appReducer = (state: AppState, action: Action): AppState => {
   switch (action.action) {
-    case 'upsert':
+    case 'upsert': {
       const id = generateRandomId([state[action.type].original, state[action.type].new]);
       const upsertValue = { id, ...action.value };
       return {
@@ -49,7 +49,8 @@ export const appReducer = (state: AppState, action: Action): AppState => {
           new: { ...state[action.type].new, [upsertValue.id]: upsertValue },
         },
       };
-    case 'delete':
+    }
+    case 'delete': {
       const inOriginal = Object.keys(state[action.type].original).includes(action.id.toString());
       const inNew = Object.keys(state[action.type].new).includes(action.id.toString());
       if (inOriginal) {
@@ -61,7 +62,8 @@ export const appReducer = (state: AppState, action: Action): AppState => {
             new: { ...state[action.type].new, [action.id]: undefined },
           },
         };
-      } else if (!inOriginal && inNew) {
+      }
+      if (!inOriginal && inNew) {
         return {
           ...state,
           [action.type]: {
@@ -74,7 +76,7 @@ export const appReducer = (state: AppState, action: Action): AppState => {
         };
       }
       return state;
-
+    }
     default:
       return state;
   }
@@ -93,14 +95,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
 // Hook ////////////////////////////////////////////////////////////////////////
 
-function getSegmentData(id: number) {
-  const seg = segments[id];
-  return {
-    ...segments[id],
-    trails: trails.filter((t) => seg.trailIds.includes(t.id)),
-    links: links.filter((l) => l.segmentIds?.includes(seg.id)),
-  };
-}
+// function getSegmentData(id: number) {
+//   const seg = segments[id];
+//   return {
+//     ...segments[id],
+//     trails: trails.filter((t) => seg.trailIds.includes(t.id)),
+//     links: links.filter((l) => l.segmentIds?.includes(seg.id)),
+//   };
+// }
 
 export const useData = () => {
   const context = useContext(DataContext);

@@ -1,8 +1,3 @@
-import { Newsflash } from "@/types";
+import { Newsflash } from '@/types';
 
-
-export const newsflashes: Newsflash[] = [
-
-
-    
-]
+export const newsflashes: Newsflash[] = [];

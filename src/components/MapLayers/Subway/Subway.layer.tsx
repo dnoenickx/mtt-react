@@ -28,7 +28,7 @@ export default function Subway({ visible }: SubwayProps) {
       // @ts-ignore */}
       <Source type="geojson" data={lines}>
         <Layer
-          type={'line'}
+          type="line"
           layout={{ visibility }}
           paint={{
             'line-width': 1.5,
@@ -40,7 +40,7 @@ export default function Subway({ visible }: SubwayProps) {
       // @ts-ignore */}
       <Source type="geojson" data={stations}>
         <Layer
-          type={'circle'}
+          type="circle"
           layout={{ visibility }}
           paint={{
             'circle-radius': 2.75,

@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { Layer, Source } from 'react-map-gl';
+import { Feature, feature, featureCollection, Properties } from '@turf/turf';
+import { Geometry } from 'geojson';
 import { SegmentStates } from '@/pages/TrailMap/TrailMap.config';
 import { Hover } from '@/pages/TrailMap/TrailMap.page';
 import { SegmentState } from '@/types';
-import { Feature, feature, featureCollection, Properties } from '@turf/turf';
 import { useData } from '@/data/DataContext';
-import { Geometry } from 'geojson';
 
 export const segmentsLayerName = 'segments';
 
@@ -46,7 +46,7 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   );
 
   const visibleStates = Object.entries(states)
-    .filter(([key, value]) => value.visible)
+    .filter(([, value]) => value.visible)
     .map(([key]) => key as SegmentState);
 
   const hoveredId = hover && hover.layer === segmentsLayerName ? hover.id : null;

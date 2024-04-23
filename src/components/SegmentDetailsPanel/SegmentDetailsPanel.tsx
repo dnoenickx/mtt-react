@@ -27,7 +27,7 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
 }
 
 export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefined }) {
-  const { segments, trails, newsflashes, links } = useData();
+  const { segments, trails, newsflashes } = useData();
 
   if (!segmentId) {
     return (
@@ -69,7 +69,11 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           >
             Timeline
           </Title>
-          {segmentNews.length ? <Timeline events={segmentNews} /> : <p>No events yet. Check back later</p>}
+          {segmentNews.length ? (
+            <Timeline events={segmentNews} />
+          ) : (
+            <p>No events yet. Check back later</p>
+          )}
         </>
       )}
     </>

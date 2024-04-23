@@ -1,7 +1,6 @@
-import { formatDate } from '@/utils';
-import { Button, Flex, Text, Timeline as MantineTimeline } from '@mantine/core';
+import { Text, Timeline as MantineTimeline } from '@mantine/core';
 import {
-  IconExternalLink,
+  // IconExternalLink,
   IconBarrierBlock,
   IconRuler,
   IconConfetti,
@@ -21,6 +20,7 @@ import {
   // IconCertificate2
   // IconFileCertificate
 } from '@tabler/icons-react';
+import { formatDate } from '@/utils';
 
 import { Newsflash } from '../../types';
 
@@ -38,7 +38,7 @@ function getIcon(iconName: string) {
     case 'IconLicense':
       return <IconLicense />;
     default:
-      <></>;
+      return <></>;
   }
 }
 

@@ -4,7 +4,7 @@ import { SegmentDetailsPanel } from './SegmentDetailsPanel';
 export default {
   title: 'Segment Details',
   component: SegmentDetailsPanel,
-  argTypes: { editing: { control: 'boolean' }},
+  argTypes: { editing: { control: 'boolean' } },
   parameters: {
     mockData: [
       {
@@ -86,7 +86,7 @@ export default {
 
 const Template = () => (
   <div style={{ maxWidth: 350 }}>
-    <SegmentDetailsPanel segmentId={99}/>
+    <SegmentDetailsPanel segmentId={99} />
   </div>
 );
 

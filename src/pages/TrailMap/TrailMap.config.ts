@@ -1,4 +1,4 @@
-import { ColorValueHex, SegmentState } from '@/types';
+import { ColorValueHex } from '@/types';
 
 export type SegmentStates = {
   // [key in SegmentState]: {

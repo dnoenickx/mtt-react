@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
   FullscreenControl,
   GeolocateControl,
@@ -8,16 +8,15 @@ import {
   Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl';
-import { useState } from 'react';
-import classes from './TrailMap.module.css';
 import { Button, Group, Modal, ScrollArea, Tabs } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import classes from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
 import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
 import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway from '@/components/MapLayers/Subway/Subway.layer';
 import SegmentsLayer, { segmentsLayerName } from '@/components/MapLayers/Segments/Segments.layer';
-import { useDisclosure } from '@mantine/hooks';
 
 // TODO: secure token (https://visgl.github.io/react-map-gl/docs/get-started/tips-and-tricks#securing-mapbox-token)
 
@@ -76,12 +75,12 @@ export function TrailMap() {
   const onContextHandler = (e: MapLayerMouseEvent) => {
     const [lng, lat] = e.lngLat.toArray();
 
-    if (!e.features || e.features.length == 0) {
+    if (!e.features || e.features.length === 0) {
       const googleMapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
 
       setPopup({
-        lng: lng,
-        lat: lat,
+        lng,
+        lat,
         content: (
           <a target="_blank" rel="noopener noreferrer" href={googleMapsUrl}>
             Google Maps
@@ -92,16 +91,13 @@ export function TrailMap() {
   };
 
   const onClickHandler = (e: MapLayerMouseEvent) => {
-    if (!e.features || e.features.length == 0) return;
+    if (!e.features || e.features.length === 0) return;
 
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
-
-    console.log(id, layer);
 
     if (layer === segmentsLayerName) {
       setSelectedSegmentId(id);
       setActiveTab('segmentDetailsPanel');
-      //   console.log()
     }
   };
 
@@ -111,7 +107,7 @@ export function TrailMap() {
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
 
     if (!hover || layer !== hover.layer || id !== hover.id) {
-      setHover({ layer: layer, id: id });
+      setHover({ layer, id });
       setCursorStyle('pointer');
     }
   };
@@ -121,17 +117,16 @@ export function TrailMap() {
     setCursorStyle(undefined);
   };
 
-  const [opened, { open, close }] = useDisclosure(
-    sessionStorage.getItem('acceptedWelcome') !== 'true'
-  );
+  const [opened, { close }] = useDisclosure(sessionStorage.getItem('acceptedWelcome') !== 'true');
 
   return (
     <div className={classes.container}>
       <Modal opened={opened} onClose={close} withCloseButton={false} centered>
         <p>
-          Update (May 2024): I'm working on a lot of updates to the website, including the ability
-          to submit changes. If you see anything that's incorrect, or want to request a feature,
-          email me <a href="mailto:mass.trail.tracker@gmail.com">mass.trail.tracker@gmail.com</a>
+          Update (May 2024): I&apos;m working on a lot of updates to the website, including the
+          ability to submit changes. If you see anything that&apos;s incorrect, or want to request a
+          feature, email me{' '}
+          <a href="mailto:mass.trail.tracker@gmail.com">mass.trail.tracker@gmail.com</a>
         </p>
         <p style={{ color: 'gray', fontSize: 'small' }}>
           Disclaimer: The data herein is provided for informational purposes only. MassTrailTracker
@@ -151,7 +146,7 @@ export function TrailMap() {
           </Button>
         </Group>
       </Modal>
-      <ScrollArea h={'100%'} type="scroll" scrollbars="y" className={classes.aside}>
+      <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside}>
         <Tabs
           value={activeTab}
           onChange={setActiveTab}
@@ -207,7 +202,7 @@ export function TrailMap() {
               latitude={Number(popup.lat)}
               onClose={() => setPopup(undefined)}
               closeButton={false}
-              closeOnMove={true}
+              closeOnMove
               style={{ borderTopColor: 'gray' }}
             >
               {popup.content}

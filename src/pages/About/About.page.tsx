@@ -1,11 +1,8 @@
-import { Container, Title, Accordion, Text } from '@mantine/core';
+import { Container, Title, Accordion, Text, List, ThemeIcon, rem } from '@mantine/core';
 import { ReactElement } from 'react';
-import { Link } from 'react-router-dom';
-import classes from './About.module.css';
+import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
 
-import statsGroupStyle from './StatsGroup.module.css';
-import { List, ThemeIcon, rem } from '@mantine/core';
-import { IconCircleCheck, IconCircleDashed, IconCircleX } from '@tabler/icons-react';
+// import statsGroupStyle from './StatsGroup.module.css';
 
 const listCheck = (
   <ThemeIcon variant="outline" color="teal" style={{ border: 0 }}>
@@ -29,8 +26,10 @@ const faqs: FAQ[] = [
   {
     key: 'missing-information',
     title: "Why don't you show all trails?",
-    body: 'There is some level of curation that occurs and it can be a little arbitrary, but my goal in doing so is to have an approachable resource. \
-    There are already other mapping resources that highlight every single piece of infrastructure. ',
+    body:
+      'There is some level of curation that occurs and it can be a little arbitrary,' +
+      'but my goal in doing so is to have an approachable resource.' +
+      'There are already other mapping resources that highlight every single piece of infrastructure. ',
   },
   // {
   //   key: 'no-bike-lanes',
@@ -68,35 +67,35 @@ const faqs: FAQ[] = [
   // },
 ];
 
-const data = [
-  {
-    title: 'Trail Miles',
-    stats: '1,200',
-    description: '24% more than in the same month last year, 33% more that two years ago',
-  },
-  {
-    title: 'Events',
-    stats: '200',
-    description: '',
-  },
-  {
-    title: 'Contributers',
-    stats: '1',
-    description: '1994 orders were completed this month, 97% satisfaction rate',
-  },
-];
+// const data = [
+//   {
+//     title: 'Trail Miles',
+//     stats: '1,200',
+//     description: '24% more than in the same month last year, 33% more that two years ago',
+//   },
+//   {
+//     title: 'Events',
+//     stats: '200',
+//     description: '',
+//   },
+//   {
+//     title: 'Contributers',
+//     stats: '1',
+//     description: '1994 orders were completed this month, 97% satisfaction rate',
+//   },
+// ];
 
-const statsGroup = (
-  <div className={statsGroupStyle.root}>
-    {data.map((stat) => (
-      <div key={stat.title} className={statsGroupStyle.stat}>
-        <Text className={statsGroupStyle.count}>{stat.stats}</Text>
-        <Text className={statsGroupStyle.title}>{stat.title}</Text>
-        <Text className={statsGroupStyle.description}>{stat.description}</Text>
-      </div>
-    ))}
-  </div>
-);
+// const statsGroup = (
+//   <div className={statsGroupStyle.root}>
+//     {data.map((stat) => (
+//       <div key={stat.title} className={statsGroupStyle.stat}>
+//         <Text className={statsGroupStyle.count}>{stat.stats}</Text>
+//         <Text className={statsGroupStyle.title}>{stat.title}</Text>
+//         <Text className={statsGroupStyle.description}>{stat.description}</Text>
+//       </div>
+//     ))}
+//   </div>
+// );
 
 // .item {
 //     border-radius: var(--mantine-radius-md);
@@ -163,9 +162,9 @@ export default function About() {
         So why make another map?
       </Title>
       I wanted to make a map that is more legible, easy to digest, responsive, and user friendly. By
-      not including every foot trail, bike lane, and little path, it's easier to see the regional
-      picture of how longer distance trails intersect. I also want to provide more information when
-      you click on a trail, particularly links to relevant articles and websites.
+      not including every foot trail, bike lane, and little path, it&#39;s easier to see the
+      regional picture of how longer distance trails intersect. I also want to provide more
+      information when you click on a trail, particularly links to relevant articles and websites.
       <Title order={2} pt="xl" pb="xs">
         A hub for local trail groups
       </Title>
@@ -177,7 +176,7 @@ export default function About() {
         track of dozens of websites.
       </Text>
       <Text pt="sm">
-        I want to collect this information in a single location so it's easy to find, allowing
+        I want to collect this information in a single location so it&#39;s easy to find, allowing
         anyone to submit suggestions so the data is always timely and accurate. Technology can be
         difficult to navigate, and I want to enable these groups to share information about the
         trails they care about.

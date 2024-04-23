@@ -11,10 +11,9 @@ const navLinks = [
   { link: '/about', label: 'About' },
 ];
 
-
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
-  
+
   const navButtons = navLinks.map(({ link, label }) => (
     <Link className={classes.link} to={link} key={link} onClick={toggle}>
       <Text>{label}</Text>
@@ -31,7 +30,7 @@ export function Root() {
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Group justify="space-between" style={{ flex: 1 }}>
-            <Link to={'/'}>
+            <Link to="/">
               <Logo height={36} className={classes.logo} />
             </Link>
             <Group ml={50} gap={5} visibleFrom="sm">

@@ -24,6 +24,7 @@ describe('segments', () => {
     });
 
     if (invalidTrailIds.length > 0) {
+      // eslint-disable-next-line no-console
       console.error('Trail IDs not found:', invalidTrailIds);
       expect(false).toBe(true); // Fail the test if invalid trail IDs exist
     }
