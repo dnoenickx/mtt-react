@@ -1,14 +1,14 @@
-import { useQuery } from 'react-query';
-import { Accordion, AppShell, Button, Divider, InputDescription, Text, Title } from '@mantine/core';
+import React from 'react';
 
+import { Accordion, Divider, Text, Title } from '@mantine/core';
+
+import { Trail } from '@/types';
+import { useData } from '@/data/DataContext';
 import { Timeline } from '../Timeline/Timeline';
 
-import { RelatedTrail, Segment } from '@/types';
 import classes from './SegmentDetailsPanel.module.css';
-import { getSegment } from '@/api';
-import { useEffect, useState } from 'react';
 
-function TrailAccordion({ trails }: { trails: RelatedTrail[] }) {
+function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description }) => (
     <Accordion.Item key={name} value={name}>
       <Accordion.Control>
@@ -18,6 +18,7 @@ function TrailAccordion({ trails }: { trails: RelatedTrail[] }) {
     </Accordion.Item>
   ));
 
+  // TODO: zero index below throws error if no trails
   return (
     <Accordion classNames={classes} defaultValue={trails[0].name}>
       {items}
@@ -26,54 +27,41 @@ function TrailAccordion({ trails }: { trails: RelatedTrail[] }) {
 }
 
 export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefined }) {
-  const [data, setData] = useState<Segment | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { segments, trails, newsflashes, links } = useData();
 
-  useEffect(() => {
-    if (segmentId === undefined) return;
-
-    getSegment(segmentId)
-      .then((data) => {
-        setData(data);
-        setLoading(false);
-        setError(null);
-      })
-      .catch((error) => {
-        setError(error);
-        setLoading(false);
-      });
-  }, [segmentId]);
-
-  if (segmentId === undefined) {
+  if (!segmentId) {
     return (
       <Text c="dimmed" ta="center">
         Use the map to select a trail segment and learn more.
       </Text>
     );
   }
+  const segment = segments.find((s) => s.id === segmentId)!;
+  const segmentTrails = trails.filter((t) => segment?.trailIds.includes(t.id));
+  const segmentNews = newsflashes.filter((n) => n.segmentIds.includes(segment.id));
 
   return (
     <>
-      {loading && <Text c="dimmed">Loading...</Text>}
-      {error && <Text c="dimmed">Error</Text>}
-      {data && (
+      {!segment ? (
+        'Error'
+      ) : (
         <>
-          <Title
-            order={4}
-            style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}
-          >
-            Trails
-          </Title>
-          <TrailAccordion trails={data.trails} />
-          <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
             order={4}
             style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}
           >
             Segment Description
           </Title>
-          <p style={{ margin: 0 }}>{data.description}</p>
+          <p style={{ color: 'gray', margin: 0, fontSize: 'smaller' }}>Segment ID: {segment.id}</p>
+          <p style={{ margin: 0 }}>{segment.description || 'No description yet'}</p>
+          <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
+          <Title
+            order={4}
+            style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}
+          >
+            Trails
+          </Title>
+          <TrailAccordion trails={segmentTrails} />
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
             order={4}
@@ -81,7 +69,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           >
             Timeline
           </Title>
-          <Timeline events={data.events} />
+          {segmentNews.length ? <Timeline events={segmentNews} /> : <p>No events yet. Check back later</p>}
         </>
       )}
     </>

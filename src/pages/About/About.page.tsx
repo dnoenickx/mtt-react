@@ -29,44 +29,43 @@ const faqs: FAQ[] = [
   {
     key: 'missing-information',
     title: "Why don't you show all trails?",
-    body: "There is some level of curation that occurs and it can be a little arbitrary, but my goal in doing so is to have an approachable resource. \
-    There are already other mapping resources that highlight every single piece of infrastructure. \
-    guiding principal I have is that a trail bikeable and relatively linear and long. For example, I don't",
+    body: 'There is some level of curation that occurs and it can be a little arbitrary, but my goal in doing so is to have an approachable resource. \
+    There are already other mapping resources that highlight every single piece of infrastructure. ',
   },
-  {
-    key: 'no-bike-lanes',
-    title: "Why don't you show bike lanes?",
-    body: '',
-  },
-  {
-    key: 'why-account',
-    title: 'Do I need an account to suggests changes?',
-    body: (
-      <>
-        <Text>Yes, but anyone can create an account.</Text>
-        <Text c="dimmed">
-          Accounts are necessary for allowing you to view your own edits prior to them being
-          approved. That way you can make a series of changes, like adding events to a trail segment
-          you just created.
-        </Text>
-      </>
-    ),
-  },
-  {
-    key: 'adding-an-event',
-    title: 'How do I add an event?',
-    body: (
-      <ol>
-        <li>Log in or create an account.</li>
-        <li>Use the map to select a trail segment.</li>
-        <li>Scroll to the bottom of the segment details panel and click edit.</li>
-        <li>
-          Fill out the empty event field. Make sure you click 'select segments' and select all
-          applicable trail segments on the map.
-        </li>
-      </ol>
-    ),
-  },
+  // {
+  //   key: 'no-bike-lanes',
+  //   title: "Why don't you show bike lanes?",
+  //   body: '',
+  // },
+  // {
+  //   key: 'why-account',
+  //   title: 'Do I need an account to suggests changes?',
+  //   body: (
+  //     <>
+  //       <Text>Yes, but anyone can create an account.</Text>
+  //       <Text c="dimmed">
+  //         Accounts are necessary for allowing you to view your own edits prior to them being
+  //         approved. That way you can make a series of changes, like adding events to a trail segment
+  //         you just created.
+  //       </Text>
+  //     </>
+  //   ),
+  // },
+  // {
+  //   key: 'adding-an-event',
+  //   title: 'How do I add an event?',
+  //   body: (
+  //     <ol>
+  //       <li>Log in or create an account.</li>
+  //       <li>Use the map to select a trail segment.</li>
+  //       <li>Scroll to the bottom of the segment details panel and click edit.</li>
+  //       <li>
+  //         Fill out the empty event field. Make sure you click 'select segments' and select all
+  //         applicable trail segments on the map.
+  //       </li>
+  //     </ol>
+  //   ),
+  // },
 ];
 
 const data = [
@@ -125,8 +124,8 @@ export default function About() {
       <Title order={2} pt="xl" pb="xs">
         Mission
       </Title>
-      To help you find trails, while highlighting regional connectivity, the history of completed
-      trails, and the timeline for future trails. To connect people to local trail advocacy groups.
+      To help you find trails. To highlight regional connectivity, the history of completed trails,
+      and the timeline for future trails. To connect people to local trail advocacy groups.
       <Title order={2} pt="xl" pb="xs">
         What does this map show?
       </Title>
@@ -164,10 +163,9 @@ export default function About() {
         So why make another map?
       </Title>
       I wanted to make a map that is more legible, easy to digest, responsive, and user friendly. By
-      not including every foot trail, bike lane, and little path in the state, it's easier to see
-      the regional picture of how longer distance trails intersect. Furthermore, I wanted to provide
-      more information when you click on a trail, particularly links to relevant articles and
-      websites.
+      not including every foot trail, bike lane, and little path, it's easier to see the regional
+      picture of how longer distance trails intersect. I also want to provide more information when
+      you click on a trail, particularly links to relevant articles and websites.
       <Title order={2} pt="xl" pb="xs">
         A hub for local trail groups
       </Title>
@@ -206,8 +204,8 @@ export default function About() {
         Now what?
       </Title>
       <ul style={{ paddingTop: 0 }}>
-        <li>Contribute information (add a trail, an article, a description, a photo).</li>
-        <li>Make a donation to support the continued hosting and development of this site.</li>
+        {/* <li>Contribute information (add a trail, an article, a description, a photo).</li> */}
+        {/* <li>Make a donation to support the continued hosting and development of this site.</li> */}
         <li>Contact your local representatives.</li>
         <li>Join a local trail advocacy group.</li>
         <li>Share this site with a friend.</li>

@@ -16,14 +16,17 @@
     "vitest:watch": "vitest",
     "test": "npm run typecheck && npm run prettier && npm run lint && npm run vitest && npm run build",
     "storybook": "storybook dev -p 6006",
-    "storybook:build": "storybook build"
+    "storybook:build": "storybook build",
+    "data": "node prepareData.js"
   },
   "dependencies": {
     "@mantine/core": "^7.5.0",
     "@mantine/dates": "^7.5.0",
     "@mantine/form": "^7.5.0",
     "@mantine/hooks": "^7.5.0",
+    "@mapbox/polyline": "^1.2.1",
     "@tabler/icons-react": "^2.44.0",
+    "@turf/turf": "^6.5.0",
     "@types/mapbox-gl": "^2.7.19",
     "dayjs": "^1.11.10",
     "mapbox-gl": "^3.0.1",

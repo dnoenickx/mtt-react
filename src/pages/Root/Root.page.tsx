@@ -11,14 +11,15 @@ const navLinks = [
   { link: '/about', label: 'About' },
 ];
 
-const navButtons = navLinks.map(({ link, label }) => (
-  <Link className={classes.link} to={link} key={link}>
-    <Text>{label}</Text>
-  </Link>
-));
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
+  
+  const navButtons = navLinks.map(({ link, label }) => (
+    <Link className={classes.link} to={link} key={link} onClick={toggle}>
+      <Text>{label}</Text>
+    </Link>
+  ));
 
   return (
     <AppShell

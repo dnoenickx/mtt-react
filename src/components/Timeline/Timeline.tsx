@@ -22,7 +22,7 @@ import {
   // IconFileCertificate
 } from '@tabler/icons-react';
 
-import { SegmentEvent } from '../../types';
+import { Newsflash } from '../../types';
 
 function getIcon(iconName: string) {
   const size = 14;
@@ -42,7 +42,7 @@ function getIcon(iconName: string) {
   }
 }
 
-export function Timeline({ events }: { events: SegmentEvent[] }) {
+export function Timeline({ events }: { events: Newsflash[] }) {
   const currentDate = new Date();
   const past = events.filter((event) => event.date < currentDate).length - 1;
 
@@ -50,9 +50,9 @@ export function Timeline({ events }: { events: SegmentEvent[] }) {
     <MantineTimeline active={past} reverseActive lineWidth={3} bulletSize={24}>
       {events
         .sort((a, b) => (a.date > b.date ? -1 : 1))
-        .map(({ title, icon, date, datePrecision, description, links }) => (
+        .map(({ headline, icon, date, datePrecision, description }) => (
           <MantineTimeline.Item
-            title={title}
+            title={headline}
             bullet={getIcon(icon)}
             lineVariant={date < currentDate ? 'solid' : 'dashed'}
           >
@@ -62,7 +62,7 @@ export function Timeline({ events }: { events: SegmentEvent[] }) {
             <Text c="dimmed" size="sm">
               {description}
             </Text>
-            {links.length > 0 && (
+            {/* {links.length > 0 && (
               <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
                 {links.map(({ label, url }) => (
                   <a href={url} target="_blank" rel="nofollow">
@@ -77,7 +77,7 @@ export function Timeline({ events }: { events: SegmentEvent[] }) {
                   </a>
                 ))}
               </Flex>
-            )}
+            )} */}
           </MantineTimeline.Item>
         ))}
     </MantineTimeline>

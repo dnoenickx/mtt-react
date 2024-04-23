@@ -21,3 +21,14 @@ export function formatDate(date: Date, precision: DatePrecision) {
       return 'Unknown Date';
   }
 }
+
+export function generateRandomId(maps: { [id: number]: any }[]): number {
+  const min = 1;
+  const max = 9999;
+  let randomNumber: number;
+  do {
+    randomNumber = Math.floor(min + Math.random() * (max - min + 1));
+  } while (maps.some((obj) => Object.keys(obj).includes(randomNumber.toString())));
+
+  return randomNumber;
+}

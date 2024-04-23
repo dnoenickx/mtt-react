@@ -1,4 +1,4 @@
-import React, { ReactElement, useCallback, useRef } from 'react';
+import React, { ReactElement } from 'react';
 import {
   FullscreenControl,
   GeolocateControl,
@@ -10,13 +10,14 @@ import {
 } from 'react-map-gl';
 import { useState } from 'react';
 import classes from './TrailMap.module.css';
-import { ScrollArea, Tabs } from '@mantine/core';
+import { Button, Group, Modal, ScrollArea, Tabs } from '@mantine/core';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
-import { TrailStates, TRAIL_STATES } from './TrailMap.config';
+import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
 import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway from '@/components/MapLayers/Subway/Subway.layer';
-import TrailsLayer from '@/components/MapLayers/Trails/Trails.layer';
+import SegmentsLayer, { segmentsLayerName } from '@/components/MapLayers/Segments/Segments.layer';
+import { useDisclosure } from '@mantine/hooks';
 
 // TODO: secure token (https://visgl.github.io/react-map-gl/docs/get-started/tips-and-tricks#securing-mapbox-token)
 
@@ -46,10 +47,10 @@ export function TrailMap() {
   // Active Tab /////////////////////////////////////////////////////////////////////
   const [activeTab, setActiveTab] = useState<string | null>('welcome');
 
-  // Trail States ///////////////////////////////////////////////////////////////////
-  const [trailStates, setTrailStates] = useState<TrailStates>(TRAIL_STATES);
-  const toggleTrailState = (value: string) => {
-    setTrailStates((prev) => ({
+  // Segment States /////////////////////////////////////////////////////////////////
+  const [segmentStates, setSegmentStates] = useState<SegmentStates>(SEGMENT_STATES);
+  const toggleSegmentStateVisibility = (value: string) => {
+    setSegmentStates((prev) => ({
       ...prev,
       [value]: { ...prev[value], visible: !prev[value].visible },
     }));
@@ -95,9 +96,12 @@ export function TrailMap() {
 
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
 
-    if (layer === 'trails') {
+    console.log(id, layer);
+
+    if (layer === segmentsLayerName) {
       setSelectedSegmentId(id);
       setActiveTab('segmentDetailsPanel');
+      //   console.log()
     }
   };
 
@@ -117,8 +121,36 @@ export function TrailMap() {
     setCursorStyle(undefined);
   };
 
+  const [opened, { open, close }] = useDisclosure(
+    sessionStorage.getItem('acceptedWelcome') !== 'true'
+  );
+
   return (
     <div className={classes.container}>
+      <Modal opened={opened} onClose={close} withCloseButton={false} centered>
+        <p>
+          Update (May 2024): I'm working on a lot of updates to the website, including the ability
+          to submit changes. If you see anything that's incorrect, or want to request a feature,
+          email me <a href="mailto:mass.trail.tracker@gmail.com">mass.trail.tracker@gmail.com</a>
+        </p>
+        <p style={{ color: 'gray', fontSize: 'small' }}>
+          Disclaimer: The data herein is provided for informational purposes only. MassTrailTracker
+          makes no warranties, either expressed or implied, and assumes no responsibility for its
+          completeness or accuracy. Users assume all responsibility and risk associated with use of
+          the map and agree to indemnify and hold harmless MassTrailTracker with respect to any and
+          all claims and demands that may arise resulting from use of this map.
+        </p>
+        <Group justify="center">
+          <Button
+            onClick={() => {
+              sessionStorage.setItem('acceptedWelcome', 'true');
+              close();
+            }}
+          >
+            Get started
+          </Button>
+        </Group>
+      </Modal>
       <ScrollArea h={'100%'} type="scroll" scrollbars="y" className={classes.aside}>
         <Tabs
           value={activeTab}
@@ -133,8 +165,8 @@ export function TrailMap() {
 
           <Tabs.Panel value="welcome">
             <WelcomePanel
-              trailStates={trailStates}
-              toggleTrailState={toggleTrailState}
+              segmentStates={segmentStates}
+              toggleSegmentStateVisibility={toggleSegmentStateVisibility}
               layers={layers}
             />
           </Tabs.Panel>
@@ -153,7 +185,7 @@ export function TrailMap() {
           onMouseLeave={onLeaveHandler}
           onClick={onClickHandler}
           cursor={cursorStyle}
-          interactiveLayerIds={['trails']}
+          interactiveLayerIds={[segmentsLayerName]}
           mapboxAccessToken={MAPBOX_TOKEN}
           // mapStyle="mapbox://styles/mapbox/light-v11"
           mapStyle="mapbox://styles/dnoen/clp8rwblo001001p84znz9viw"
@@ -170,7 +202,7 @@ export function TrailMap() {
 
           {popup && (
             <MapPopup
-              anchor="bottom"
+              anchor="top-left"
               longitude={Number(popup.lng)}
               latitude={Number(popup.lat)}
               onClose={() => setPopup(undefined)}
@@ -182,7 +214,7 @@ export function TrailMap() {
             </MapPopup>
           )}
 
-          <TrailsLayer states={trailStates} hover={hover} />
+          <SegmentsLayer states={segmentStates} hover={hover} />
           <CommuterRailLayer visible={commuterRailVisible} />
           <Subway visible={subwayVisible} />
         </ReactMap>

@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import { theme } from '@/theme';
-import { Button, Checkbox, Divider, Flex, Grid, Text, Title } from '@mantine/core';
+import { Button, Checkbox, Divider, Flex, Grid, Text, Title, Tooltip } from '@mantine/core';
 import { useState } from 'react';
 
 import classes from './WelcomePanel.module.css';
 
-import { BaseMap, BASE_MAPS, TrailStates } from '../../pages/TrailMap/TrailMap.config';
+import { BaseMap, BASE_MAPS, SegmentStates } from '../../pages/TrailMap/TrailMap.config';
 import { string } from 'prop-types';
 
 // https://mantine.dev/core/button/#custom-variants
@@ -18,15 +18,19 @@ interface LayerOption {
 }
 
 interface WelcomePanelProps {
-  trailStates: TrailStates;
-  toggleTrailState: (value: string) => void;
+  segmentStates: SegmentStates;
+  toggleSegmentStateVisibility: (value: string) => void;
   // baseMap: string;
   // setBaseMap: React.Dispatch<React.SetStateAction<string>>;
   layers: LayerOption[];
   // setLayers: React.Dispatch<React.SetStateAction<MapLayer[]>>
 }
 
-const WelcomePanel: React.FC<WelcomePanelProps> = ({ trailStates, toggleTrailState, layers }) => {
+const WelcomePanel: React.FC<WelcomePanelProps> = ({
+  segmentStates: trailStates,
+  toggleSegmentStateVisibility: toggleTrailState,
+  layers,
+}) => {
   return (
     <>
       <Text>
@@ -36,18 +40,41 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({ trailStates, toggleTrailSta
         Trails
       </Title>
       <Flex gap="sm" justify="flex-start" align="center" direction="row" wrap="wrap">
-        {Object.entries(trailStates).map(([value, { label, color, visible }]) => (
-          <Checkbox
-            id={value}
-            key={value}
-            classNames={classes}
-            color={color}
-            label={label}
-            checked={visible}
-            onChange={() => toggleTrailState(value)}
-            wrapperProps={{ onClick: () => toggleTrailState(value) }}
-          />
-        ))}
+        {Object.entries(trailStates).map(([value, { label, color, visible, description }]) =>
+          description ? (
+            <Tooltip
+              label={description}
+              multiline
+              w={180}
+              withArrow
+              transitionProps={{ duration: 200 }}
+              openDelay={300}
+              refProp="rootRef"
+            >
+              <Checkbox
+                id={value}
+                key={value}
+                classNames={classes}
+                color={color}
+                label={label}
+                checked={visible}
+                onChange={() => toggleTrailState(value)}
+                wrapperProps={{ onClick: () => toggleTrailState(value) }}
+              />
+            </Tooltip>
+          ) : (
+            <Checkbox
+              id={value}
+              key={value}
+              classNames={classes}
+              color={color}
+              label={label}
+              checked={visible}
+              onChange={() => toggleTrailState(value)}
+              wrapperProps={{ onClick: () => toggleTrailState(value) }}
+            />
+          )
+        )}
       </Flex>
       <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
       <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
@@ -68,7 +95,14 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({ trailStates, toggleTrailSta
           </Grid.Col>
         ))}
       </Grid>
-      {/* <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
+    </>
+  );
+};
+
+export default WelcomePanel;
+
+{
+  /* <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
       <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
         Base Map
       </Title>
@@ -89,9 +123,5 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({ trailStates, toggleTrailSta
             />
           </Grid.Col>
         ))}
-      </Grid> */}
-    </>
-  );
-};
-
-export default WelcomePanel;
+      </Grid> */
+}
