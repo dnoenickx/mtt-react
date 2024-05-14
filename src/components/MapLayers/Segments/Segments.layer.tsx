@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Layer, Source } from 'react-map-gl';
 import { Feature, feature, featureCollection, Properties } from '@turf/turf';
 import { Geometry } from 'geojson';
+import { useMediaQuery } from '@mantine/hooks';
 import { SegmentStates } from '@/pages/TrailMap/TrailMap.config';
 import { Hover } from '@/pages/TrailMap/TrailMap.page';
 import { SegmentState } from '@/types';
@@ -16,6 +17,8 @@ export interface SegmentsLayerProps {
 
 export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   const { segments } = useData();
+
+  const multiplier = useMediaQuery('(min-width: 415px)') ? 1 : 1.5;
 
   const segmentGeoJson = useMemo(
     () =>
@@ -72,15 +75,15 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
       6,
       // heavy thickness
       ['==', ['get', 'weight'], 'heavy'],
-      2.5,
+      2.5 * multiplier,
       // medium thickness
       ['==', ['get', 'weight'], 'medium'],
-      2.25,
+      2.25 * multiplier,
       // light thickness
       ['==', ['get', 'weight'], 'light'],
-      1.5,
+      1.5 * multiplier,
       // thinner otherwise
-      1,
+      1 * multiplier,
     ],
     'line-dasharray': [
       'match',

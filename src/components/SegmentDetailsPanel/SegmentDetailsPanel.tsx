@@ -1,12 +1,16 @@
 import React from 'react';
 
-import { Accordion, Divider, Text, Title } from '@mantine/core';
+import { Accordion, Divider, Group, Text, Title, UnstyledButton } from '@mantine/core';
 
+import { useDisclosure } from '@mantine/hooks';
 import { Trail } from '@/types';
 import { useData } from '@/data/DataContext';
 import { Timeline } from '../Timeline/Timeline';
 
 import classes from './SegmentDetailsPanel.module.css';
+import EditMenu from '../EditMenu/EditMenu';
+import SegmentEditPopup from '../SegmentEditPopup/SegmentEditPopup';
+import { TimelineEditorModal } from '../TimelineEditorModal/TimelineEditorModal';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description }) => (
@@ -18,16 +22,14 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
     </Accordion.Item>
   ));
 
-  // TODO: zero index below throws error if no trails
-  return (
-    <Accordion classNames={classes} defaultValue={trails[0].name}>
-      {items}
-    </Accordion>
-  );
+  return <Accordion classNames={classes}>{items}</Accordion>;
 }
 
+// export function SegmentDetailsPanel({ segmentId = 9130 }: { segmentId: number | undefined }) {
 export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefined }) {
   const { segments, trails, newsflashes } = useData();
+  const [segmentPopupOpened, segmentPopupToggle] = useDisclosure(false);
+  const [newsflashPopupOpened, newsflashPopupToggle] = useDisclosure(false);
 
   if (!segmentId) {
     return (
@@ -46,14 +48,40 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
         'Error'
       ) : (
         <>
-          <Title
-            order={4}
-            style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}
-          >
-            Segment Description
-          </Title>
-          <p style={{ color: 'gray', margin: 0, fontSize: 'smaller' }}>Segment ID: {segment.id}</p>
-          <p style={{ margin: 0 }}>{segment.description || 'No description yet'}</p>
+          {segmentPopupOpened && (
+            <SegmentEditPopup
+              segment={segment}
+              opened={segmentPopupOpened}
+              close={segmentPopupToggle.close}
+            />
+          )}
+          {newsflashPopupOpened && (
+            <TimelineEditorModal
+              newsflashes={segmentNews}
+              opened={newsflashPopupOpened}
+              close={newsflashPopupToggle.close}
+              segmentId={segmentId}
+            />
+          )}
+          <Group justify="space-between">
+            <Title
+              order={4}
+              style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}
+            >
+              Segment Description
+            </Title>
+            <EditMenu
+              openSegmentEditor={segmentPopupToggle.open}
+              openEventEditor={newsflashPopupToggle.open}
+            />
+          </Group>
+          {segment.description ? (
+            <Text m={0}>{segment.description}</Text>
+          ) : (
+            <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentPopupToggle.open}>
+              Add a description
+            </UnstyledButton>
+          )}
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
             order={4}
@@ -69,10 +97,13 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           >
             Timeline
           </Title>
+
           {segmentNews.length ? (
             <Timeline events={segmentNews} />
           ) : (
-            <p>No events yet. Check back later</p>
+            <UnstyledButton td="underline" m={0} c="dimmed" onClick={newsflashPopupToggle.open}>
+              Add a event
+            </UnstyledButton>
           )}
         </>
       )}

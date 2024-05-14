@@ -8,8 +8,9 @@ import {
   Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl';
-import { Button, Group, Modal, ScrollArea, Tabs } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { Button, Group, Modal, ScrollArea, Stack, Tabs } from '@mantine/core';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
 import classes from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
@@ -33,6 +34,8 @@ export function TrailMap() {
   const [selectedSegmentId, setSelectedSegmentId] = useState<string | number | undefined>(
     undefined
   );
+
+  const mobile = useMediaQuery('(min-width: 414px)');
 
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
 
@@ -70,15 +73,34 @@ export function TrailMap() {
 
     if (!e.features || e.features.length === 0) {
       const googleMapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
+      const appleMapsUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=Dropped%20Pin`;
 
       setPopup({
         lng,
         lat,
         content: (
-          <a target="_blank" rel="noopener noreferrer" href={googleMapsUrl}>
-            Google Maps
-          </a>
+          <Stack gap="xs">
+            <Button
+              leftSection={<IconBrandGoogleMaps size={14} />}
+              variant="default"
+              component="a"
+              href={googleMapsUrl}
+            >
+              Open in Google Maps
+            </Button>
+            <Button
+              leftSection={<IconMap2 size={14} />}
+              variant="default"
+              component="a"
+              href={appleMapsUrl}
+            >
+              Open in Apple Maps
+            </Button>
+          </Stack>
         ),
+        // <a target="_blank" rel="noopener noreferrer" href={googleMapsUrl}>
+        //   Google Maps
+        // </a>
       });
     }
   };
@@ -183,8 +205,8 @@ export function TrailMap() {
             zoom: 8.78,
           }}
         >
-          <GeolocateControl position="top-right" />
-          <FullscreenControl position="top-right" />
+          {mobile && <GeolocateControl position="top-right" />}
+          {mobile && <FullscreenControl position="top-right" />}
           <NavigationControl position="top-right" />
           <ScaleControl />
 
@@ -203,8 +225,8 @@ export function TrailMap() {
           )}
 
           <SegmentsLayer states={segmentStates} hover={hover} />
-          <CommuterRailLayer visible={commuterRailVisible} />
-          <Subway visible={subwayVisible} />
+          {commuterRailVisible && <CommuterRailLayer visible={commuterRailVisible} />}
+          {subwayVisible && <Subway visible={subwayVisible} />}
         </ReactMap>
       </div>
     </div>

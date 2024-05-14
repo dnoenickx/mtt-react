@@ -462,8 +462,8 @@ export const trails: Trail[] = [
   },
   {
     id: 2062,
-    slug: 'sommerville',
-    name: 'Sommerville Community Path',
+    slug: 'somerville',
+    name: 'Somerville Community Path',
     description:
       'The Somerville Community Path is a paved rail trail in Somerville, Massachusetts, running 1.3 miles (2.1 km) from Massachusetts Avenue to Lowell Street via Davis Square. Opened in segments between 1985 and 2015, it follows part of the former Fitchburg Cutoff rail line. A 1.9-mile (3.1 km) extension to East cambridge will open in 2023 as part of the Green Line Extension project.',
   },
@@ -519,7 +519,7 @@ export const trails: Trail[] = [
   {
     id: 4132,
     slug: 'west-springfield-river',
-    name: 'Connecticut River Walk and Bikeway',
+    name: 'West Springfield River',
     description: '',
   },
   {
@@ -668,5 +668,24 @@ export const trails: Trail[] = [
     name: 'Groveland Community Trail',
     description:
       'The new community trail opened May 25, 2023. The Groveland Community Trail is visioned as a 3.25 mile trail.',
+  },
+  {
+    id: 3829,
+    slug: 'bradford',
+    name: 'Bradford Community Trail',
+    description: '',
+  },
+  {
+    id: 2976,
+    slug: 'lawrence',
+    name: 'Lawrence Rail Trail',
+    description: '',
+  },
+  {
+    id: 2369,
+    slug: 'haverhill-riverside',
+    name: 'Riverside Park Connector Trail',
+    description:
+      'Planned trail along the Merrimack River between Riverside Park and the Groveland Bates Bridge. https://whav.net/2023/06/19/haverhill-to-connect-riverside-park-trail-with-groveland-fix-paths-at-winnekenni-park/ https://www.eagletribune.com/news/haverhill-to-expand-its-walking-biking-trails/article_d673f772-774d-11ee-9b8e-3ff837044165.html',
   },
 ];

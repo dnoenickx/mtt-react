@@ -20,10 +20,12 @@
   },
   "dependencies": {
     "@mantine/core": "^7.5.0",
+    "@mantine/form": "^7.8.1",
     "@mantine/hooks": "^7.5.0",
     "@tabler/icons-react": "^2.44.0",
     "@turf/turf": "^6.5.0",
     "@types/mapbox-gl": "^2.7.19",
+    "date-fns": "^3.6.0",
     "mapbox-gl": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

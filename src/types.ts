@@ -33,17 +33,14 @@ export type Newsflash = {
   description: string;
   icon: string;
   segmentIds: number[];
+  links: Link[];
 };
 
 export type DatePrecision = 'day' | 'month' | 'year';
 
 export type Link = {
-  id: number;
   url: string;
   label: string;
-  trailIds?: string[];
-  segmentIds?: number[];
-  newsIds?: number[];
 };
 
 /** Construct a type with the properties of T where those in type K are optional. */

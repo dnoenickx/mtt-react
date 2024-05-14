@@ -1,4 +1,4 @@
-import { Text, Timeline as MantineTimeline } from '@mantine/core';
+import { Button, Flex, Text, Timeline as MantineTimeline } from '@mantine/core';
 import {
   // IconExternalLink,
   IconBarrierBlock,
@@ -6,6 +6,7 @@ import {
   IconConfetti,
   IconLicense,
   IconBulldozer,
+  IconExternalLink,
   // Icon,
   // IconGitBranch,
   // IconGitPullRequest,
@@ -50,8 +51,9 @@ export function Timeline({ events }: { events: Newsflash[] }) {
     <MantineTimeline active={past} reverseActive lineWidth={3} bulletSize={24}>
       {events
         .sort((a, b) => (a.date > b.date ? -1 : 1))
-        .map(({ headline, icon, date, datePrecision, description }) => (
+        .map(({ id, headline, icon, date, datePrecision, description, links }) => (
           <MantineTimeline.Item
+            key={id}
             title={headline}
             bullet={getIcon(icon)}
             lineVariant={date < currentDate ? 'solid' : 'dashed'}
@@ -62,22 +64,20 @@ export function Timeline({ events }: { events: Newsflash[] }) {
             <Text c="dimmed" size="sm">
               {description}
             </Text>
-            {/* {links.length > 0 && (
-              <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
-                {links.map(({ label, url }) => (
-                  <a href={url} target="_blank" rel="nofollow">
-                    <Button
-                      size="compact-sm"
-                      c="dimmed"
-                      leftSection={<IconExternalLink size={14} />}
-                      variant="default"
-                    >
-                      {label}
-                    </Button>
-                  </a>
-                ))}
-              </Flex>
-            )} */}
+            <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
+              {links.map(({ label, url }) => (
+                <a href={url} target="_blank" rel="nofollow noreferrer" key={url}>
+                  <Button
+                    size="compact-sm"
+                    c="dimmed"
+                    leftSection={<IconExternalLink size={14} />}
+                    variant="default"
+                  >
+                    {label}
+                  </Button>
+                </a>
+              ))}
+            </Flex>
           </MantineTimeline.Item>
         ))}
     </MantineTimeline>

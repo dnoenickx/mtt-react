@@ -53,9 +53,9 @@ export const SEGMENT_STATES: SegmentStates = {
   },
   design: {
     label: 'In Design',
-    color: '#702963',
+    color: '#901c7b',
     weight: 'medium',
-    style: 'solid',
+    style: 'dashed',
     visible: true,
   },
   proposed: {

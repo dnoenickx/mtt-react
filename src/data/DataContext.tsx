@@ -1,9 +1,8 @@
-import React, { createContext, useContext, useReducer } from 'react';
-import { Link, Newsflash, Segment, Trail, Optional, Tracker } from '@/types';
+import React, { createContext, useContext, useMemo, useReducer } from 'react';
+import { Newsflash, Segment, Trail, Optional, Tracker } from '@/types';
 import { trails } from './trails';
-import { links } from './links';
 import { newsflashes } from './newsflashes';
-import { generateRandomId } from '@/utils';
+import { createMapping, generateRandomId, getItem } from '@/utils';
 import { segments } from './segments';
 
 // App state ////////////////////////////////////////////////////////////////////////
@@ -12,15 +11,13 @@ export type AppState = {
   trails: Tracker<Trail>;
   segments: Tracker<Segment>;
   newsflashes: Tracker<Newsflash>;
-  links: Tracker<Link>;
 };
 
 // Define initial state
 const initialState: AppState = {
-  trails: { original: trails, new: {} },
-  segments: { original: segments, new: {} },
-  newsflashes: { original: newsflashes, new: {} },
-  links: { original: links, new: {} },
+  trails: { original: createMapping(trails, 'id'), new: getItem('new_trails') },
+  segments: { original: createMapping(segments, 'id'), new: getItem('new_segments') },
+  newsflashes: { original: createMapping(newsflashes, 'id'), new: getItem('new_events') },
 };
 
 // Reducer ////////////////////////////////////////////////////////////////////////
@@ -29,7 +26,7 @@ export type Action =
   | {
       action: 'upsert';
       type: keyof AppState;
-      value: Optional<Trail | Segment | Newsflash | Link, 'id'>;
+      value: Optional<Trail | Segment | Newsflash, 'id'>;
     }
   | {
       action: 'delete';
@@ -95,34 +92,28 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
 // Hook ////////////////////////////////////////////////////////////////////////
 
-// function getSegmentData(id: number) {
-//   const seg = segments[id];
-//   return {
-//     ...segments[id],
-//     trails: trails.filter((t) => seg.trailIds.includes(t.id)),
-//     links: links.filter((l) => l.segmentIds?.includes(seg.id)),
-//   };
-// }
-
 export const useData = () => {
   const context = useContext(DataContext);
   if (!context) {
     throw new Error('useData must be used within a DataProvider');
   }
-  return {
-    ...context,
-    trails: Object.values({
-      ...context.state.trails.original,
-      ...context.state.trails.new,
-    }) as Trail[],
-    segments: Object.values({
-      ...context.state.segments.original,
-      ...context.state.segments.new,
-    }) as Segment[],
-    newsflashes: Object.values({
-      ...context.state.newsflashes.original,
-      ...context.state.newsflashes.new,
-    }) as Newsflash[],
-    links: Object.values({ ...context.state.links.original, ...context.state.links.new }) as Link[],
-  };
+  const memoizedContext = useMemo(() => context, [context]); // Memoize the context value
+
+  return useMemo(() => {
+    const { state } = memoizedContext;
+
+    localStorage.setItem('new_trails', JSON.stringify(state.trails.new));
+    localStorage.setItem('new_segments', JSON.stringify(state.segments.new));
+    localStorage.setItem('new_events', JSON.stringify(state.newsflashes.new));
+
+    return {
+      ...memoizedContext,
+      trails: Object.values({ ...state.trails.original, ...state.trails.new }) as Trail[],
+      segments: Object.values({ ...state.segments.original, ...state.segments.new }) as Segment[],
+      newsflashes: Object.values({
+        ...state.newsflashes.original,
+        ...state.newsflashes.new,
+      }) as Newsflash[],
+    };
+  }, [memoizedContext]);
 };

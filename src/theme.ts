@@ -1,4 +1,4 @@
-import { createTheme } from '@mantine/core';
+import { Anchor, createTheme } from '@mantine/core';
 
 export const theme = createTheme({
   /** Put your mantine theme override here */
@@ -35,5 +35,12 @@ export const theme = createTheme({
       '#0f172a',
       '#020617',
     ],
+  },
+  components: {
+    Anchor: Anchor.extend({
+      styles: {
+        root: { color: 'var(--mantine-primary-color-9)' },
+      },
+    }),
   },
 });
