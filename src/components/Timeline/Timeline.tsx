@@ -1,4 +1,4 @@
-import { Button, Flex, Text, Timeline as MantineTimeline } from '@mantine/core';
+import { Text, Timeline as MantineTimeline } from '@mantine/core';
 import {
   // IconExternalLink,
   IconBarrierBlock,
@@ -6,7 +6,6 @@ import {
   IconConfetti,
   IconLicense,
   IconBulldozer,
-  IconExternalLink,
   // Icon,
   // IconGitBranch,
   // IconGitPullRequest,

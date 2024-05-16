@@ -1,18 +1,22 @@
 import {
   Button,
   Divider,
+  Fieldset,
   Group,
   JsonInput,
   Modal,
   MultiSelect,
+  rem,
   Select,
   SimpleGrid,
+  Text,
   Textarea,
   TextInput,
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { IconLinkPlus, IconTrash } from '@tabler/icons-react';
 import { useData } from '@/data/DataContext';
-import { Segment } from '@/types';
+import { Link, Segment } from '@/types';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { normalizeMultiLineString } from '@/utils';
 
@@ -28,6 +32,7 @@ interface FormSegment {
   description: string;
   state: string;
   trailIds: string[];
+  links: Link[];
   geometry: string;
   comment: '';
 }
@@ -54,6 +59,28 @@ function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
     },
     validateInputOnBlur: true,
   });
+
+  const links = form.values.links.map((item, index) => (
+    <Fieldset style={{ width: '100%' }} mb="sm" key={index}>
+      <TextInput placeholder="Label" mb={10} {...form.getInputProps(`links.${index}.label`)} />
+      <TextInput
+        placeholder="bostonglobe.com"
+        mb={10}
+        {...form.getInputProps(`links.${index}.url`)}
+      />
+      <Group justify="right">
+        <Button
+          variant="light"
+          color="red"
+          size="xs"
+          leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+          onClick={() => form.removeListItem('links', index)}
+        >
+          Delete
+        </Button>
+      </Group>
+    </Fieldset>
+  ));
 
   return (
     <Modal opened={opened} onClose={close} title="Edit Segment" size="xl" centered>
@@ -126,10 +153,25 @@ function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
                 </>
               }
               validationError="Invalid JSON"
-              maxRows={15}
+              maxRows={10}
               autosize
               {...form.getInputProps('geometry')}
             />
+            <Text size="sm" mt="md">
+              Links
+            </Text>
+            {links}
+
+            <Group justify="center" mt="md">
+              <Button
+                variant="light"
+                size="xs"
+                onClick={() => form.insertListItem('links', { url: '', label: '' })}
+                leftSection={<IconLinkPlus style={{ width: rem(14), height: rem(14) }} />}
+              >
+                Add link
+              </Button>
+            </Group>
           </div>
         </SimpleGrid>
         <Divider my="lg" />

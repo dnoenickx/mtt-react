@@ -1,6 +1,6 @@
-import { Link } from '@/types';
 import { IconExternalLink } from '@tabler/icons-react';
 import { Button, Flex, TextProps, Text } from '@mantine/core';
+import { Link } from '@/types';
 
 export interface MultiLineTextProps extends TextProps {
   text: string;

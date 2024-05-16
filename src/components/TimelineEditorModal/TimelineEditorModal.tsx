@@ -103,7 +103,7 @@ function EventEditForm({
   useEffect(() => onDirty(form.isDirty()), [form.isDirty()]);
 
   const links = form.values.links.map((item, index) => (
-    <Fieldset style={{ width: '100%' }} mb="sm" key={item.url}>
+    <Fieldset style={{ width: '100%' }} mb="sm" key={index}>
       <TextInput placeholder="Label" mb={10} {...form.getInputProps(`links.${index}.label`)} />
       <TextInput
         placeholder="bostonglobe.com"

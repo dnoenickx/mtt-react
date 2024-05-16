@@ -15,6 +15,7 @@ const segment1: Segment = {
   description: 'Description 1',
   state: 'paved',
   trailIds: [11],
+  links: [],
   geometry: {
     type: 'LineString',
     coordinates: [[]],
@@ -27,6 +28,7 @@ const segment2: Segment = {
   description: 'Description 2',
   state: 'stoneDust',
   trailIds: [22],
+  links: [],
   geometry: {
     type: 'MultiLineString',
     coordinates: [[[]]],
