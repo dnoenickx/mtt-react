@@ -5,6 +5,7 @@ export type Trail = {
   slug: string;
   name: string;
   description: string;
+  links: Link[];
 };
 
 export type SegmentState =
@@ -23,6 +24,7 @@ export type Segment = {
   state: SegmentState;
   trailIds: number[];
   geometry: MultiLineString | LineString;
+  links: Link[];
 };
 
 export type Newsflash = {

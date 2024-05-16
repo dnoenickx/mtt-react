@@ -24,6 +24,7 @@ import {
 import { formatDate } from '@/utils';
 
 import { Newsflash } from '../../types';
+import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 
 function getIcon(iconName: string) {
   const size = 14;
@@ -61,25 +62,8 @@ export function Timeline({ events }: { events: Newsflash[] }) {
             <Text size="xs" mt={4}>
               {formatDate(date, datePrecision)}
             </Text>
-            {description.split('\n').map((str) => (
-              <Text c="dimmed" size="sm">
-                {str}
-              </Text>
-            ))}
-            <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
-              {links.map(({ label, url }) => (
-                <a href={url} target="_blank" rel="nofollow noreferrer" key={url}>
-                  <Button
-                    size="compact-sm"
-                    c="dimmed"
-                    leftSection={<IconExternalLink size={14} />}
-                    variant="default"
-                  >
-                    {label}
-                  </Button>
-                </a>
-              ))}
-            </Flex>
+            <MultiLineText c="dimmed" size="sm" text={description} />
+            <LinkGroup links={links} />
           </MantineTimeline.Item>
         ))}
     </MantineTimeline>

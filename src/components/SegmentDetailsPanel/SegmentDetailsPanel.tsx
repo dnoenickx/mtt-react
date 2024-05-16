@@ -11,14 +11,18 @@ import classes from './SegmentDetailsPanel.module.css';
 import EditMenu from '../EditMenu/EditMenu';
 import SegmentEditPopup from '../SegmentEditPopup/SegmentEditPopup';
 import { TimelineEditorModal } from '../TimelineEditorModal/TimelineEditorModal';
+import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
-  const items = trails.map(({ name, description }) => (
+  const items = trails.map(({ name, description, links }) => (
     <Accordion.Item key={name} value={name}>
       <Accordion.Control>
         <Text>{name}</Text>
       </Accordion.Control>
-      <Accordion.Panel>{description}</Accordion.Panel>
+      <Accordion.Panel>
+        <MultiLineText text={description} />
+        <LinkGroup links={links} />
+      </Accordion.Panel>
     </Accordion.Item>
   ));
 
@@ -68,19 +72,22 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               order={4}
               style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}
             >
-              Segment Description
+              Segment
             </Title>
             <EditMenu
               openSegmentEditor={segmentPopupToggle.open}
               openEventEditor={newsflashPopupToggle.open}
             />
           </Group>
-          {segment.description ? (
-            segment.description.split('\n').map((str) => <Text m={0}>{str}</Text>)
-          ) : (
+          {!segment.description && !segment.links.length ? (
             <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentPopupToggle.open}>
               Add a description
             </UnstyledButton>
+          ) : (
+            <>
+              <MultiLineText m={0} text={segment.description} />
+              <LinkGroup links={segment.links} />
+            </>
           )}
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title

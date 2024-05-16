@@ -7,6 +7,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [9406, 9281],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -36,6 +37,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5198, 9281],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -82,6 +84,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [9281],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -106,6 +109,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8768],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -261,6 +265,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8768],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -296,6 +301,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8768],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -430,6 +436,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6572],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -612,6 +619,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3251],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -636,6 +644,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [741],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -717,6 +726,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [196],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -939,6 +949,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [3622, 9281],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -977,6 +988,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'design',
     trailIds: [2018, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1007,6 +1019,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'design',
     trailIds: [2018, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1037,6 +1050,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [914],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1056,6 +1070,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'construction',
     trailIds: [914],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1139,6 +1154,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [914],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1482,6 +1498,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [914],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1532,6 +1549,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [22],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1563,6 +1581,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [22],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1637,6 +1656,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8624],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1735,6 +1755,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8624],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1840,6 +1861,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8375],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -2332,6 +2354,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8654],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -2748,6 +2771,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8654],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3137,6 +3161,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [714],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3185,6 +3210,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8146],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3355,6 +3381,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2526],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3448,6 +3475,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [509],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3545,6 +3573,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [509],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3593,6 +3622,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [4476],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3763,6 +3793,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [4476],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3784,6 +3815,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4994],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3903,6 +3935,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9877],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3939,6 +3972,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [9497],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3957,6 +3991,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9497],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -3978,6 +4013,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4531, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4042,6 +4078,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [1848],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4090,6 +4127,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [851],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4121,6 +4159,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3983],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4185,6 +4224,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [7967],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4256,6 +4296,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4220],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4323,6 +4364,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8876],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4427,6 +4469,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9527],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4501,6 +4544,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3743],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4557,6 +4601,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3743],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4697,6 +4742,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [874],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4724,6 +4770,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8108],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4747,6 +4794,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8108],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4841,6 +4889,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8108],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4863,6 +4912,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [504],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4909,6 +4959,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4951,6 +5002,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'construction',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5014,6 +5066,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5039,6 +5092,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5115,6 +5169,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5177,6 +5232,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -5198,6 +5254,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5218,6 +5275,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5245,6 +5303,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -5272,6 +5331,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -5388,6 +5448,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5419,6 +5480,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5435,6 +5497,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5461,6 +5524,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5487,6 +5551,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5531,6 +5596,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5551,6 +5617,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5572,6 +5639,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5598,6 +5666,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -5630,6 +5699,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -5665,6 +5735,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -5696,6 +5767,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5714,6 +5786,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5779,6 +5852,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5826,6 +5900,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5844,6 +5919,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5881,6 +5957,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5934,6 +6011,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -5974,6 +6052,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'unimproved',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -6004,6 +6083,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6039,6 +6119,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6070,6 +6151,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [836],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6166,6 +6248,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6234,6 +6317,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -6259,6 +6343,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6275,6 +6360,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -6333,6 +6419,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'unimproved',
   //   trailIds: [5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -6369,6 +6456,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6416,6 +6504,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6442,6 +6531,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6465,6 +6555,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6502,6 +6593,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6534,6 +6626,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6553,6 +6646,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6576,6 +6670,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2269],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6638,6 +6733,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9033],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6884,6 +6980,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2663],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6923,6 +7020,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3585],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6948,6 +7046,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [230],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -6982,6 +7081,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3468],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7018,6 +7118,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9119],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7115,6 +7216,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [1016],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7180,6 +7282,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3415],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7202,6 +7305,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6993],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7237,6 +7341,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4817],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7283,6 +7388,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6050],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7301,6 +7407,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5804],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7487,6 +7594,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2932],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7543,6 +7651,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6136],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7562,6 +7671,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6136],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7603,6 +7713,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [7366],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7676,6 +7787,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [7489],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7928,6 +8040,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2826],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7960,6 +8073,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [867],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -7990,6 +8104,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4326],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8051,6 +8166,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [7194],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8143,6 +8259,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2058],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8333,6 +8450,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2082],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8482,6 +8600,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [794],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8507,6 +8626,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [2371],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8543,6 +8663,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2371],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8805,6 +8926,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [4202, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -8826,6 +8948,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4202, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9073,6 +9196,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4202],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9228,6 +9352,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5221],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9372,6 +9497,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [340],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9536,6 +9662,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [340],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9588,6 +9715,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [4097],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9614,6 +9742,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4747],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9655,6 +9784,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5268],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9824,6 +9954,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [1141],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9933,6 +10064,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3447],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9963,6 +10095,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5392],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9989,6 +10122,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5392],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10062,6 +10196,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5775],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10149,6 +10284,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8685],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10215,6 +10351,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3570],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10268,6 +10405,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [3570],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10288,6 +10426,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [9334],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10325,6 +10464,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3695],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10497,6 +10637,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6983],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10569,6 +10710,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [6983],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10594,6 +10736,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [6983],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10658,6 +10801,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [6983],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10852,6 +10996,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -10901,6 +11046,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11016,6 +11162,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11035,6 +11182,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6968],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11267,6 +11415,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8492],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11291,6 +11440,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8492],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11358,6 +11508,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8320],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11597,6 +11748,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6166],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11697,6 +11849,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [73],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11719,6 +11872,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [73],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11893,6 +12047,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [73],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11920,6 +12075,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [73],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11991,6 +12147,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [73],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12101,6 +12258,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [6912, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12133,6 +12291,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6912, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12156,6 +12315,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6912, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12179,6 +12339,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [1643],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12207,6 +12368,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4132],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12270,6 +12432,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [5728],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12341,6 +12504,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [4220],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12365,6 +12529,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [4220],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12386,6 +12551,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [8654],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12449,6 +12615,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [7523],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12668,6 +12835,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4590],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12743,6 +12911,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5535],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12857,6 +13026,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5535],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12977,6 +13147,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4590],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -12999,6 +13170,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [9499],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13228,6 +13400,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'construction',
     trailIds: [4590],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13277,6 +13450,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [5535],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13405,6 +13579,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'proposed',
     trailIds: [4590],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13555,6 +13730,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4097],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13615,6 +13791,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9334],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13657,6 +13834,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2681],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13743,6 +13921,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2681],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13779,6 +13958,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4733],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13821,6 +14001,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2681],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13848,6 +14029,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2681],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13910,6 +14092,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8571],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -13983,6 +14166,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6435],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14012,6 +14196,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4097],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14080,6 +14265,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [6778],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14131,6 +14317,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [6778],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14400,6 +14587,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8571],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14484,6 +14672,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8571],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14558,6 +14747,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8086],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14849,6 +15039,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8086],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -14901,6 +15092,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3980],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15070,6 +15262,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6521],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15207,6 +15400,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6855],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15278,6 +15472,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8086],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15342,6 +15537,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6521],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15397,6 +15593,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4181],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15425,6 +15622,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8086],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15467,6 +15665,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [6778],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15554,6 +15753,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [340],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15610,6 +15810,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6572],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15649,6 +15850,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6572],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15681,6 +15883,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6572],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15741,6 +15944,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3980],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15781,6 +15985,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8654],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15822,6 +16027,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3980],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15854,6 +16060,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3980],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15920,6 +16127,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2082],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -15979,6 +16187,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3980],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16009,6 +16218,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [8654],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16129,6 +16339,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [9079],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16154,6 +16365,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'construction',
     trailIds: [2371],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16311,6 +16523,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16340,6 +16553,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16363,6 +16577,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2973],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16703,6 +16918,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16745,6 +16961,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16793,6 +17010,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16815,6 +17033,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6912, 5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16867,6 +17086,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -16898,6 +17118,7 @@ export const segments: Segment[] = [
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [6912, 5056],
+  //   links: [],
   //   geometry: {
   //     type: 'MultiLineString',
   //     coordinates: [
@@ -16914,6 +17135,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17030,6 +17252,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17170,6 +17393,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17201,6 +17425,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'construction',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17293,6 +17518,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'onRoad',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17347,6 +17573,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17384,6 +17611,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'onRoad',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17799,6 +18027,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17828,6 +18057,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'unimproved',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17862,6 +18092,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'onRoad',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -17960,6 +18191,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18007,6 +18239,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'onRoad',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18037,6 +18270,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18073,6 +18307,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18097,6 +18332,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18138,6 +18374,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18401,6 +18638,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'construction',
     trailIds: [5056],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18417,6 +18655,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [3829],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18529,6 +18768,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6076],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18576,6 +18816,7 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [6076],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18607,6 +18848,7 @@ export const segments: Segment[] = [
       'https://www.mass.gov/event/lawrence-manchester-rail-trail-2022-07-21t190000-0400-2022-07-21t200000-0400 https://mass.streetsblog.org/2022/07/26/lawrence-project-will-complete-an-off-street-path-from-merrimack-river-to-nh-border',
     state: 'design',
     trailIds: [2976],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -18643,6 +18885,7 @@ export const segments: Segment[] = [
       'begin at the back of the park and stretch along the rivers shoreline and through the woods for about a half mile to the Groveland (Bates) Bridge. The 10-foot wide nature trail will split into two paths at various points, he said, providing a disability-accessible asphalt surface on one stretch and a stone-dust or natural dirt surface on another. Construction on the trail is scheduled to begin next spring (2024) and it is expected to open by June 30 2024',
     state: 'design',
     trailIds: [2369],
+    links: [],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
