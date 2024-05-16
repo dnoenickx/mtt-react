@@ -76,7 +76,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
             />
           </Group>
           {segment.description ? (
-            <Text m={0}>{segment.description}</Text>
+            segment.description.split('\n').map((str) => <Text m={0}>{str}</Text>)
           ) : (
             <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentPopupToggle.open}>
               Add a description

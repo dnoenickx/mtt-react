@@ -61,9 +61,11 @@ export function Timeline({ events }: { events: Newsflash[] }) {
             <Text size="xs" mt={4}>
               {formatDate(date, datePrecision)}
             </Text>
-            <Text c="dimmed" size="sm">
-              {description}
-            </Text>
+            {description.split('\n').map((str) => (
+              <Text c="dimmed" size="sm">
+                {str}
+              </Text>
+            ))}
             <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
               {links.map(({ label, url }) => (
                 <a href={url} target="_blank" rel="nofollow noreferrer" key={url}>
