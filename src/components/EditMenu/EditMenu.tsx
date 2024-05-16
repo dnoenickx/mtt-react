@@ -1,12 +1,17 @@
 import { Menu, rem, UnstyledButton } from '@mantine/core';
-import { IconDotsVertical, IconEdit, IconTimelineEvent } from '@tabler/icons-react';
+import { IconCirclePlus, IconDotsVertical, IconEdit, IconTimelineEvent } from '@tabler/icons-react';
 
 interface EditMenuParams {
+  openSegmentCreator: () => void;
   openSegmentEditor: () => void;
   openEventEditor: () => void;
 }
 
-export default function EditMenu({ openSegmentEditor, openEventEditor }: EditMenuParams) {
+export default function EditMenu({
+  openSegmentCreator,
+  openSegmentEditor,
+  openEventEditor,
+}: EditMenuParams) {
   return (
     <Menu shadow="md" width={200} position="bottom-end">
       <Menu.Target>
@@ -16,6 +21,12 @@ export default function EditMenu({ openSegmentEditor, openEventEditor }: EditMen
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Item
+          leftSection={<IconCirclePlus style={{ width: rem(14), height: rem(14) }} />}
+          onClick={openSegmentCreator}
+        >
+          Create Segment
+        </Menu.Item>
         <Menu.Item
           leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
           onClick={openSegmentEditor}

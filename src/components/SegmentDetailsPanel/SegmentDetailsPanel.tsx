@@ -12,6 +12,7 @@ import EditMenu from '../EditMenu/EditMenu';
 import SegmentEditPopup from '../SegmentEditPopup/SegmentEditPopup';
 import { TimelineEditorModal } from '../TimelineEditorModal/TimelineEditorModal';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
+import { generateRandomId } from '@/utils';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -32,7 +33,8 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
 // export function SegmentDetailsPanel({ segmentId = 9130 }: { segmentId: number | undefined }) {
 export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefined }) {
   const { segments, trails, newsflashes } = useData();
-  const [segmentPopupOpened, segmentPopupToggle] = useDisclosure(false);
+  const [segmentCreatePopupOpened, segmentCreatePopupToggle] = useDisclosure(false);
+  const [segmentEditPopupOpened, segmentEditPopupToggle] = useDisclosure(false);
   const [newsflashPopupOpened, newsflashPopupToggle] = useDisclosure(false);
 
   if (!segmentId) {
@@ -52,11 +54,29 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
         'Error'
       ) : (
         <>
-          {segmentPopupOpened && (
+          {segmentCreatePopupOpened && (
+            <SegmentEditPopup
+              segment={{
+                id: generateRandomId(segments.map((s) => s.id)),
+                name: '',
+                description: '',
+                state: 'paved',
+                trailIds: [],
+                geometry: {
+                  type: 'MultiLineString',
+                  coordinates: [[]],
+                },
+                links: [],
+              }}
+              opened={segmentCreatePopupOpened}
+              close={segmentCreatePopupToggle.close}
+            />
+          )}
+          {segmentEditPopupOpened && (
             <SegmentEditPopup
               segment={segment}
-              opened={segmentPopupOpened}
-              close={segmentPopupToggle.close}
+              opened={segmentEditPopupOpened}
+              close={segmentEditPopupToggle.close}
             />
           )}
           {newsflashPopupOpened && (
@@ -75,12 +95,13 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               Segment
             </Title>
             <EditMenu
-              openSegmentEditor={segmentPopupToggle.open}
+              openSegmentCreator={segmentCreatePopupToggle.open}
+              openSegmentEditor={segmentEditPopupToggle.open}
               openEventEditor={newsflashPopupToggle.open}
             />
           </Group>
           {!segment.description && !segment.links.length ? (
-            <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentPopupToggle.open}>
+            <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentEditPopupToggle.open}>
               Add a description
             </UnstyledButton>
           ) : (

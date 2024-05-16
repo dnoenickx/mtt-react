@@ -37,7 +37,10 @@ export type Action =
 export const appReducer = (state: AppState, action: Action): AppState => {
   switch (action.action) {
     case 'upsert': {
-      const id = generateRandomId([state[action.type].original, state[action.type].new]);
+      const id = generateRandomId([
+        ...Object.keys(state[action.type].original).map((x) => Number(x)),
+        ...Object.keys(state[action.type].new).map((x) => Number(x)),
+      ]);
       const upsertValue = { id, ...action.value };
       return {
         ...state,

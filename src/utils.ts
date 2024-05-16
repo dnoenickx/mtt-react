@@ -15,17 +15,14 @@ export function formatDate(date: Date, precision: DatePrecision) {
   }
 }
 
-export function generateRandomId(maps: { [id: number]: any }[]): number {
+export function generateRandomId(existing: number[]): number {
   const min = 1;
   const max = 9999;
-
-  const isRandomNumberInMaps = (randomNumber: number) =>
-    maps.some((obj) => Object.keys(obj).includes(randomNumber.toString()));
 
   let randomNumber: number;
   do {
     randomNumber = Math.floor(min + Math.random() * (max - min + 1));
-  } while (isRandomNumberInMaps(randomNumber));
+  } while (existing.includes(randomNumber));
 
   return randomNumber;
 }

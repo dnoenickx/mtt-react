@@ -124,7 +124,7 @@ function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
             />
             <MultiSelect
               label="Trails"
-              placeholder="Search for trail"
+              placeholder="Type to search..."
               data={trails.map((t) => ({ label: t.name, value: t.id.toString() }))}
               checkIconPosition="left"
               pb={25}
