@@ -44,20 +44,30 @@ export default function About() {
         I highly recommend checking out these other maps:
         <ul>
           <li key="mapc">
-            <Anchor href="https://trailmap.mapc.org/">Trail Map | MAPC</Anchor>
+            <Anchor target="_blank" href="https://trailmap.mapc.org/">
+              Trail Map | MAPC
+            </Anchor>
           </li>
           <li key="priority">
-            <Anchor href="https://experience.arcgis.com/experience/75ad0564b18f48f5973657d65d2a775d/page/Page/">
+            <Anchor
+              target="_blank"
+              href="https://experience.arcgis.com/experience/75ad0564b18f48f5973657d65d2a775d/page/Page/"
+            >
               Massachusetts Priority Trails Network | MassDOT
             </Anchor>
           </li>
           <li key="inventory">
-            <Anchor href="https://massdot.maps.arcgis.com/apps/webappviewer/index.html?id=76fc33869d534c6ba0b16803d25ee990">
+            <Anchor
+              target="_blank"
+              href="https://massdot.maps.arcgis.com/apps/webappviewer/index.html?id=76fc33869d534c6ba0b16803d25ee990"
+            >
               Bicycle Facility Inventory | MassDOT
             </Anchor>
           </li>
           <li key="masstrails">
-            <Anchor href="https://masstrails.com/bigmap.html">Mass Trails</Anchor>
+            <Anchor target="_blank" href="https://masstrails.com/bigmap.html">
+              Mass Trails
+            </Anchor>
           </li>
         </ul>
         <Title order={3} pt="xl" pb="xs">
@@ -81,11 +91,10 @@ export default function About() {
         <Text>
           Massachusetts has 351 cities and towns, and when we build a trail we tend to gradually
           contruct it town by town. The result is countless &ldquo;friends of the ___ trail&ldquo;
-          organizations, each with their own website detailing their trail&lsquo;s hisotry and
+          organizations, each with their own website detailing their trail&lsquo;s history and
           conditions. I want to collect this information in a single location so it&#39;s easy to
-          find, allowing anyone to submit suggestions so the data is always timely and accurate.
-          Technology can be difficult to navigate, and I want to enable these groups to share
-          information about the trails they care about.
+          find, allowing anyone to submit suggestions so the data is always timely and accurate. I
+          want to enable these groups to share information about the trails they care about.
         </Text>
         {/* <Title order={3} pt="xl" pb="xs">
         Why do I care?
@@ -170,6 +179,21 @@ export default function About() {
                 <li>Link an existing event with aditional segments</li>
               </ul>
               You&lsquo;re welcome to email me those or any other changes.
+            </Accordion.Panel>
+          </Accordion.Item>
+          <Accordion.Item value="features" key="features" mb="lg">
+            <Accordion.Control>Can I report a bug/request a feature?</Accordion.Control>
+            <Accordion.Panel>
+              Yes. Email me: masstrailtracker@gmail.com
+              <br />
+              Here is a{' '}
+              <Anchor
+                target="_blank"
+                href="https://noenickx.notion.site/Mass-Trail-Tracker-To-Do-8e8f71b4d5f347598c5eb63d6f9a941b"
+              >
+                frequently updated list
+              </Anchor>{' '}
+              of all the things I plan on fixing/adding.
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>
