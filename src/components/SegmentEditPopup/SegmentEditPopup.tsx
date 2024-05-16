@@ -16,7 +16,7 @@ import {
 import { useForm } from '@mantine/form';
 import { IconLinkPlus, IconTrash } from '@tabler/icons-react';
 import { useData } from '@/data/DataContext';
-import { Link, Segment } from '@/types';
+import { Link, Optional, Segment, SegmentState } from '@/types';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { normalizeMultiLineString } from '@/utils';
 
@@ -37,10 +37,14 @@ interface FormSegment {
   comment: '';
 }
 
+interface SubmitSegment extends Optional<Segment, 'id'> {
+  comment: string;
+}
+
 function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
   const { trails, dispatch } = useData();
 
-  const form = useForm<FormSegment>({
+  const form = useForm({
     initialValues: {
       ...segment,
       geometry: JSON.stringify(segment.geometry),
@@ -56,6 +60,20 @@ function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
         }
         return null;
       },
+    },
+    transformValues: (values): SubmitSegment => {
+      const updatedValues: SubmitSegment = {
+        ...values,
+        trailIds: values.trailIds.map(Number),
+        geometry: normalizeMultiLineString(values.geometry),
+        state: values.state as SegmentState,
+      };
+
+      if (updatedValues.id === -1) {
+        delete updatedValues.id;
+      }
+
+      return updatedValues;
     },
     validateInputOnBlur: true,
   });
@@ -85,16 +103,12 @@ function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
   return (
     <Modal opened={opened} onClose={close} title="Edit Segment" size="xl" centered>
       <form
-        onSubmit={form.onSubmit((values, event) => {
+        onSubmit={form.onSubmit((value, event) => {
           event?.preventDefault();
           dispatch({
             action: 'upsert',
             type: 'segments',
-            value: {
-              ...values,
-              trailIds: values.trailIds.map(Number),
-              geometry: normalizeMultiLineString(values.geometry),
-            } as Segment,
+            value: value,
           });
           close();
         })}

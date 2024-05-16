@@ -106,17 +106,24 @@ export const useData = () => {
     const { state } = memoizedContext;
 
     localStorage.setItem('new_trails', JSON.stringify(state.trails.new));
-    localStorage.setItem('new_segments', JSON.stringify(state.segments.new));
+    localStorage.setItem(
+      'new_segments',
+      JSON.stringify(state.segments.new, (key, value) => (value === undefined ? null : value))
+    );
     localStorage.setItem('new_events', JSON.stringify(state.newsflashes.new));
 
     return {
       ...memoizedContext,
-      trails: Object.values({ ...state.trails.original, ...state.trails.new }) as Trail[],
-      segments: Object.values({ ...state.segments.original, ...state.segments.new }) as Segment[],
+      trails: Object.values({ ...state.trails.original, ...state.trails.new }).filter(
+        (trail) => trail !== undefined
+      ) as Trail[],
+      segments: Object.values({ ...state.segments.original, ...state.segments.new }).filter(
+        (segment) => segment !== undefined
+      ) as Segment[],
       newsflashes: Object.values({
         ...state.newsflashes.original,
         ...state.newsflashes.new,
-      }) as Newsflash[],
+      }).filter((newsflash) => newsflash !== undefined) as Newsflash[],
     };
   }, [memoizedContext]);
 };

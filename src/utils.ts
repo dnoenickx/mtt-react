@@ -59,8 +59,20 @@ export function normalizeMultiLineString(geoJSONString: string): MultiLineString
 }
 
 export function getItem(key: string, location = localStorage, value = {}) {
-  const val = location.getItem(key);
-  return val ? JSON.parse(val) : value;
+  function replaceNullWithUndefined(obj: any): any {
+    if (typeof obj !== 'object' || obj === null) {
+      return obj;
+    }
+
+    return Object.fromEntries(
+      Object.entries(obj).map(([key, value]) => [
+        key,
+        value === null ? undefined : replaceNullWithUndefined(value),
+      ])
+    );
+  }
+
+  return replaceNullWithUndefined(JSON.parse(location.getItem(key) ?? JSON.stringify(value)));
 }
 
 export function createMapping(list: any[], key: string) {

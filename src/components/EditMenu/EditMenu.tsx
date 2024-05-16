@@ -1,16 +1,24 @@
 import { Menu, rem, UnstyledButton } from '@mantine/core';
-import { IconCirclePlus, IconDotsVertical, IconEdit, IconTimelineEvent } from '@tabler/icons-react';
+import {
+  IconCirclePlus,
+  IconDotsVertical,
+  IconEdit,
+  IconTimelineEvent,
+  IconTrash,
+} from '@tabler/icons-react';
 
 interface EditMenuParams {
   openSegmentCreator: () => void;
   openSegmentEditor: () => void;
   openEventEditor: () => void;
+  onDeleteSegment: () => void;
 }
 
 export default function EditMenu({
   openSegmentCreator,
   openSegmentEditor,
   openEventEditor,
+  onDeleteSegment,
 }: EditMenuParams) {
   return (
     <Menu shadow="md" width={200} position="bottom-end">
@@ -38,6 +46,16 @@ export default function EditMenu({
           onClick={openEventEditor}
         >
           Edit Timeline
+        </Menu.Item>
+        <Menu.Divider />
+
+        <Menu.Label>Danger zone</Menu.Label>
+        <Menu.Item
+          leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+          color="red"
+          onClick={onDeleteSegment}
+        >
+          Delete Segment
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

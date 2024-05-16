@@ -32,19 +32,21 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
 
 // export function SegmentDetailsPanel({ segmentId = 9130 }: { segmentId: number | undefined }) {
 export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefined }) {
-  const { segments, trails, newsflashes } = useData();
+  const { dispatch, segments, trails, newsflashes } = useData();
   const [segmentCreatePopupOpened, segmentCreatePopupToggle] = useDisclosure(false);
   const [segmentEditPopupOpened, segmentEditPopupToggle] = useDisclosure(false);
   const [newsflashPopupOpened, newsflashPopupToggle] = useDisclosure(false);
 
-  if (!segmentId) {
-    return (
-      <Text c="dimmed" ta="center">
-        Use the map to select a trail segment and learn more.
-      </Text>
-    );
-  }
-  const segment = segments.find((s) => s.id === segmentId)!;
+  const fallback = (
+    <Text c="dimmed" ta="center">
+      Use the map to select a trail segment and learn more.
+    </Text>
+  );
+
+  if (!segmentId) return fallback;
+  const segment = segments.find((s) => s.id === segmentId);
+
+  if (!segment) return fallback;
   const segmentTrails = trails.filter((t) => segment?.trailIds.includes(t.id));
   const segmentNews = newsflashes.filter((n) => n.segmentIds.includes(segment.id));
 
@@ -57,7 +59,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           {segmentCreatePopupOpened && (
             <SegmentEditPopup
               segment={{
-                id: generateRandomId(segments.map((s) => s.id)),
+                id: -1,
                 name: '',
                 description: '',
                 state: 'paved',
@@ -98,6 +100,13 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               openSegmentCreator={segmentCreatePopupToggle.open}
               openSegmentEditor={segmentEditPopupToggle.open}
               openEventEditor={newsflashPopupToggle.open}
+              onDeleteSegment={() =>
+                dispatch({
+                  action: 'delete',
+                  type: 'segments',
+                  id: segmentId,
+                })
+              }
             />
           </Group>
           {!segment.description && !segment.links.length ? (
