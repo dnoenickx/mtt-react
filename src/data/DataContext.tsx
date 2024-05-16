@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useMemo, useReducer } from 'react';
 import { Newsflash, Segment, Trail, Optional, Tracker } from '@/types';
+import { createMapping, generateRandomId, getItem } from '@/utils';
+
 import { trails } from './trails';
 import { newsflashes } from './newsflashes';
-import { createMapping, generateRandomId, getItem } from '@/utils';
 import { segments } from './segments';
 
 // App state ////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,9 @@ export type Action =
       action: 'delete';
       type: keyof AppState;
       id: number;
+    }
+  | {
+      action: 'reset';
     };
 
 export const appReducer = (state: AppState, action: Action): AppState => {
@@ -76,6 +80,17 @@ export const appReducer = (state: AppState, action: Action): AppState => {
         };
       }
       return state;
+    }
+    case 'reset': {
+      localStorage.removeItem('new_trails');
+      localStorage.removeItem('new_segments');
+      localStorage.removeItem('new_events');
+
+      return {
+        trails: { original: state.trails.original, new: {} },
+        segments: { original: state.segments.original, new: {} },
+        newsflashes: { original: state.newsflashes.original, new: {} },
+      };
     }
     default:
       return state;

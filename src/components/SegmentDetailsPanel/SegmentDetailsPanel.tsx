@@ -106,6 +106,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
                   id: segmentId,
                 })
               }
+              onDeleteChanges={() => dispatch({ action: 'reset' })}
             />
           </Group>
           {!segment.description && !segment.links.length ? (

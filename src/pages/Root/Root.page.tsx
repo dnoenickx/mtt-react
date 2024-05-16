@@ -21,16 +21,6 @@ export function Root() {
   const [opened, { toggle }] = useDisclosure();
   const { state } = useData();
 
-  window.clearChanges = () => {
-    localStorage.removeItem('new_trails');
-    localStorage.removeItem('new_segments');
-    localStorage.removeItem('new_events');
-
-    state.trails.new = {};
-    state.segments.new = {};
-    state.newsflashes.new = {};
-  };
-
   useEffect(() => {
     if (Object.values(state.trails.new).length !== 0) {
       const diff = simpleDiff(

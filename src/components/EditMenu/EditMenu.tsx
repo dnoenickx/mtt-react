@@ -3,6 +3,7 @@ import {
   IconCirclePlus,
   IconDotsVertical,
   IconEdit,
+  IconRefresh,
   IconTimelineEvent,
   IconTrash,
 } from '@tabler/icons-react';
@@ -12,6 +13,7 @@ interface EditMenuParams {
   openSegmentEditor: () => void;
   openEventEditor: () => void;
   onDeleteSegment: () => void;
+  onDeleteChanges: () => void;
 }
 
 export default function EditMenu({
@@ -19,6 +21,7 @@ export default function EditMenu({
   openSegmentEditor,
   openEventEditor,
   onDeleteSegment,
+  onDeleteChanges,
 }: EditMenuParams) {
   return (
     <Menu shadow="md" width={200} position="bottom-end">
@@ -29,6 +32,7 @@ export default function EditMenu({
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Label>Segment</Menu.Label>
         <Menu.Item
           leftSection={<IconCirclePlus style={{ width: rem(14), height: rem(14) }} />}
           onClick={openSegmentCreator}
@@ -42,20 +46,30 @@ export default function EditMenu({
           Edit Segment
         </Menu.Item>
         <Menu.Item
-          leftSection={<IconTimelineEvent style={{ width: rem(14), height: rem(14) }} />}
-          onClick={openEventEditor}
-        >
-          Edit Timeline
-        </Menu.Item>
-        <Menu.Divider />
-
-        <Menu.Label>Danger zone</Menu.Label>
-        <Menu.Item
           leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
           color="red"
           onClick={onDeleteSegment}
         >
           Delete Segment
+        </Menu.Item>
+
+        <Menu.Divider />
+        <Menu.Label>Timeline</Menu.Label>
+        <Menu.Item
+          leftSection={<IconTimelineEvent style={{ width: rem(14), height: rem(14) }} />}
+          onClick={openEventEditor}
+        >
+          Edit Timeline
+        </Menu.Item>
+
+        <Menu.Divider />
+        <Menu.Label>Danger zone</Menu.Label>
+        <Menu.Item
+          leftSection={<IconRefresh style={{ width: rem(14), height: rem(14) }} />}
+          color="red"
+          onClick={onDeleteChanges}
+        >
+          Clear My Changes
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
