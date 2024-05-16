@@ -1,11 +1,13 @@
 import { format, parse, isValid } from 'date-fns';
 import {
   Alert,
+  Autocomplete,
   Button,
   Divider,
   Fieldset,
   Group,
   Modal,
+  Popover,
   rem,
   Slider,
   Tabs,
@@ -20,9 +22,10 @@ import {
   IconCirclePlus,
   IconInfoCircle,
   IconLinkPlus,
+  IconSearch,
   IconTrash,
 } from '@tabler/icons-react';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import { useData } from '@/data/DataContext';
 import { formatDate } from '@/utils';
 import { DatePrecision, Newsflash } from '@/types';
@@ -227,6 +230,20 @@ export function TimelineEditorModal({
   close,
   segmentId,
 }: TimelineEditorProps) {
+  const { dispatch, newsflashes: allNewsflashes } = useData();
+
+  const [lookupOpened, setLookupOpened] = useState(false);
+  const [lookupValue, setLookupValue] = useState('');
+  const [lookupError, setLookupError] = useState(false);
+
+  const lookupData = useMemo(
+    () =>
+      allNewsflashes
+        .filter((x) => !newsflashes.map((n) => n.id).includes(x.id))
+        .map((y) => `${y.headline} (${y.id})`),
+    [allNewsflashes, newsflashes]
+  );
+
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [formIsDirty, setFormIsDirty] = useState(false);
   const [showSaveWarning, setShowSaveWarning] = useState(false);
@@ -310,6 +327,78 @@ export function TimelineEditorModal({
           >
             Add Event
           </Button>
+
+          <Popover
+            position="right"
+            withArrow
+            arrowPosition="side"
+            arrowOffset={24}
+            arrowSize={10}
+            offset={12}
+            opened={lookupOpened}
+            onChange={setLookupOpened}
+          >
+            <Popover.Target>
+              <Button
+                leftSection={<IconSearch style={{ width: rem(14), height: rem(14) }} />}
+                variant="light"
+                mx="sm"
+                mt="md"
+                onClick={() => setLookupOpened((prev) => !prev)}
+              >
+                Link Event
+              </Button>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <Group>
+                <Autocomplete
+                  placeholder="Type to search..."
+                  maxDropdownHeight={200}
+                  data={lookupData}
+                  value={lookupValue}
+                  onChange={setLookupValue}
+                  comboboxProps={{ withinPortal: false }}
+                  error={lookupError}
+                  onOptionSubmit={() => setLookupError(false)}
+                />
+                <Button
+                  onClick={() => {
+                    if (!lookupValue) {
+                      setLookupError(true);
+                      return;
+                    }
+                    const match = lookupValue.match(/\((\d+)\)$/);
+                    if (!match) {
+                      setLookupError(true);
+                      return;
+                    }
+                    const flashToUpdate = allNewsflashes.find(
+                      (e) => e.id === parseInt(match[1], 10)
+                    );
+                    if (!flashToUpdate) {
+                      setLookupError(true);
+                      return;
+                    }
+
+                    dispatch({
+                      action: 'upsert',
+                      type: 'newsflashes',
+                      value: {
+                        ...flashToUpdate,
+                        segmentIds: [...flashToUpdate.segmentIds, segmentId],
+                      } as Newsflash,
+                    });
+
+                    setLookupError(false);
+                    setLookupOpened(false);
+                    setLookupValue('');
+                  }}
+                >
+                  Link
+                </Button>
+              </Group>
+            </Popover.Dropdown>
+          </Popover>
         </Tabs.List>
 
         {preppedNewsflashes.map((n) => (
