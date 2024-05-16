@@ -16,7 +16,7 @@ import {
 import { useForm } from '@mantine/form';
 import { IconLinkPlus, IconTrash } from '@tabler/icons-react';
 import { useData } from '@/data/DataContext';
-import { Link, Optional, Segment, SegmentState } from '@/types';
+import { Optional, Segment, SegmentState } from '@/types';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { normalizeMultiLineString } from '@/utils';
 
@@ -24,17 +24,6 @@ export interface SegmentEditPopupParams {
   segment: Segment;
   opened: boolean;
   close: () => void;
-}
-
-interface FormSegment {
-  id: number;
-  name: string;
-  description: string;
-  state: string;
-  trailIds: string[];
-  links: Link[];
-  geometry: string;
-  comment: '';
 }
 
 interface SubmitSegment extends Optional<Segment, 'id'> {
@@ -108,7 +97,7 @@ function SegmentEditPopup({ segment, opened, close }: SegmentEditPopupParams) {
           dispatch({
             action: 'upsert',
             type: 'segments',
-            value: value,
+            value,
           });
           close();
         })}

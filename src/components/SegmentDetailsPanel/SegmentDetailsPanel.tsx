@@ -12,7 +12,6 @@ import EditMenu from '../EditMenu/EditMenu';
 import SegmentEditPopup from '../SegmentEditPopup/SegmentEditPopup';
 import { TimelineEditorModal } from '../TimelineEditorModal/TimelineEditorModal';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
-import { generateRandomId } from '@/utils';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (

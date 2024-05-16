@@ -65,10 +65,7 @@ export function getItem(key: string, location = localStorage, value = {}) {
     }
 
     return Object.fromEntries(
-      Object.entries(obj).map(([key, value]) => [
-        key,
-        value === null ? undefined : replaceNullWithUndefined(value),
-      ])
+      Object.entries(obj).map(([k, v]) => [k, v === null ? undefined : replaceNullWithUndefined(v)])
     );
   }
 
