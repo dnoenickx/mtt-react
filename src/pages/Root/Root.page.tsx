@@ -11,11 +11,6 @@ const navLinks = [
   { link: '/', label: 'Trail Map' },
   { link: '/about', label: 'About' },
 ];
-declare global {
-  interface Window {
-    clearChanges: () => void;
-  }
-}
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
@@ -68,16 +63,15 @@ export function Root() {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: { base: 45, sm: 60 } }}
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
-      padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <Group justify="space-between" style={{ flex: 1 }}>
             <Link to="/">
-              <Logo height={36} className={classes.logo} />
+              <Logo h={{ base: 30, sm: 36 }} />
             </Link>
             <Group ml={50} gap={5} visibleFrom="sm">
               {navButtons}
@@ -90,7 +84,7 @@ export function Root() {
         {navButtons}
       </AppShell.Navbar>
 
-      <AppShell.Main style={{ padding: '60px 0 0 0' }}>
+      <AppShell.Main>
         <Outlet />
       </AppShell.Main>
     </AppShell>

@@ -22,6 +22,8 @@ export default function EditMenu({
   onDeleteSegment,
   onDeleteChanges,
 }: EditMenuParams) {
+  const modControls = false;
+
   return (
     <Menu shadow="md" width={200} position="bottom-end">
       <Menu.Target>
@@ -44,13 +46,15 @@ export default function EditMenu({
         >
           Edit Segment
         </Menu.Item>
-        {/* <Menu.Item
-          leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
-          color="red"
-          onClick={onDeleteSegment}
-        >
-          Delete Segment
-        </Menu.Item> */}
+        {modControls && (
+          <Menu.Item
+            leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+            color="red"
+            onClick={onDeleteSegment}
+          >
+            Delete Segment
+          </Menu.Item>
+        )}
 
         <Menu.Divider />
         <Menu.Label>Timeline</Menu.Label>
@@ -60,16 +64,19 @@ export default function EditMenu({
         >
           Edit Timeline
         </Menu.Item>
-
-        {/* <Menu.Divider />
-        <Menu.Label>Danger zone</Menu.Label>
-        <Menu.Item
-          leftSection={<IconRefresh style={{ width: rem(14), height: rem(14) }} />}
-          color="red"
-          onClick={onDeleteChanges}
-        >
-          Clear Local Changes
-        </Menu.Item> */}
+        {modControls && (
+          <>
+            <Menu.Divider />
+            <Menu.Label>Danger zone</Menu.Label>
+            <Menu.Item
+              leftSection={<IconRefresh style={{ width: rem(14), height: rem(14) }} />}
+              color="red"
+              onClick={onDeleteChanges}
+            >
+              Clear Local Changes
+            </Menu.Item>
+          </>
+        )}
       </Menu.Dropdown>
     </Menu>
   );

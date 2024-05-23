@@ -170,13 +170,13 @@ export default function About() {
                   A segment (name, description, geometry, associated trails, open/closed status).
                 </li>
                 <li>Segment timeline events (name, description, date, links)</li>
+                <li>Create a segment</li>
+                <li>Link an existing event with aditional segments</li>
               </ul>
               <Divider my="sm" />
               It is not yet possible to:
               <ul>
-                <li>Create a segment</li>
                 <li>Create or edit trails</li>
-                <li>Link an existing event with aditional segments</li>
               </ul>
               You&lsquo;re welcome to email me those or any other changes.
             </Accordion.Panel>

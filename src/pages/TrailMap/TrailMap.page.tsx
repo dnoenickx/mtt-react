@@ -84,6 +84,7 @@ export function TrailMap() {
               leftSection={<IconBrandGoogleMaps size={14} />}
               variant="default"
               component="a"
+              target="_blank"
               href={googleMapsUrl}
             >
               Open in Google Maps
@@ -92,6 +93,7 @@ export function TrailMap() {
               leftSection={<IconMap2 size={14} />}
               variant="default"
               component="a"
+              target="_blank"
               href={appleMapsUrl}
             >
               Open in Apple Maps

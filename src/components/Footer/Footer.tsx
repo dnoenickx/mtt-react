@@ -41,7 +41,7 @@ export function Footer() {
     <footer className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
-          <Logo height={36} className={classes.logo} />
+          <Logo h={36} />
           {/* <Text size="xs" c="dimmed" className={classes.description}></Text> */}
         </div>
         <div className={classes.groups}>{groups}</div>

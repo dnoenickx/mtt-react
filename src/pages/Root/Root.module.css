@@ -13,9 +13,3 @@
     background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
   }
 }
-
-.logo {
-    /* fill: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0)); */
-    fill: var(--mantine-primary-color-9);
-    
-}

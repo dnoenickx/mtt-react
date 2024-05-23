@@ -5537,7 +5537,7 @@ export const segments: Segment[] = [
     id: 9964,
     name: 'Waltham-Weston Rail Crossing',
     description:
-      'Crosses the Fitchburg Commuter Rail Line. Has been questionable passable for some time, but construction may impact that going forward.',
+      'Crosses the Fitchburg Commuter Rail Line. Has been passable for some time, but construction may impact that going forward.',
     state: 'construction',
     trailIds: [2383, 5056],
     links: [],
