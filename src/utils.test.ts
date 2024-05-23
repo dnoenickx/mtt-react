@@ -1,5 +1,5 @@
-import { expect, test } from 'vitest';
-import { createMapping, normalizeMultiLineString, simpleDiff } from './utils';
+import { expect, test, describe, it } from 'vitest';
+import { createMapping, getItem, normalizeMultiLineString, simpleDiff } from './utils';
 
 describe('normalize GeoJSON', () => {
   test('MultiLineString', () => {
@@ -262,5 +262,29 @@ describe('simpleDiff', () => {
       a: { b: { c: [1, 3] } },
       d: [{ e: { f: 4 } }, { g: 5 }],
     });
+  });
+});
+
+describe('getItem', () => {
+  it('maintains lists', () => {
+    const expectedValue = {
+      '1': {
+        trailIds: [9, 8, 7, 6],
+      },
+    };
+
+    localStorage.setItem('test', JSON.stringify(expectedValue));
+
+    const value = getItem('test');
+
+    expect(value).toEqual(expectedValue);
+  });
+
+  it('replaces nulls', () => {
+    localStorage.setItem('test', '{"1":null}');
+
+    const value = getItem('test');
+
+    expect(value).toEqual({ 1: undefined });
   });
 });

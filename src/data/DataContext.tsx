@@ -120,6 +120,7 @@ export const useData = () => {
   return useMemo(() => {
     const { state } = memoizedContext;
 
+    // TODO: need the same replaced for trails and events, once I allow deleting
     localStorage.setItem('new_trails', JSON.stringify(state.trails.new));
     localStorage.setItem(
       'new_segments',

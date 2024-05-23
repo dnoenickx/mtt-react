@@ -60,13 +60,18 @@ export function normalizeMultiLineString(geoJSONString: string): MultiLineString
 
 export function getItem(key: string, location = localStorage, value = {}) {
   function replaceNullWithUndefined(obj: any): any {
-    if (typeof obj !== 'object' || obj === null) {
+    if (Array.isArray(obj)) {
+      return obj.map(replaceNullWithUndefined);
+    } else if (typeof obj === 'object' && obj !== null) {
+      return Object.fromEntries(
+        Object.entries(obj).map(([k, v]) => [
+          k,
+          v === null ? undefined : replaceNullWithUndefined(v),
+        ])
+      );
+    } else {
       return obj;
     }
-
-    return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, v === null ? undefined : replaceNullWithUndefined(v)])
-    );
   }
 
   return replaceNullWithUndefined(JSON.parse(location.getItem(key) ?? JSON.stringify(value)));

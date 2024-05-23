@@ -161,7 +161,7 @@ export default function About() {
             <Accordion.Panel>
               <ol>
                 <li>Use the map to select a segment</li>
-                <li>Click the 3 dots on the top right of the information panel</li>
+                <li>Click the edit icon on the top right of the information panel</li>
                 <li>Select an option</li>
               </ol>
               You can edit:
