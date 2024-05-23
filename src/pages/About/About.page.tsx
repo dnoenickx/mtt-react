@@ -114,17 +114,6 @@ export default function About() {
         Both are good. I want to encourage the use and construction of paths to enable both. That's
         why I focus on long linear paths.
       </Text> */}
-        <Title order={3} pt="xl" pb="xs">
-          Now what?
-        </Title>
-        <ul style={{ paddingTop: 0 }}>
-          {/* <li>Contribute information (add a trail, an article, a description, a photo).</li> */}
-          {/* <li>Make a donation to support the continued hosting and development of this site.</li> */}
-          <li>Contact your local representatives.</li>
-          <li>Join a local trail advocacy group.</li>
-          <li>Share this site with a friend.</li>
-          <li>Get outside and go for a ride.</li>
-        </ul>
         <Title order={3} pt="xl" pb="xs" ta="center">
           Frequently Asked Questions
         </Title>

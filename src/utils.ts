@@ -62,16 +62,16 @@ export function getItem(key: string, location = localStorage, value = {}) {
   function replaceNullWithUndefined(obj: any): any {
     if (Array.isArray(obj)) {
       return obj.map(replaceNullWithUndefined);
-    } else if (typeof obj === 'object' && obj !== null) {
+    }
+    if (typeof obj === 'object' && obj !== null) {
       return Object.fromEntries(
         Object.entries(obj).map(([k, v]) => [
           k,
           v === null ? undefined : replaceNullWithUndefined(v),
         ])
       );
-    } else {
-      return obj;
     }
+    return obj;
   }
 
   return replaceNullWithUndefined(JSON.parse(location.getItem(key) ?? JSON.stringify(value)));
@@ -128,7 +128,8 @@ interface submitChangesParams {
 }
 
 export function submitChanges({ trails, segments, newsflashes }: submitChangesParams) {
-  const user_id = localStorage.getItem('user_id') ?? crypto.randomUUID();
+  const user_id =
+    localStorage.getItem('user_id') ?? (crypto.randomUUID ? crypto.randomUUID() : 'test');
   localStorage.setItem('user_id', user_id);
 
   const url = 'https://elzjlaxywew5ucecydqyfrkb440irert.lambda-url.us-east-1.on.aws/';

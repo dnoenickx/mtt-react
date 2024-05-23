@@ -268,7 +268,7 @@ describe('simpleDiff', () => {
 describe('getItem', () => {
   it('maintains lists', () => {
     const expectedValue = {
-      '1': {
+      1: {
         trailIds: [9, 8, 7, 6],
       },
     };

@@ -18672,8 +18672,9 @@ export const segments: Segment[] = [
   },
   {
     id: 9927,
-    name: '',
-    description: '',
+    name: 'Linden Street Bridge',
+    description:
+      'The bridge is not passable. The timeline for its construction and completion has not been well communicated by the city.\nThere is a ramp on the west side, but it has closed recently. On the east side there is a steep dirt path (use at your own risk).',
     state: 'construction',
     trailIds: [6912, 2383, 5056],
     links: [],

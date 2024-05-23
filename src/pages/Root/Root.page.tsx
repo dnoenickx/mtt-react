@@ -69,13 +69,18 @@ export function Root() {
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Group justify="space-between" style={{ flex: 1 }}>
+          <Group justify="space-between" style={{ flex: 1 }} visibleFrom="sm">
             <Link to="/">
               <Logo h={{ base: 30, sm: 36 }} />
             </Link>
-            <Group ml={50} gap={5} visibleFrom="sm">
+            <Group ml={50} gap={5}>
               {navButtons}
             </Group>
+          </Group>
+          <Group justify="space-around" style={{ flex: 1 }} hiddenFrom="sm" pr={44}>
+            <Link to="/">
+              <Logo h={{ base: 30, sm: 36 }} />
+            </Link>
           </Group>
         </Group>
       </AppShell.Header>

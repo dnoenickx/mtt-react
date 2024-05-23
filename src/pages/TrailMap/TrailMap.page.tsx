@@ -35,8 +35,6 @@ export function TrailMap() {
     undefined
   );
 
-  const mobile = useMediaQuery('(min-width: 414px)');
-
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
 
   // Active Tab /////////////////////////////////////////////////////////////////////
@@ -207,8 +205,8 @@ export function TrailMap() {
             zoom: 8.78,
           }}
         >
-          {mobile && <GeolocateControl position="top-right" />}
-          {mobile && <FullscreenControl position="top-right" />}
+          <GeolocateControl position="top-right" />
+          <FullscreenControl position="top-right" />
           <NavigationControl position="top-right" />
           <ScaleControl />
 
