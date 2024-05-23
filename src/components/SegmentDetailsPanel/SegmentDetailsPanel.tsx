@@ -73,6 +73,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               close={segmentCreatePopupToggle.close}
             />
           )}
+
           {segmentEditPopupOpened && (
             <SegmentEditPopup
               segment={segment}
@@ -80,6 +81,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               close={segmentEditPopupToggle.close}
             />
           )}
+
           {newsflashPopupOpened && (
             <TimelineEditorModal
               newsflashes={segmentNews}
@@ -88,6 +90,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               segmentId={segmentId}
             />
           )}
+
           <Group justify="space-between">
             <Title
               order={4}
@@ -109,6 +112,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               onDeleteChanges={() => dispatch({ action: 'reset' })}
             />
           </Group>
+          {segment.name && <Title order={5}>{segment.name}</Title>}
           {!segment.description && !segment.links.length ? (
             <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentEditPopupToggle.open}>
               Add a description
@@ -119,6 +123,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
               <LinkGroup links={segment.links} />
             </>
           )}
+
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
             order={4}
@@ -127,6 +132,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
             Trails
           </Title>
           <TrailAccordion trails={segmentTrails} />
+
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
             order={4}
@@ -134,7 +140,6 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           >
             Timeline
           </Title>
-
           {segmentNews.length ? (
             <Timeline events={segmentNews} />
           ) : (

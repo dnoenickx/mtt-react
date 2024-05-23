@@ -3,7 +3,7 @@ import { Segment } from '@/types';
 export const segments: Segment[] = [
   {
     id: 9548,
-    name: '9548',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [9406, 9281],
@@ -33,7 +33,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4385,
-    name: '4385',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5198, 9281],
@@ -80,7 +80,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4155,
-    name: '4155',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [9281],
@@ -105,7 +105,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4106,
-    name: '4106',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8768],
@@ -261,7 +261,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8297,
-    name: '3189',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [8768],
@@ -297,7 +297,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3189,
-    name: '3189',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8768],
@@ -432,7 +432,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9317,
-    name: '9317',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6572],
@@ -615,7 +615,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1546,
-    name: '1546',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3251],
@@ -640,7 +640,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1913,
-    name: '1913',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [741],
@@ -722,7 +722,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5352,
-    name: '5352',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [196],
@@ -945,7 +945,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8433,
-    name: '8433',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [3622, 9281],
@@ -984,11 +984,16 @@ export const segments: Segment[] = [
   },
   {
     id: 8570,
-    name: '8570',
+    name: 'Belmont Community Path, Phase 2',
     description: '',
     state: 'design',
     trailIds: [2018, 5056],
-    links: [],
+    links: [
+      {
+        url: 'https://www.belmontcommunitypathphase2.com/',
+        label: 'Belmont Community Path - Phase 2',
+      },
+    ],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1015,11 +1020,16 @@ export const segments: Segment[] = [
   },
   {
     id: 4706,
-    name: '4706',
+    name: 'Belmont Community Path, Phase 1',
     description: '',
     state: 'design',
     trailIds: [2018, 5056],
-    links: [],
+    links: [
+      {
+        url: 'https://belmontcommunitypath.com/belmont-community-path-phase-1/',
+        label: 'Belmont Community Path - Phase 1',
+      },
+    ],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1046,9 +1056,9 @@ export const segments: Segment[] = [
   },
   {
     id: 5102,
-    name: '5102',
+    name: '',
     description: '',
-    state: 'unimproved',
+    state: 'design',
     trailIds: [914],
     links: [],
     geometry: {
@@ -1066,11 +1076,16 @@ export const segments: Segment[] = [
   },
   {
     id: 8092,
-    name: '8092',
+    name: '',
     description: '',
     state: 'construction',
     trailIds: [914],
-    links: [],
+    links: [
+      {
+        url: 'https://sudbury.ma.us/pcd/2024/02/14/bruce-freeman-rail-trail-update-info-2/',
+        label: 'Sudbury Town Updates',
+      },
+    ],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -1150,7 +1165,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9940,
-    name: '9940',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [914],
@@ -1494,9 +1509,9 @@ export const segments: Segment[] = [
   },
   {
     id: 5417,
-    name: '5417',
+    name: '',
     description: '',
-    state: 'unimproved',
+    state: 'design',
     trailIds: [914],
     links: [],
     geometry: {
@@ -1545,7 +1560,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3971,
-    name: '3971',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [22],
@@ -1577,7 +1592,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6934,
-    name: '6934',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [22],
@@ -1652,7 +1667,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3556,
-    name: '3556',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8624],
@@ -1751,7 +1766,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5991,
-    name: '5991',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8624],
@@ -1857,7 +1872,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3412,
-    name: '3412',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8375],
@@ -2350,7 +2365,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7585,
-    name: '7585',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8654],
@@ -2767,7 +2782,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7140,
-    name: '7140',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8654],
@@ -3157,7 +3172,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6419,
-    name: '6419',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [714],
@@ -3206,7 +3221,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1345,
-    name: '1345',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8146],
@@ -3377,7 +3392,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8919,
-    name: '8919',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2526],
@@ -3471,7 +3486,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7410,
-    name: '7410',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [509],
@@ -3569,7 +3584,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6285,
-    name: '6285',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [509],
@@ -3618,7 +3633,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6580,
-    name: '6580',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [4476],
@@ -3789,7 +3804,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7605,
-    name: '7605',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [4476],
@@ -3811,7 +3826,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8916,
-    name: '8916',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4994],
@@ -3931,7 +3946,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9403,
-    name: '9403',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9877],
@@ -3968,7 +3983,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1937,
-    name: '1937',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [9497],
@@ -3987,7 +4002,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5541,
-    name: '5541',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9497],
@@ -4009,7 +4024,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1254,
-    name: '1254',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4531, 5056],
@@ -4074,7 +4089,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8635,
-    name: '8635',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [1848],
@@ -4123,7 +4138,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6075,
-    name: '6075',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [851],
@@ -4155,7 +4170,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5791,
-    name: '5791',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3983],
@@ -4220,7 +4235,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9697,
-    name: '9697',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [7967],
@@ -4292,7 +4307,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5138,
-    name: '5138',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4220],
@@ -4360,7 +4375,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7161,
-    name: '7161',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8876],
@@ -4465,7 +4480,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8111,
-    name: '8111',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9527],
@@ -4540,7 +4555,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7564,
-    name: '7563',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3743],
@@ -4597,7 +4612,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6432,
-    name: '6432',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3743],
@@ -4738,7 +4753,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4504,
-    name: '4504',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [874],
@@ -4766,7 +4781,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5127,
-    name: '5127',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [8108],
@@ -4790,7 +4805,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6565,
-    name: '6565',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [8108],
@@ -4885,7 +4900,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1505,
-    name: '1505',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [8108],
@@ -4908,7 +4923,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1141,
-    name: '1141',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [504],
@@ -4955,7 +4970,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2039,
-    name: '2039',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -4998,10 +5013,10 @@ export const segments: Segment[] = [
   },
   {
     id: 5459,
-    name: '5459',
+    name: '',
     description: '',
     state: 'construction',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5062,10 +5077,10 @@ export const segments: Segment[] = [
   },
   {
     id: 9750,
-    name: '9750',
+    name: '',
     description: '',
-    state: 'unimproved',
-    trailIds: [5056],
+    state: 'design',
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5088,7 +5103,7 @@ export const segments: Segment[] = [
   },
   {
     id: 486,
-    name: '486',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -5165,7 +5180,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6237,
-    name: '6237',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -5228,7 +5243,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 1545,
-  //   name: '1545',
+  //   name: '',
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [],
@@ -5250,7 +5265,7 @@ export const segments: Segment[] = [
   // },
   {
     id: 3894,
-    name: '3894',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -5271,7 +5286,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1669,
-    name: '1669',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -5299,7 +5314,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 4645,
-  //   name: '4645',
+  //   name: '',
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [5056],
@@ -5327,7 +5342,7 @@ export const segments: Segment[] = [
   // },
   // {
   //   id: 2984,
-  //   name: '2984',
+  //   name: '',
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
@@ -5444,10 +5459,10 @@ export const segments: Segment[] = [
   // },
   {
     id: 7951,
-    name: '7951',
+    name: '',
     description: '',
     state: 'stoneDust',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5476,7 +5491,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5851,
-    name: '5851',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -5493,10 +5508,10 @@ export const segments: Segment[] = [
   },
   {
     id: 3628,
-    name: '3628',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5520,10 +5535,11 @@ export const segments: Segment[] = [
   },
   {
     id: 9964,
-    name: '9964',
-    description: '',
-    state: 'proposed',
-    trailIds: [5056],
+    name: 'Waltham-Weston Rail Crossing',
+    description:
+      'Crosses the Fitchburg Commuter Rail Line. Has been questionable passable for some time, but construction may impact that going forward.',
+    state: 'construction',
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5547,7 +5563,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8710,
-    name: '8710',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -5592,10 +5608,10 @@ export const segments: Segment[] = [
   },
   {
     id: 1877,
-    name: '1877',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [5056],
+    trailIds: [8768, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5613,7 +5629,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1567,
-    name: '1567',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -5635,10 +5651,10 @@ export const segments: Segment[] = [
   },
   {
     id: 8171,
-    name: '8171',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5662,7 +5678,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 6247,
-  //   name: '6247',
+  //   name: '',
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
@@ -5695,7 +5711,7 @@ export const segments: Segment[] = [
   // },
   // {
   //   id: 8103,
-  //   name: '8103',
+  //   name: '',
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [5056],
@@ -5731,7 +5747,7 @@ export const segments: Segment[] = [
   // },
   // {
   //   id: 6676,
-  //   name: '6676',
+  //   name: '',
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
@@ -5763,10 +5779,10 @@ export const segments: Segment[] = [
   // },
   {
     id: 3932,
-    name: '3932',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5782,7 +5798,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3815,
-    name: '3815',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -5848,10 +5864,10 @@ export const segments: Segment[] = [
   },
   {
     id: 2532,
-    name: '2532',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -5896,7 +5912,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1631,
-    name: '1631',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -5915,7 +5931,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9874,
-    name: '9874',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -5953,7 +5969,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1715,
-    name: '1715',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5056],
@@ -6007,7 +6023,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5265,
-    name: '5265',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -6048,7 +6064,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 4446,
-  //   name: '4446',
+  //   name: '',
   //   description: '',
   //   state: 'unimproved',
   //   trailIds: [5056],
@@ -6079,7 +6095,7 @@ export const segments: Segment[] = [
   // },
   {
     id: 7155,
-    name: '7155',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -6115,7 +6131,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6837,
-    name: '6837',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -6147,7 +6163,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4018,
-    name: '4018',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [836],
@@ -6244,10 +6260,10 @@ export const segments: Segment[] = [
   },
   {
     id: 8174,
-    name: '8174',
+    name: '',
     description: '',
     state: 'unimproved',
-    trailIds: [5056],
+    trailIds: [2338, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -6313,7 +6329,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 3303,
-  //   name: '3303',
+  //   name: '',
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [5056],
@@ -6339,10 +6355,10 @@ export const segments: Segment[] = [
   // },
   {
     id: 6328,
-    name: '6328',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -6356,7 +6372,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 8377,
-  //   name: '8377',
+  //   name: '',
   //   description: '',
   //   state: 'stoneDust',
   //   trailIds: [5056],
@@ -6415,7 +6431,7 @@ export const segments: Segment[] = [
   // },
   // {
   //   id: 6472,
-  //   name: '6472',
+  //   name: '',
   //   description: '',
   //   state: 'unimproved',
   //   trailIds: [5056],
@@ -6452,10 +6468,10 @@ export const segments: Segment[] = [
   // },
   {
     id: 6528,
-    name: '6528',
+    name: '',
     description: '',
     state: 'unimproved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -6500,10 +6516,10 @@ export const segments: Segment[] = [
   },
   {
     id: 5955,
-    name: '5955',
+    name: '',
     description: '',
     state: 'unimproved',
-    trailIds: [5056],
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -6527,7 +6543,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8379,
-    name: '8379',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5056],
@@ -6551,7 +6567,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4663,
-    name: '4663',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5056],
@@ -6589,7 +6605,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6604,
-    name: '6604',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5056],
@@ -6622,7 +6638,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6513,
-    name: '6513',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5056],
@@ -6642,7 +6658,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2408,
-    name: '2408',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5056],
@@ -6666,7 +6682,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9069,
-    name: '9069',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2269],
@@ -6729,7 +6745,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4803,
-    name: '4803',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9033],
@@ -6976,7 +6992,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7444,
-    name: '7444',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2663],
@@ -7016,7 +7032,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8221,
-    name: '8221',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3585],
@@ -7042,7 +7058,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9488,
-    name: '9488',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [230],
@@ -7077,7 +7093,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4139,
-    name: '4139',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3468],
@@ -7114,7 +7130,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1976,
-    name: '1976',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9119],
@@ -7212,7 +7228,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2067,
-    name: '2067',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [1016],
@@ -7278,7 +7294,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2135,
-    name: '2135',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3415],
@@ -7301,7 +7317,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3085,
-    name: '3085',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6993],
@@ -7337,7 +7353,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6745,
-    name: '6745',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4817],
@@ -7384,7 +7400,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7759,
-    name: '7759',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6050],
@@ -7403,7 +7419,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1169,
-    name: '1169',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5804],
@@ -7590,7 +7606,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8743,
-    name: '8743',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2932],
@@ -7647,7 +7663,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1907,
-    name: '1907',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6136],
@@ -7667,7 +7683,7 @@ export const segments: Segment[] = [
   },
   {
     id: 996,
-    name: '996',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6136],
@@ -7709,7 +7725,7 @@ export const segments: Segment[] = [
   },
   {
     id: 983,
-    name: '983',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [7366],
@@ -7783,7 +7799,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7686,
-    name: '7686',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [7489],
@@ -8036,7 +8052,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3493,
-    name: '3493',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2826],
@@ -8069,7 +8085,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7563,
-    name: '7563',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [867],
@@ -8100,7 +8116,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9730,
-    name: '9730',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4326],
@@ -8162,7 +8178,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2686,
-    name: '2686',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [7194],
@@ -8255,7 +8271,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9866,
-    name: '9866',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2058],
@@ -8446,7 +8462,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8571,
-    name: '8571',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2082],
@@ -8596,7 +8612,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6399,
-    name: '6399',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [794],
@@ -8622,9 +8638,9 @@ export const segments: Segment[] = [
   },
   {
     id: 7420,
-    name: '7420',
-    description: '',
-    state: 'proposed',
+    name: '',
+    description: 'A 1.92 mile two-way separated bike lane and shared-use path',
+    state: 'construction',
     trailIds: [2371],
     links: [],
     geometry: {
@@ -8659,7 +8675,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2542,
-    name: '2542',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2371],
@@ -8922,7 +8938,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2188,
-    name: '2188',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [4202, 5056],
@@ -8944,7 +8960,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9807,
-    name: '9807',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4202, 5056],
@@ -9192,7 +9208,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3410,
-    name: '3410',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4202],
@@ -9348,7 +9364,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4856,
-    name: '4856',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5221],
@@ -9493,7 +9509,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5650,
-    name: '5650',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [340],
@@ -9658,7 +9674,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1769,
-    name: '1769',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [340],
@@ -9711,7 +9727,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9111,
-    name: '9111',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [4097],
@@ -9738,7 +9754,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3557,
-    name: '3556',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4747],
@@ -9780,7 +9796,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4476,
-    name: '4476',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5268],
@@ -9950,7 +9966,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7525,
-    name: '7525',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [1141],
@@ -10060,7 +10076,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6139,
-    name: '6139',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3447],
@@ -10091,7 +10107,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9343,
-    name: '9343',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5392],
@@ -10118,7 +10134,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3214,
-    name: '3214',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5392],
@@ -10192,7 +10208,7 @@ export const segments: Segment[] = [
   },
   {
     id: 146,
-    name: '146',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5775],
@@ -10280,7 +10296,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2439,
-    name: '2439',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8685],
@@ -10347,7 +10363,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4954,
-    name: '4954',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3570],
@@ -10401,7 +10417,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1435,
-    name: '1435',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [3570],
@@ -10422,7 +10438,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5990,
-    name: '5990',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [9334],
@@ -10460,7 +10476,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5495,
-    name: '5495',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3695],
@@ -10633,7 +10649,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2021,
-    name: '2021',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6983],
@@ -10706,7 +10722,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1259,
-    name: '1259',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [6983],
@@ -10732,7 +10748,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4791,
-    name: '4791',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [6983],
@@ -10797,7 +10813,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6341,
-    name: '6341',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [6983],
@@ -10992,10 +11008,11 @@ export const segments: Segment[] = [
   },
   {
     id: 7224,
-    name: '7224',
-    description: '',
+    name: '',
+    description:
+      'North Point Development Cambridge Crossing, North Point Park, the North Bank Bridge, and Paul Revere Park.',
     state: 'paved',
-    trailIds: [2062, 5056],
+    trailIds: [5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -11041,12 +11058,17 @@ export const segments: Segment[] = [
     },
   },
   {
-    id: 3910,
-    name: '3910',
+    id: 3912,
+    name: 'Alewife Linear Park',
     description: '',
     state: 'paved',
-    trailIds: [2062, 5056],
-    links: [],
+    trailIds: [3251, 5056],
+    links: [
+      {
+        url: 'https://www.cambridgema.gov/Departments/communitydevelopment/linearparkredesign',
+        label: 'Ongoing Redesign',
+      },
+    ],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -11100,6 +11122,22 @@ export const segments: Segment[] = [
           [-71.12806, 42.3977],
           [-71.12784, 42.39769],
           [-71.12763, 42.39767],
+          [-71.12709, 42.39749],
+        ],
+      ],
+    },
+  },
+  {
+    id: 3910,
+    name: '',
+    description: '',
+    state: 'paved',
+    trailIds: [2062, 5056],
+    links: [],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
           [-71.12709, 42.39749],
           [-71.12592, 42.39743],
           [-71.12541, 42.39742],
@@ -11158,7 +11196,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6654,
-    name: '6654',
+    name: 'Somerville Community Path Extension',
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
@@ -11178,7 +11216,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2867,
-    name: '2867',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6968],
@@ -11411,7 +11449,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4406,
-    name: '4406',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [8492],
@@ -11436,9 +11474,9 @@ export const segments: Segment[] = [
   },
   {
     id: 149,
-    name: '149',
+    name: '',
     description: '',
-    state: 'stoneDust',
+    state: 'design',
     trailIds: [8492],
     links: [],
     geometry: {
@@ -11504,7 +11542,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8724,
-    name: '8724',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8320],
@@ -11744,7 +11782,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2142,
-    name: '2142',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6166],
@@ -11845,7 +11883,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4806,
-    name: '4806',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [73],
@@ -11868,7 +11906,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3043,
-    name: '3043',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [73],
@@ -12043,7 +12081,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4107,
-    name: '4107',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [73],
@@ -12071,7 +12109,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7875,
-    name: '7875',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [73],
@@ -12143,7 +12181,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7134,
-    name: '7134',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [73],
@@ -12254,10 +12292,10 @@ export const segments: Segment[] = [
   },
   {
     id: 9452,
-    name: '9452',
+    name: '',
     description: '',
     state: 'proposed',
-    trailIds: [6912, 5056],
+    trailIds: [6912, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -12287,10 +12325,10 @@ export const segments: Segment[] = [
   },
   {
     id: 4465,
-    name: '4465',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [6912, 5056],
+    trailIds: [6912, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -12311,10 +12349,10 @@ export const segments: Segment[] = [
   },
   {
     id: 5264,
-    name: '5264',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [6912, 5056],
+    trailIds: [6912, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -12335,7 +12373,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2782,
-    name: '2782',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [1643],
@@ -12364,7 +12402,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2313,
-    name: '2313',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4132],
@@ -12428,7 +12466,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4788,
-    name: '4788',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [5728],
@@ -12500,7 +12538,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5891,
-    name: '5891',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [4220],
@@ -12525,7 +12563,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5430,
-    name: '5430',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [4220],
@@ -12547,7 +12585,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5297,
-    name: '5297',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [8654],
@@ -12611,7 +12649,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2272,
-    name: '2272',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [7523],
@@ -12831,7 +12869,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7440,
-    name: '7440',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4590],
@@ -12907,7 +12945,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9854,
-    name: '9854',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5535],
@@ -13022,7 +13060,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9934,
-    name: '9934',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5535],
@@ -13143,7 +13181,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6222,
-    name: '6222',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4590],
@@ -13166,7 +13204,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5437,
-    name: '5437',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [9499],
@@ -13396,7 +13434,7 @@ export const segments: Segment[] = [
   },
   {
     id: 326,
-    name: '326',
+    name: '',
     description: '',
     state: 'construction',
     trailIds: [4590],
@@ -13446,7 +13484,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2786,
-    name: '2786',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [5535],
@@ -13575,7 +13613,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9926,
-    name: '9926',
+    name: '',
     description: '',
     state: 'proposed',
     trailIds: [4590],
@@ -13726,7 +13764,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3321,
-    name: '3321',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4097],
@@ -13787,7 +13825,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9687,
-    name: '9687',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9334],
@@ -13830,7 +13868,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8412,
-    name: '8412',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2681],
@@ -13917,7 +13955,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9420,
-    name: '9420',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2681],
@@ -13954,7 +13992,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8066,
-    name: '8066',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4733],
@@ -13997,7 +14035,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1869,
-    name: '1869',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2681],
@@ -14025,7 +14063,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4570,
-    name: '4570',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2681],
@@ -14088,7 +14126,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8790,
-    name: '8790',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8571],
@@ -14162,7 +14200,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4461,
-    name: '4461',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6435],
@@ -14192,7 +14230,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5669,
-    name: '5669',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4097],
@@ -14261,7 +14299,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2930,
-    name: '2930',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [6778],
@@ -14313,7 +14351,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5349,
-    name: '5349',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [6778],
@@ -14583,7 +14621,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7070,
-    name: '7070',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8571],
@@ -14668,7 +14706,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2761,
-    name: '2761',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8571],
@@ -14743,7 +14781,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8526,
-    name: '8526',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8086],
@@ -15035,7 +15073,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3969,
-    name: '3969',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8086],
@@ -15088,7 +15126,7 @@ export const segments: Segment[] = [
   },
   {
     id: 525,
-    name: '525',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3980],
@@ -15258,7 +15296,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4175,
-    name: '4175',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6521],
@@ -15396,7 +15434,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2473,
-    name: '2473',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6855],
@@ -15468,7 +15506,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1805,
-    name: '1805',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8086],
@@ -15533,7 +15571,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8073,
-    name: '8073',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6521],
@@ -15589,7 +15627,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5357,
-    name: '5357',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [4181],
@@ -15618,7 +15656,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3605,
-    name: '3605',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8086],
@@ -15661,7 +15699,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7411,
-    name: '7411',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [6778],
@@ -15749,7 +15787,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9768,
-    name: '9768',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [340],
@@ -15806,7 +15844,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1162,
-    name: '1162',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6572],
@@ -15846,7 +15884,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6811,
-    name: '6811',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6572],
@@ -15879,7 +15917,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8785,
-    name: '8785',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [6572],
@@ -15940,7 +15978,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4985,
-    name: '4985',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3980],
@@ -15981,7 +16019,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8394,
-    name: '8394',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8654],
@@ -16023,7 +16061,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3560,
-    name: '3560',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3980],
@@ -16056,7 +16094,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9855,
-    name: '9855',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3980],
@@ -16123,7 +16161,7 @@ export const segments: Segment[] = [
   },
   {
     id: 4842,
-    name: '4842',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2082],
@@ -16183,7 +16221,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3447,
-    name: '3447',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [3980],
@@ -16214,7 +16252,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7823,
-    name: '7823',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [8654],
@@ -16335,7 +16373,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5278,
-    name: '5278',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [9079],
@@ -16361,9 +16399,9 @@ export const segments: Segment[] = [
   },
   {
     id: 348,
-    name: '348',
+    name: '',
     description: '',
-    state: 'construction',
+    state: 'paved',
     trailIds: [2371],
     links: [],
     geometry: {
@@ -16519,7 +16557,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5215,
-    name: '5215',
+    name: 'Somerville Community Path Extension',
     description: '',
     state: 'paved',
     trailIds: [2062, 5056],
@@ -16549,7 +16587,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6551,
-    name: '6551',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [],
@@ -16573,7 +16611,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5436,
-    name: '5436',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [2973],
@@ -16914,7 +16952,7 @@ export const segments: Segment[] = [
   },
   {
     id: 11,
-    name: '11',
+    name: '',
     description: '',
     state: 'paved',
     trailIds: [],
@@ -16957,8 +16995,8 @@ export const segments: Segment[] = [
   },
   {
     id: 9130,
-    name: '9130',
-    description: '',
+    name: 'Somerville Community Path Extension',
+    description: 'Includes the Skyway Bridge over the Union Square Green Line Extension',
     state: 'paved',
     trailIds: [2062, 5056],
     links: [],
@@ -17006,7 +17044,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1403,
-    name: '1403',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5056],
@@ -17029,10 +17067,10 @@ export const segments: Segment[] = [
   },
   {
     id: 8789,
-    name: '8789',
+    name: '',
     description: '',
     state: 'paved',
-    trailIds: [6912, 5056],
+    trailIds: [6912, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -17082,10 +17120,10 @@ export const segments: Segment[] = [
   },
   {
     id: 84,
-    name: '84',
+    name: '',
     description: '',
-    state: 'unimproved',
-    trailIds: [5056],
+    state: 'design',
+    trailIds: [2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',
@@ -17114,7 +17152,7 @@ export const segments: Segment[] = [
   },
   // {
   //   id: 9922,
-  //   name: '9922',
+  //   name: '',
   //   description: '',
   //   state: 'proposed',
   //   trailIds: [6912, 5056],
@@ -17131,7 +17169,7 @@ export const segments: Segment[] = [
   // },
   {
     id: 2932,
-    name: '2932',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -17248,7 +17286,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3772,
-    name: '3772',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -17389,7 +17427,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3927,
-    name: '3927',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -17421,7 +17459,7 @@ export const segments: Segment[] = [
   },
   {
     id: 6657,
-    name: '6657',
+    name: '',
     description: '',
     state: 'construction',
     trailIds: [5056],
@@ -17514,7 +17552,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2267,
-    name: '2267',
+    name: '',
     description: '',
     state: 'onRoad',
     trailIds: [5056],
@@ -17569,7 +17607,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2292,
-    name: '2292',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -17607,7 +17645,7 @@ export const segments: Segment[] = [
   },
   {
     id: 8827,
-    name: '8827',
+    name: '',
     description: '',
     state: 'onRoad',
     trailIds: [5056],
@@ -18023,7 +18061,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2938,
-    name: '2938',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -18053,7 +18091,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2738,
-    name: '2738',
+    name: '',
     description: '',
     state: 'unimproved',
     trailIds: [5056],
@@ -18088,7 +18126,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2882,
-    name: '2882',
+    name: '',
     description: '',
     state: 'onRoad',
     trailIds: [5056],
@@ -18187,7 +18225,7 @@ export const segments: Segment[] = [
   },
   {
     id: 7782,
-    name: '7782',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -18235,7 +18273,7 @@ export const segments: Segment[] = [
   },
   {
     id: 9928,
-    name: '9928',
+    name: '',
     description: '',
     state: 'onRoad',
     trailIds: [5056],
@@ -18266,7 +18304,7 @@ export const segments: Segment[] = [
   },
   {
     id: 1192,
-    name: '1192',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -18303,7 +18341,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3382,
-    name: '3382',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -18328,7 +18366,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2987,
-    name: '2987',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -18370,7 +18408,7 @@ export const segments: Segment[] = [
   },
   {
     id: 2937,
-    name: '2937',
+    name: '',
     description: '',
     state: 'stoneDust',
     trailIds: [5056],
@@ -18634,10 +18672,10 @@ export const segments: Segment[] = [
   },
   {
     id: 9927,
-    name: '9927',
+    name: '',
     description: '',
     state: 'construction',
-    trailIds: [5056],
+    trailIds: [6912, 2383, 5056],
     links: [],
     geometry: {
       type: 'MultiLineString',

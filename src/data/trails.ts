@@ -54,7 +54,12 @@ export const trails: Trail[] = [
     name: 'Bruce Freeman Rail Trail',
     description:
       'The Bruce Freeman Rail Trail is a rail trail through the communities of Lowell, Chelmsford, Westford, Carlisle, Acton, Concord, Sudbury (under constrction), and Framingham (planned) in Massachusetts \u2014 following the 25-mile route of the old New Haven Railroad Framingham & Lowell line. The trail has a 10-foot wide pavement with a 2-foot wide packed shoulder on each sid.The Bruce Freeman Rail Trail is open to non-motorized uses such as cycling, jogging, walking, rollerblading, and skiing.',
-    links: [],
+    links: [
+      {
+        url: 'https://brucefreemanrailtrail.org/',
+        label: 'Friends of the Bruce Freeman Rail Trail',
+      },
+    ],
   },
   {
     id: 5728,
@@ -797,5 +802,29 @@ export const trails: Trail[] = [
     description:
       'Planned trail along the Merrimack River between Riverside Park and the Groveland Bates Bridge. https://whav.net/2023/06/19/haverhill-to-connect-riverside-park-trail-with-groveland-fix-paths-at-winnekenni-park/ https://www.eagletribune.com/news/haverhill-to-expand-its-walking-biking-trails/article_d673f772-774d-11ee-9b8e-3ff837044165.html',
     links: [],
+  },
+  {
+    id: 2383,
+    slug: 'mcrt-wayside',
+    name: 'MCRT Wayside',
+    description: '',
+    links: [
+      {
+        url: 'https://www.mass.gov/info-details/mass-central-rail-trail-wayside',
+        label: 'Mass Central Rail Trail - Wayside',
+      },
+    ],
+  },
+  {
+    id: 2338,
+    slug: 'berlin-rail-trail',
+    name: 'Berlin Rail Trail',
+    description: '',
+    links: [
+      {
+        url: 'https://berlinrailtrail.org/',
+        label: 'Friends of the Berlin Rail Trail',
+      },
+    ],
   },
 ];

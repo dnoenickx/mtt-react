@@ -19,7 +19,16 @@ declare global {
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
-  const { state } = useData();
+  const { state, dispatch } = useData();
+
+  useEffect(() => {
+    const lastSubmitted = localStorage.getItem('last_submitted');
+    if (lastSubmitted) {
+      if (new Date(lastSubmitted) < new Date(1716441751264)) {
+        dispatch({ action: 'reset' });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (Object.values(state.trails.new).length !== 0) {
