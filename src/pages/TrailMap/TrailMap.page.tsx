@@ -17,7 +17,7 @@ import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
 import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
 import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway from '@/components/MapLayers/Subway/Subway.layer';
-import SegmentsLayer, { segmentsLayerName } from '@/components/MapLayers/Segments/Segments.layer';
+import SegmentsLayer, { segmentsLayerId } from '@/components/MapLayers/Segments/Segments.layer';
 
 export interface Hover {
   layer: string;
@@ -110,26 +110,23 @@ export function TrailMap() {
 
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
 
-    if (layer === segmentsLayerName) {
+    if (layer === segmentsLayerId) {
       setSelectedSegmentId(id);
       setActiveTab('segmentDetailsPanel');
     }
   };
 
-  const onEnterHandler = (e: MapLayerMouseEvent) => {
-    if (!e.features) return;
-
-    const [id, layer] = [e.features[0].id, e.features[0].layer.id];
-
-    if (!hover || layer !== hover.layer || id !== hover.id) {
-      setHover({ layer, id });
-      setCursorStyle('pointer');
+  const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
+    if (!e.features?.length) {
+      setHover(undefined);
+      setCursorStyle(undefined);
+    } else {
+      const [id, layer] = [e.features[0].id, e.features[0].layer.id];
+      if (!hover || layer !== hover.layer || id !== hover.id) {
+        setHover({ layer, id });
+        setCursorStyle('pointer');
+      }
     }
-  };
-
-  const onLeaveHandler = () => {
-    setHover(undefined);
-    setCursorStyle(undefined);
   };
 
   const [opened, { close }] = useDisclosure(sessionStorage.getItem('acceptedWelcome') !== 'true');
@@ -190,12 +187,11 @@ export function TrailMap() {
           reuseMaps
           dragRotate={false}
           boxZoom={false}
-          onMouseEnter={onEnterHandler}
           onContextMenu={onContextHandler}
-          onMouseLeave={onLeaveHandler}
+          onMouseMove={onMouseMoveHandler}
           onClick={onClickHandler}
           cursor={cursorStyle}
-          interactiveLayerIds={[segmentsLayerName]}
+          interactiveLayerIds={[segmentsLayerId]}
           mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
           // mapStyle="mapbox://styles/mapbox/light-v11"
           mapStyle="mapbox://styles/dnoen/clp8rwblo001001p84znz9viw"

@@ -8,7 +8,7 @@ import { Hover } from '@/pages/TrailMap/TrailMap.page';
 import { SegmentState } from '@/types';
 import { useData } from '@/data/DataContext';
 
-export const segmentsLayerName = 'segments';
+export const segmentsLayerId = 'segments';
 
 export interface SegmentsLayerProps {
   states: SegmentStates;
@@ -52,7 +52,7 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
     .filter(([, value]) => value.visible)
     .map(([key]) => key as SegmentState);
 
-  const hoveredId = hover && hover.layer === segmentsLayerName ? hover.id : null;
+  const hoveredId = hover && hover.layer === segmentsLayerId ? hover.id : null;
 
   const colorMatchExpression: mapboxgl.Expression = useMemo(
     () => [
@@ -100,7 +100,13 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   return (
     <Source type="geojson" data={segmentGeoJson}>
       <Layer
-        id={segmentsLayerName}
+        id={segmentsLayerId}
+        type="line"
+        paint={{ 'line-width': 30, 'line-opacity': 0 }}
+        filter={['in', 'state', ...visibleStates]}
+      />
+      <Layer
+        id={`${segmentsLayerId}_symbology`}
         type="line"
         paint={paintExpression}
         filter={['in', 'state', ...visibleStates]}
