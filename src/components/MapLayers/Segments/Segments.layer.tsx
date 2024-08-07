@@ -109,6 +109,10 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
         id={`${segmentsLayerId}_symbology`}
         type="line"
         paint={paintExpression}
+        layout={{
+          'line-join': 'round',
+          'line-cap': 'round',
+        }}
         filter={['in', 'state', ...visibleStates]}
       />
     </Source>

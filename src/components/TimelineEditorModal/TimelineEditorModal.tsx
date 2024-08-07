@@ -337,6 +337,8 @@ export function TimelineEditorModal({
             offset={12}
             opened={lookupOpened}
             onChange={setLookupOpened}
+            shadow="sm"
+            trapFocus
           >
             <Popover.Target>
               <Button

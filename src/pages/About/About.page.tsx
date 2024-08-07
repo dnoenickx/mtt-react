@@ -8,8 +8,10 @@ import {
   rem,
   Anchor,
   Divider,
+  CopyButton,
+  Button,
 } from '@mantine/core';
-import { IconCircleCheck, IconCircleX } from '@tabler/icons-react';
+import { IconCircleCheck, IconCircleX, IconCopy } from '@tabler/icons-react';
 import { Footer } from '@/components/Footer/Footer';
 
 const listCheck = (
@@ -173,7 +175,20 @@ export default function About() {
           <Accordion.Item value="features" key="features" mb="lg">
             <Accordion.Control>Can I report a bug/request a feature?</Accordion.Control>
             <Accordion.Panel>
-              Yes. Email me: masstrailtracker@gmail.com
+              Yes. Email me:
+              <CopyButton value="mass.trail.tracker@gmail.com" timeout={2000}>
+                {({ copied, copy }) => (
+                  <Button
+                    variant="outline"
+                    color={copied ? 'green' : 'gray'}
+                    onClick={copy}
+                    leftSection={<IconCopy />}
+                    ml="md"
+                  >
+                    {copied ? 'Email copied' : 'mass.trail.tracker@gmail.com'}
+                  </Button>
+                )}
+              </CopyButton>
               <br />
               Here is a{' '}
               <Anchor

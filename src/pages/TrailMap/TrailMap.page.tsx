@@ -8,9 +8,9 @@ import {
   Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl';
-import { Button, Group, Modal, ScrollArea, Stack, Tabs } from '@mantine/core';
-import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
+import { Button, CopyButton, Group, Modal, ScrollArea, Stack, Tabs, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconBrandGoogleMaps, IconCopy, IconMap2 } from '@tabler/icons-react';
 import classes from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
@@ -98,9 +98,6 @@ export function TrailMap() {
             </Button>
           </Stack>
         ),
-        // <a target="_blank" rel="noopener noreferrer" href={googleMapsUrl}>
-        //   Google Maps
-        // </a>
       });
     }
   };
@@ -134,19 +131,31 @@ export function TrailMap() {
   return (
     <div className={classes.container}>
       <Modal opened={opened} onClose={close} withCloseButton={false} centered>
-        <p>
-          Update (May 2024): I&apos;m working on a lot of updates to the website, including the
-          ability to submit changes. If you see anything that&apos;s incorrect, or want to request a
-          feature, email me{' '}
-          <a href="mailto:mass.trail.tracker@gmail.com">mass.trail.tracker@gmail.com</a>
-        </p>
-        <p style={{ color: 'gray', fontSize: 'small' }}>
+        <Text>
+          May 2024: Updates are in the works! Try clicking the edit button after selecting a
+          segment. Feel free to email me with information, bugs, or feature requests.
+        </Text>
+        <Group justify="center" my="md">
+          <CopyButton value="mass.trail.tracker@gmail.com" timeout={2000}>
+            {({ copied, copy }) => (
+              <Button
+                variant="outline"
+                color={copied ? 'green' : 'gray'}
+                onClick={copy}
+                leftSection={<IconCopy />}
+              >
+                {copied ? 'Email copied' : 'mass.trail.tracker@gmail.com'}
+              </Button>
+            )}
+          </CopyButton>
+        </Group>
+        <Text c="dimmed" size="sm">
           Disclaimer: The data herein is provided for informational purposes only. MassTrailTracker
           makes no warranties, either expressed or implied, and assumes no responsibility for its
           completeness or accuracy. Users assume all responsibility and risk associated with use of
           the map and agree to indemnify and hold harmless MassTrailTracker with respect to any and
           all claims and demands that may arise resulting from use of this map.
-        </p>
+        </Text>
         <Group justify="center">
           <Button
             onClick={() => {

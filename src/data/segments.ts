@@ -3830,7 +3830,12 @@ export const segments: Segment[] = [
     description: '',
     state: 'paved',
     trailIds: [4994],
-    links: [],
+    links: [
+      {
+        url: 'https://maryellenwelchgreenway.org/',
+        label: 'Friends of the Mary Ellen Welch Greenway',
+      },
+    ],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -4307,7 +4312,7 @@ export const segments: Segment[] = [
   },
   {
     id: 5138,
-    name: '',
+    name: 'Phase 1',
     description: '',
     state: 'paved',
     trailIds: [4220],
@@ -8642,7 +8647,12 @@ export const segments: Segment[] = [
     description: 'A 1.92 mile two-way separated bike lane and shared-use path',
     state: 'construction',
     trailIds: [2371],
-    links: [],
+    links: [
+      {
+        url: 'https://mass.streetsblog.org/2021/11/22/massdot-making-plans-to-extend-northern-strand-through-downtown-lynn',
+        label: 'Mass Streets Blog',
+      },
+    ],
     geometry: {
       type: 'MultiLineString',
       coordinates: [
@@ -9186,6 +9196,22 @@ export const segments: Segment[] = [
           [-72.487405, 42.342414],
           [-72.487377, 42.342348],
           [-72.486852, 42.341893],
+          [-72.486755, 42.341871],
+        ],
+      ],
+    },
+  },
+  {
+    id: 9808,
+    name: '',
+    description: '',
+    state: 'paved',
+    trailIds: [4202, 5056],
+    links: [],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
           [-72.486755, 42.341871],
           [-72.486728, 42.341847],
           [-72.486644, 42.341777],
@@ -9754,7 +9780,7 @@ export const segments: Segment[] = [
   },
   {
     id: 3557,
-    name: '',
+    name: 'Phase 1',
     description: '',
     state: 'paved',
     trailIds: [4747],
@@ -12538,9 +12564,9 @@ export const segments: Segment[] = [
   },
   {
     id: 5891,
-    name: '',
+    name: 'Phase 2',
     description: '',
-    state: 'proposed',
+    state: 'design',
     trailIds: [4220],
     links: [],
     geometry: {
@@ -12563,9 +12589,10 @@ export const segments: Segment[] = [
   },
   {
     id: 5430,
-    name: '',
-    description: '',
-    state: 'proposed',
+    name: 'Phase 3',
+    description:
+      'This phase will connect the phase 1 sections completed in 2010, and is slated to being construction in Spring 2026',
+    state: 'design',
     trailIds: [4220],
     links: [],
     geometry: {
@@ -18939,5 +18966,154 @@ export const segments: Segment[] = [
         ],
       ],
     },
+  },
+  {
+    id: 1718,
+    name: '',
+    description: '',
+    state: 'onRoad',
+    trailIds: [3980],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [-71.134716, 42.457509],
+          [-71.13461, 42.457381],
+          [-71.133953, 42.457183],
+          [-71.133131, 42.45883],
+          [-71.132556, 42.459762],
+          [-71.132265, 42.459673],
+          [-71.13107, 42.461602],
+          [-71.130803, 42.462128],
+          [-71.131192, 42.462247],
+        ],
+      ],
+    },
+    links: [],
+  },
+  {
+    id: 4932,
+    name: '',
+    description: '',
+    state: 'onRoad',
+    trailIds: [3980],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [-71.123958, 42.473166],
+          [-71.126529, 42.473686],
+          [-71.124378, 42.479164],
+        ],
+      ],
+    },
+    links: [],
+  },
+  {
+    id: 5782,
+    name: '',
+    description: '',
+    state: 'onRoad',
+    trailIds: [340],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [-69.985526, 41.690073],
+          [-69.984414, 41.690253],
+          [-69.981889, 41.690563],
+          [-69.977843, 41.690586],
+          [-69.976989, 41.690701],
+          [-69.976266, 41.690905],
+          [-69.975345, 41.691337],
+        ],
+      ],
+    },
+    links: [],
+  },
+  {
+    id: 2580,
+    name: 'Mystic River Bridge',
+    description:
+      'Originally proposed for construction in 2024, there has been little word about any sort of design process or timeline for this project.',
+    state: 'proposed',
+    trailIds: [],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [-71.07522417485227, 42.39223768760286],
+          [-71.07416936955697, 42.39300679190737],
+          [-71.07302295381527, 42.393558336521295],
+        ],
+      ],
+    },
+    links: [
+      {
+        url: 'https://mass.streetsblog.org/2024/04/15/mystic-river-bridge-design-timeline-still-shrouded-in-mystery-globe-confirms',
+        label: 'Mass Streets Blog',
+      },
+    ],
+  },
+
+  {
+    id: 4845,
+    name: 'Winthrop Extension',
+    description:
+      'Completed a 10% conceptual design. (route is not finalized yet, so still marking is as proposed)',
+    state: 'proposed',
+    trailIds: [],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [-71.00347673210952, 42.386760186208136],
+          [-71.00324431748083, 42.38680394369126],
+          [-71.00036875609406, 42.38573355957527],
+          [-70.99900610602347, 42.384828707542624],
+          [-70.99629737713238, 42.383818239416854],
+          [-70.99538064149294, 42.38398532140849],
+          [-70.99469233806157, 42.38410857245145],
+          [-70.99365640663495, 42.38407262425554],
+          [-70.99270390592753, 42.38422668780754],
+          [-70.99195302945692, 42.38405208242014],
+          [-70.99071367022715, 42.383970774689175],
+          [-70.98882257393146, 42.3838834717005],
+        ],
+      ],
+    },
+    links: [
+      {
+        url: 'https://maryellenwelchgreenway.org/projects/greenway-extensions/',
+        label: 'Greenway Extension',
+      },
+    ],
+  },
+  {
+    id: 8904,
+    name: '',
+    description: 'Missing link between Peabody and Salem Riverwalks',
+    state: 'proposed',
+    trailIds: [],
+    geometry: {
+      type: 'MultiLineString',
+      coordinates: [
+        [
+          [-70.92464839116258, 42.52602227827879],
+          [-70.9243586815351, 42.52591997255314],
+          [-70.9243164322149, 42.52574204915251],
+          [-70.92140122909126, 42.52500810976872],
+          [-70.91972332750049, 42.52455439747243],
+          [-70.9191861575667, 42.52454550112037],
+          [-70.9187455575088, 42.52443874479175],
+        ],
+      ],
+    },
+    links: [
+      {
+        url: 'https://www.solomonfoundation.org/projects/salem-and-peabody-north-river-riverwalk/',
+        label: 'Solomon Foundation',
+      },
+    ],
   },
 ];

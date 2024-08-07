@@ -655,7 +655,7 @@ export const trails: Trail[] = [
   {
     id: 6778,
     slug: 'ware',
-    name: 'ware',
+    name: 'Ware River Rail Trail',
     description: '',
     links: [],
   },
