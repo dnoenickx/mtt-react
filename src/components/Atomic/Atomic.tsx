@@ -1,5 +1,5 @@
 import { IconExternalLink } from '@tabler/icons-react';
-import { Button, Flex, TextProps, Text } from '@mantine/core';
+import { Button, Flex, TextProps, Text, Skeleton, SkeletonProps } from '@mantine/core';
 import { Link } from '@/types';
 
 export interface MultiLineTextProps extends TextProps {
@@ -15,6 +15,22 @@ export const MultiLineText = ({ text, ...rest }: MultiLineTextProps) => (
     ))}
   </>
 );
+
+interface SkeletonParagraphProps extends SkeletonProps {
+  lines: number;
+}
+
+export const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({ lines, ...props }) => {
+  const skeletonLines = [];
+
+  for (let i = 0; i < lines - 1; i++) {
+    skeletonLines.push(<Skeleton key={`line-${i}`} {...props} />);
+  }
+
+  skeletonLines.push(<Skeleton key={`line-${lines - 1}`} {...props} width="70%" />);
+
+  return <>{skeletonLines}</>;
+};
 
 export const LinkGroup = ({ links }: { links: Link[] }) => (
   <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
