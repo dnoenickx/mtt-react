@@ -22,7 +22,7 @@ import {
 } from '@tabler/icons-react';
 import { formatDate } from '@/utils';
 
-import { Newsflash } from '../../types';
+import { TrailEvent } from '../../types';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 
 function getIcon(iconName: string) {
@@ -43,7 +43,7 @@ function getIcon(iconName: string) {
   }
 }
 
-export function Timeline({ events }: { events: Newsflash[] }) {
+export function Timeline({ events }: { events: TrailEvent[] }) {
   const currentDate = new Date();
   const past = events.filter((event) => event.date < currentDate).length - 1;
 
@@ -51,15 +51,14 @@ export function Timeline({ events }: { events: Newsflash[] }) {
     <MantineTimeline active={past} reverseActive lineWidth={3} bulletSize={24}>
       {events
         .sort((a, b) => (a.date > b.date ? -1 : 1))
-        .map(({ id, headline, icon, date, datePrecision, description, links }) => (
+        .map(({ id, headline, date, date_precision, description, links }) => (
           <MantineTimeline.Item
             key={id}
             title={headline}
-            bullet={getIcon(icon)}
             lineVariant={date < currentDate ? 'solid' : 'dashed'}
           >
             <Text size="xs" mt={4}>
-              {formatDate(date, datePrecision)}
+              {formatDate(date, date_precision)}
             </Text>
             <MultiLineText c="dimmed" size="sm" text={description} />
             <LinkGroup links={links} />

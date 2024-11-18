@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Divider, Flex, Grid, Text, Title, Tooltip } from '@mantine/core';
+import { Checkbox, Divider, Flex, Grid, Indicator, Text, Title, Tooltip } from '@mantine/core';
 import { SegmentStates } from '../../pages/TrailMap/TrailMap.config';
 import classes from './WelcomePanel.module.css';
 
@@ -18,6 +18,20 @@ interface WelcomePanelProps {
   // setLayers: React.Dispatch<React.SetStateAction<MapLayer[]>>
 }
 
+function checkboxOutlineStyle(checked: boolean, style: string) {
+  if (!checked || style == 'solid') {
+    return {};
+  }
+  return {
+    root: {
+      outlineStyle: 'dashed',
+      outlineColor: 'white',
+      outlineWidth: '1.5px',
+      outlineOffset: '-3px',
+    },
+  };
+}
+
 const WelcomePanel: React.FC<WelcomePanelProps> = ({
   segmentStates: trailStates,
   toggleSegmentStateVisibility: toggleTrailState,
@@ -31,28 +45,45 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
       Trails
     </Title>
     <Flex gap="sm" justify="flex-start" align="center" direction="row" wrap="wrap">
-      {Object.entries(trailStates).map(([value, { label, color, visible, description }]) =>
+      {Object.entries(trailStates).map(([value, { label, color, visible, description, style }]) =>
         description ? (
-          <Tooltip
-            key={value}
-            label={description}
-            multiline
-            w={180}
-            withArrow
-            transitionProps={{ duration: 200 }}
-            openDelay={300}
-            refProp="rootRef"
+          <Indicator
+            inline
+            withBorder
+            label="?"
+            size={16}
+            color="gray"
+            styles={{
+              indicator: {
+                userSelect: 'none',
+                fontSize: '0.5rem',
+                fontWeight: 'bolder',
+                borderWidth: 'thin',
+              },
+            }}
           >
-            <Checkbox
-              id={value}
-              classNames={classes}
-              color={color}
-              label={label}
-              checked={visible}
-              onChange={() => toggleTrailState(value)}
-              wrapperProps={{ onClick: () => toggleTrailState(value) }}
-            />
-          </Tooltip>
+            <Tooltip
+              key={value}
+              label={description}
+              multiline
+              w={180}
+              withArrow
+              transitionProps={{ duration: 200 }}
+              openDelay={300}
+              refProp="rootRef"
+            >
+              <Checkbox
+                id={value}
+                classNames={classes}
+                color={color}
+                label={label}
+                checked={visible}
+                onChange={() => toggleTrailState(value)}
+                wrapperProps={{ onClick: () => toggleTrailState(value) }}
+                styles={checkboxOutlineStyle(visible, style)}
+              />
+            </Tooltip>
+          </Indicator>
         ) : (
           <Checkbox
             id={value}
@@ -63,6 +94,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
             checked={visible}
             onChange={() => toggleTrailState(value)}
             wrapperProps={{ onClick: () => toggleTrailState(value) }}
+            styles={checkboxOutlineStyle(visible, style)}
           />
         )
       )}

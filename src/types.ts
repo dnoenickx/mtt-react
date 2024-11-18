@@ -19,30 +19,31 @@ export type SegmentState =
 
 export type Segment = {
   id: number;
+  trails: Trail[];
+  events: TrailEvent[];
   name: string;
   description: string;
   state: SegmentState;
-  trailIds: number[];
-  geometry: MultiLineString | LineString;
+  geometry?: MultiLineString | LineString;
   links: Link[];
 };
 
-export type Newsflash = {
+export type TrailEvent = {
   id: number;
   headline: string;
   date: Date;
-  datePrecision: DatePrecision;
+  date_precision: DatePrecision;
   description: string;
-  icon: string;
-  segmentIds: number[];
+  icon?: string;
   links: Link[];
 };
 
-export type DatePrecision = 'day' | 'month' | 'year';
+export type DatePrecision = 'd' | 'm' | 'y';
 
 export type Link = {
+  id: number;
   url: string;
-  label: string;
+  text: string;
 };
 
 /** Construct a type with the properties of T where those in type K are optional. */

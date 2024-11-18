@@ -1,14 +1,14 @@
 import { MultiLineString, Position, multiLineString } from '@turf/turf';
 import { format, startOfDay, startOfMonth, startOfYear } from 'date-fns';
-import { DatePrecision, Newsflash, Segment, Trail } from './types';
+import { DatePrecision, TrailEvent, Segment, Trail } from './types';
 
 export function formatDate(date: Date, precision: DatePrecision) {
   switch (precision) {
-    case 'day':
+    case 'd':
       return format(startOfDay(date), 'MMMM d, yyyy');
-    case 'month':
+    case 'm':
       return format(startOfMonth(date), 'MMMM yyyy');
-    case 'year':
+    case 'y':
       return format(startOfYear(date), 'yyyy');
     default:
       return date.toDateString();
@@ -124,7 +124,7 @@ export function simpleDiff(oldVal: any, newVal: any) {
 interface submitChangesParams {
   trails?: { [id: number]: Trail | undefined };
   segments?: { [id: number]: Segment | undefined };
-  newsflashes?: { [id: number]: Newsflash | undefined };
+  newsflashes?: { [id: number]: TrailEvent | undefined };
 }
 
 export function submitChanges({ trails, segments, newsflashes }: submitChangesParams) {

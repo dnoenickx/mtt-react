@@ -7,11 +7,10 @@ import {
   ThemeIcon,
   rem,
   Anchor,
-  Divider,
   CopyButton,
   Button,
 } from '@mantine/core';
-import { IconCircleCheck, IconCircleX, IconCopy } from '@tabler/icons-react';
+import { IconCircleCheck, IconCircleX, IconCopy, IconExternalLink } from '@tabler/icons-react';
 import { Footer } from '@/components/Footer/Footer';
 
 const listCheck = (
@@ -98,24 +97,6 @@ export default function About() {
           find, allowing anyone to submit suggestions so the data is always timely and accurate. I
           want to enable these groups to share information about the trails they care about.
         </Text>
-        {/* <Title order={3} pt="xl" pb="xs">
-        Why do I care?
-      </Title>
-      <Text>
-        I want to enable more people to take fewer trips by car. I don't mean you shouldn't own a
-        car and should never drive, I just think it should be safe and pleasant to get around by
-        bike or foot (if that's something you wanted to do).
-      </Text>
-      <Text pt="sm">
-        I bike most places. I most often do so on the Muddy River, Southwest Corridor, and Charles
-        River. I love these paths because they get me where I am going in a direct, safe, and
-        pleasant way.
-      </Text>
-      <Text pt="sm">
-        A trail that's primarily recreational for one person, can be transportation for another.
-        Both are good. I want to encourage the use and construction of paths to enable both. That's
-        why I focus on long linear paths.
-      </Text> */}
         <Title order={3} pt="xl" pb="xs" ta="center">
           Frequently Asked Questions
         </Title>
@@ -147,31 +128,6 @@ export default function About() {
               plan to maintain my own catalog of bike lanes.
             </Accordion.Panel>
           </Accordion.Item>
-          <Accordion.Item value="edit-map" key="edit-map" mb="lg">
-            <Accordion.Control>How do I edit the map?</Accordion.Control>
-            <Accordion.Panel>
-              <ol>
-                <li>Use the map to select a segment</li>
-                <li>Click the edit icon on the top right of the information panel</li>
-                <li>Select an option</li>
-              </ol>
-              You can edit:
-              <ul>
-                <li>
-                  A segment (name, description, geometry, associated trails, open/closed status).
-                </li>
-                <li>Segment timeline events (name, description, date, links)</li>
-                <li>Create a segment</li>
-                <li>Link an existing event with aditional segments</li>
-              </ul>
-              <Divider my="sm" />
-              It is not yet possible to:
-              <ul>
-                <li>Create or edit trails</li>
-              </ul>
-              You&lsquo;re welcome to email me those or any other changes.
-            </Accordion.Panel>
-          </Accordion.Item>
           <Accordion.Item value="features" key="features" mb="lg">
             <Accordion.Control>Can I report a bug/request a feature?</Accordion.Control>
             <Accordion.Panel>
@@ -198,6 +154,37 @@ export default function About() {
                 frequently updated list
               </Anchor>{' '}
               of all the things I plan on fixing/adding.
+            </Accordion.Panel>
+          </Accordion.Item>
+          <Accordion.Item value="mcrt-route" key="mcrt-route" mb="lg">
+            <Accordion.Control>
+              What's the best current route along the Mass Central Rail Trail?
+            </Accordion.Control>
+            <Accordion.Panel>
+              Here is the route from the first RN2B (Ride Northampton to Boston) in Fall 2024
+              <br />
+              <Button
+                component="a"
+                href="https://ridewithgps.com/routes/47996539"
+                onClick={(event) => event.preventDefault()}
+                c="dimmed"
+                leftSection={<IconExternalLink size={14} />}
+                variant="default"
+                styles={{
+                  root: {
+                    height: 'auto',
+                    paddingTop: '3px',
+                    paddingBottom: '3px',
+                  },
+                  label: {
+                    whiteSpace: 'pre-line',
+                    textAlign: 'left',
+                    lineHeight: 1.25,
+                  },
+                }}
+              >
+                Ride With GPS
+              </Button>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>

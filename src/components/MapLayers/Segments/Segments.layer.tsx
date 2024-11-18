@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Layer, Source } from 'react-map-gl';
 import { Feature, feature, featureCollection, Properties } from '@turf/turf';
 import { Geometry } from 'geojson';
 import { useMediaQuery } from '@mantine/hooks';
 import { SegmentStates } from '@/pages/TrailMap/TrailMap.config';
 import { Hover } from '@/pages/TrailMap/TrailMap.page';
-import { SegmentState } from '@/types';
-import { useData } from '@/data/DataContext';
+import { Segment, SegmentState } from '@/types';
+import { useLoaderData } from 'react-router-dom';
 
 export const segmentsLayerId = 'segments';
 
@@ -15,38 +15,43 @@ export interface SegmentsLayerProps {
   hover: Hover | undefined;
 }
 
-export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
-  const { segments } = useData();
+export async function loader() {
+  const response = await fetch(`http://localhost:8000/api/segments/`);
+  const segments: Segment[] = await response.json();
+  return { segments };
+}
 
+export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   const multiplier = useMediaQuery('(min-width: 415px)') ? 1 : 1.5;
 
-  const segmentGeoJson = useMemo(
-    () =>
-      featureCollection(
-        segments.reduce(
-          (features, segment) => {
-            if (segment) {
-              features.push(
-                feature(
-                  segment.geometry,
-                  {
-                    state: segment.state,
-                    weight: states[segment.state].weight,
-                    style: states[segment.state].style,
-                  },
-                  {
-                    id: segment.id,
-                  }
-                )
-              );
-            }
-            return features;
-          },
-          [] as Feature<Geometry, Properties>[]
-        )
-      ),
-    [segments]
-  );
+  const { segments } = useLoaderData() as { segments: Segment[] };
+  const segmentGeoJson = useMemo(() => {
+    if (segments === undefined) return featureCollection([] as Feature<Geometry, Properties>[]);
+
+    return featureCollection(
+      segments.reduce(
+        (features, segment) => {
+          if (segment) {
+            features.push(
+              feature(
+                segment.geometry!,
+                {
+                  state: segment.state,
+                  weight: states[segment.state].weight,
+                  style: states[segment.state].style,
+                },
+                {
+                  id: segment.id,
+                }
+              )
+            );
+          }
+          return features;
+        },
+        [] as Feature<Geometry, Properties>[]
+      )
+    );
+  }, [segments]);
 
   const visibleStates = Object.entries(states)
     .filter(([, value]) => value.visible)

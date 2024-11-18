@@ -22,15 +22,16 @@ export const SEGMENT_STATES: SegmentStates = {
   },
   stoneDust: {
     label: 'Stone Dust',
-    description: 'Compact gravel surface, often ADA accessible',
+    description: 'Compact gravel surface, often ADA accessible.',
     color: '#5C9969',
     weight: 'heavy',
     style: 'solid',
     visible: true,
   },
   unimproved: {
-    label: 'Unimproved',
-    description: 'Narrow or bumpy trail not suitable for all users or uses',
+    label: 'Protected + Unimproved',
+    description:
+      'Trail or corridor on publicly-owned or privately-protected land. Conditions vary; see segment descriptions.',
     color: '#4D9DE0',
     weight: 'medium',
     style: 'solid',
@@ -38,7 +39,8 @@ export const SEGMENT_STATES: SegmentStates = {
   },
   onRoad: {
     label: 'On Road',
-    description: 'Road routes connecting trails (varying levels of comfort)',
+    description:
+      'Suggested route for connecting trails. Conditions vary; see segment descriptions.',
     color: '#31588c',
     weight: 'medium',
     style: 'dashed',
@@ -60,6 +62,7 @@ export const SEGMENT_STATES: SegmentStates = {
   },
   proposed: {
     label: 'Proposed',
+    description: 'Concept only, not a set route. May pass through private land.',
     color: '#565656',
     weight: 'light',
     style: 'dashed',

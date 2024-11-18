@@ -1,17 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Accordion, Divider, Group, Text, Title, UnstyledButton } from '@mantine/core';
+import { Accordion, Divider, Group, Text, Title } from '@mantine/core';
 
-import { useDisclosure } from '@mantine/hooks';
-import { Trail } from '@/types';
-import { useData } from '@/data/DataContext';
+import { Segment, Trail } from '@/types';
 import { Timeline } from '../Timeline/Timeline';
 
 import classes from './SegmentDetailsPanel.module.css';
-import EditMenu from '../EditMenu/EditMenu';
-import SegmentEditPopup from '../SegmentEditPopup/SegmentEditPopup';
-import { TimelineEditorModal } from '../TimelineEditorModal/TimelineEditorModal';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
+import { useSearchParams } from 'react-router-dom';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -29,25 +25,38 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
   return <Accordion classNames={classes}>{items}</Accordion>;
 }
 
-// export function SegmentDetailsPanel({ segmentId = 9130 }: { segmentId: number | undefined }) {
-export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefined }) {
-  const { dispatch, segments, trails, newsflashes } = useData();
-  const [segmentCreatePopupOpened, segmentCreatePopupToggle] = useDisclosure(false);
-  const [segmentEditPopupOpened, segmentEditPopupToggle] = useDisclosure(false);
-  const [newsflashPopupOpened, newsflashPopupToggle] = useDisclosure(false);
+export function SegmentDetailsPanel() {
+  const [segment, setSegment] = useState<Segment | undefined>(undefined);
+  const [searchParams] = useSearchParams();
 
-  const fallback = (
-    <Text c="dimmed" ta="center">
-      Use the map to select a trail segment and learn more.
-    </Text>
-  );
+  useEffect(() => {
+    const fetchSegment = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/segments/${searchParams.get('segment')}/`
+        );
+        const data: Segment = await response.json();
+        data.events = data.events.map((event) => ({
+          ...event,
+          date: new Date(event.date),
+        }));
+        setSegment(data);
+      } catch (error) {
+        console.error('Error fetching segment:', error);
+      }
+    };
 
-  if (!segmentId) return fallback;
-  const segment = segments.find((s) => s.id === segmentId);
+    if (searchParams.get('segment')) {
+      fetchSegment();
+    }
+  }, [searchParams]);
 
-  if (!segment) return fallback;
-  const segmentTrails = trails.filter((t) => segment?.trailIds.includes(t.id));
-  const segmentNews = newsflashes.filter((n) => n.segmentIds.includes(segment.id));
+  if (!segment)
+    return (
+      <Text c="dimmed" ta="center">
+        Use the map to select a trail segment and learn more.
+      </Text>
+    );
 
   return (
     <>
@@ -55,42 +64,6 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
         'Error'
       ) : (
         <>
-          {segmentCreatePopupOpened && (
-            <SegmentEditPopup
-              segment={{
-                id: -1,
-                name: '',
-                description: '',
-                state: 'paved',
-                trailIds: [],
-                geometry: {
-                  type: 'MultiLineString',
-                  coordinates: [[]],
-                },
-                links: [],
-              }}
-              opened={segmentCreatePopupOpened}
-              close={segmentCreatePopupToggle.close}
-            />
-          )}
-
-          {segmentEditPopupOpened && (
-            <SegmentEditPopup
-              segment={segment}
-              opened={segmentEditPopupOpened}
-              close={segmentEditPopupToggle.close}
-            />
-          )}
-
-          {newsflashPopupOpened && (
-            <TimelineEditorModal
-              newsflashes={segmentNews}
-              opened={newsflashPopupOpened}
-              close={newsflashPopupToggle.close}
-              segmentId={segmentId}
-            />
-          )}
-
           <Group justify="space-between">
             <Title
               order={4}
@@ -98,31 +71,10 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
             >
               Segment
             </Title>
-            <EditMenu
-              openSegmentCreator={segmentCreatePopupToggle.open}
-              openSegmentEditor={segmentEditPopupToggle.open}
-              openEventEditor={newsflashPopupToggle.open}
-              onDeleteSegment={() =>
-                dispatch({
-                  action: 'delete',
-                  type: 'segments',
-                  id: segmentId,
-                })
-              }
-              onDeleteChanges={() => dispatch({ action: 'reset' })}
-            />
           </Group>
           {segment.name && <Title order={5}>{segment.name}</Title>}
-          {!segment.description && !segment.links.length ? (
-            <UnstyledButton td="underline" m={0} c="dimmed" onClick={segmentEditPopupToggle.open}>
-              Add a description
-            </UnstyledButton>
-          ) : (
-            <>
-              <MultiLineText m={0} text={segment.description} />
-              <LinkGroup links={segment.links} />
-            </>
-          )}
+          <MultiLineText m={0} text={segment.description} />
+          <LinkGroup links={segment.links} />
 
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
@@ -131,7 +83,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           >
             Trails
           </Title>
-          <TrailAccordion trails={segmentTrails} />
+          <TrailAccordion trails={segment.trails} />
 
           <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
           <Title
@@ -140,13 +92,7 @@ export function SegmentDetailsPanel({ segmentId }: { segmentId: number | undefin
           >
             Timeline
           </Title>
-          {segmentNews.length ? (
-            <Timeline events={segmentNews} />
-          ) : (
-            <UnstyledButton td="underline" m={0} c="dimmed" onClick={newsflashPopupToggle.open}>
-              Add a event
-            </UnstyledButton>
-          )}
+          <Timeline events={segment.events} />
         </>
       )}
     </>

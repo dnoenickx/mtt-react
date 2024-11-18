@@ -1,5 +1,4 @@
-import { Text, Container, ActionIcon, Group, rem } from '@mantine/core';
-import { IconBrandTwitter } from '@tabler/icons-react';
+import { Text, Container } from '@mantine/core';
 import Logo from '../Logo/Logo';
 import classes from './Footer.module.css';
 
@@ -51,13 +50,13 @@ export function Footer() {
           © {new Date().getFullYear()} masstrailtracker.com. All rights reserved.
         </Text>
 
-        <Group gap={0} className={classes.social} justify="flex-end" wrap="nowrap">
+        {/* <Group gap={0} className={classes.social} justify="flex-end" wrap="nowrap">
           <a href="https://twitter.com/masstrails" target="_blank" rel="noopener noreferrer">
             <ActionIcon size="lg" color="gray" variant="subtle">
               <IconBrandTwitter style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
             </ActionIcon>
           </a>
-        </Group>
+        </Group> */}
       </Container>
     </footer>
   );

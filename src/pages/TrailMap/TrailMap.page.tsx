@@ -8,9 +8,8 @@ import {
   Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl';
-import { Button, CopyButton, Group, Modal, ScrollArea, Stack, Tabs, Text } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { IconBrandGoogleMaps, IconCopy, IconMap2 } from '@tabler/icons-react';
+import { Button, ScrollArea, Stack, Tabs } from '@mantine/core';
+import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
 import classes from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
@@ -18,6 +17,8 @@ import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
 import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway from '@/components/MapLayers/Subway/Subway.layer';
 import SegmentsLayer, { segmentsLayerId } from '@/components/MapLayers/Segments/Segments.layer';
+import { useSearchParams } from 'react-router-dom';
+import { WelcomeModal } from '@/components/WelcomeModal/WelcomeModal';
 
 export interface Hover {
   layer: string;
@@ -30,15 +31,16 @@ interface Popup {
   content: ReactElement;
 }
 
-export function TrailMap() {
-  const [selectedSegmentId, setSelectedSegmentId] = useState<string | number | undefined>(
-    undefined
-  );
+const LOAD_MAP = true;
 
+export function TrailMap() {
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
+  let [searchParams, setSearchParams] = useSearchParams();
 
   // Active Tab /////////////////////////////////////////////////////////////////////
-  const [activeTab, setActiveTab] = useState<string | null>('welcome');
+  const [activeTab, setActiveTab] = useState<string | null>(
+    searchParams.get('segment') ? 'segmentDetailsPanel' : 'welcome'
+  );
 
   // Segment States /////////////////////////////////////////////////////////////////
   const [segmentStates, setSegmentStates] = useState<SegmentStates>(SEGMENT_STATES);
@@ -60,8 +62,6 @@ export function TrailMap() {
     },
     { label: 'Subway', visible: subwayVisible, toggle: () => setSubwayVisible((prev) => !prev) },
   ];
-
-  // const [baseMap, setBaseMap] = useState<string>('default');
 
   const [hover, setHover] = useState<Hover | undefined>();
   const [cursorStyle, setCursorStyle] = useState<string>();
@@ -107,8 +107,9 @@ export function TrailMap() {
 
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
 
-    if (layer === segmentsLayerId) {
-      setSelectedSegmentId(id);
+    if (layer === segmentsLayerId && id != undefined) {
+      searchParams.set('segment', `${id}`);
+      setSearchParams(searchParams);
       setActiveTab('segmentDetailsPanel');
     }
   };
@@ -126,47 +127,10 @@ export function TrailMap() {
     }
   };
 
-  const [opened, { close }] = useDisclosure(sessionStorage.getItem('acceptedWelcome') !== 'true');
-
   return (
     <div className={classes.container}>
-      <Modal opened={opened} onClose={close} withCloseButton={false} centered>
-        <Text>
-          May 2024: Updates are in the works! Try clicking the edit button after selecting a
-          segment. Feel free to email me with information, bugs, or feature requests.
-        </Text>
-        <Group justify="center" my="md">
-          <CopyButton value="mass.trail.tracker@gmail.com" timeout={2000}>
-            {({ copied, copy }) => (
-              <Button
-                variant="outline"
-                color={copied ? 'green' : 'gray'}
-                onClick={copy}
-                leftSection={<IconCopy />}
-              >
-                {copied ? 'Email copied' : 'mass.trail.tracker@gmail.com'}
-              </Button>
-            )}
-          </CopyButton>
-        </Group>
-        <Text c="dimmed" size="sm">
-          Disclaimer: The data herein is provided for informational purposes only. MassTrailTracker
-          makes no warranties, either expressed or implied, and assumes no responsibility for its
-          completeness or accuracy. Users assume all responsibility and risk associated with use of
-          the map and agree to indemnify and hold harmless MassTrailTracker with respect to any and
-          all claims and demands that may arise resulting from use of this map.
-        </Text>
-        <Group justify="center">
-          <Button
-            onClick={() => {
-              sessionStorage.setItem('acceptedWelcome', 'true');
-              close();
-            }}
-          >
-            Get started
-          </Button>
-        </Group>
-      </Modal>
+      <WelcomeModal />
+
       <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside}>
         <Tabs
           value={activeTab}
@@ -187,52 +151,54 @@ export function TrailMap() {
             />
           </Tabs.Panel>
           <Tabs.Panel value="segmentDetailsPanel">
-            <SegmentDetailsPanel segmentId={selectedSegmentId as number} />
+            <SegmentDetailsPanel />
           </Tabs.Panel>
         </Tabs>
       </ScrollArea>
+
       <div className={classes.body}>
-        <ReactMap
-          reuseMaps
-          dragRotate={false}
-          boxZoom={false}
-          onContextMenu={onContextHandler}
-          onMouseMove={onMouseMoveHandler}
-          onClick={onClickHandler}
-          cursor={cursorStyle}
-          interactiveLayerIds={[segmentsLayerId]}
-          mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-          // mapStyle="mapbox://styles/mapbox/light-v11"
-          mapStyle="mapbox://styles/dnoen/clp8rwblo001001p84znz9viw"
-          initialViewState={{
-            longitude: -71.68,
-            latitude: 42.35,
-            zoom: 8.78,
-          }}
-        >
-          <GeolocateControl position="top-right" />
-          <FullscreenControl position="top-right" />
-          <NavigationControl position="top-right" />
-          <ScaleControl />
+        {LOAD_MAP && (
+          <ReactMap
+            reuseMaps
+            dragRotate={false}
+            boxZoom={false}
+            onContextMenu={onContextHandler}
+            onMouseMove={onMouseMoveHandler}
+            onClick={onClickHandler}
+            cursor={cursorStyle}
+            interactiveLayerIds={[segmentsLayerId]}
+            mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+            mapStyle="mapbox://styles/dnoen/clp8rwblo001001p84znz9viw"
+            initialViewState={{
+              longitude: -71.68,
+              latitude: 42.35,
+              zoom: 8.78,
+            }}
+          >
+            <GeolocateControl position="top-right" />
+            <FullscreenControl position="top-right" />
+            <NavigationControl position="top-right" />
+            <ScaleControl />
 
-          {popup && (
-            <MapPopup
-              anchor="top-left"
-              longitude={Number(popup.lng)}
-              latitude={Number(popup.lat)}
-              onClose={() => setPopup(undefined)}
-              closeButton={false}
-              closeOnMove
-              style={{ borderTopColor: 'gray' }}
-            >
-              {popup.content}
-            </MapPopup>
-          )}
+            {popup && (
+              <MapPopup
+                anchor="top-left"
+                longitude={Number(popup.lng)}
+                latitude={Number(popup.lat)}
+                onClose={() => setPopup(undefined)}
+                closeButton={false}
+                closeOnMove
+                style={{ borderTopColor: 'gray' }}
+              >
+                {popup.content}
+              </MapPopup>
+            )}
 
-          <SegmentsLayer states={segmentStates} hover={hover} />
-          {commuterRailVisible && <CommuterRailLayer visible={commuterRailVisible} />}
-          {subwayVisible && <Subway visible={subwayVisible} />}
-        </ReactMap>
+            <SegmentsLayer states={segmentStates} hover={hover} />
+            {commuterRailVisible && <CommuterRailLayer visible={commuterRailVisible} />}
+            {subwayVisible && <Subway visible={subwayVisible} />}
+          </ReactMap>
+        )}
       </div>
     </div>
   );
