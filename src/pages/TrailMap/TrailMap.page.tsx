@@ -1,14 +1,12 @@
 import React, { ReactElement, useState } from 'react';
 import {
-  FullscreenControl,
   GeolocateControl,
   Map as ReactMap,
   MapLayerMouseEvent,
   NavigationControl,
   Popup as MapPopup,
-  ScaleControl,
 } from 'react-map-gl';
-import { Button, ScrollArea, Stack, Tabs } from '@mantine/core';
+import { Affix, Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
 import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
 import classes from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
@@ -36,6 +34,8 @@ const LOAD_MAP = true;
 export function TrailMap() {
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
   let [searchParams, setSearchParams] = useSearchParams();
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Active Tab /////////////////////////////////////////////////////////////////////
   const [activeTab, setActiveTab] = useState<string | null>(
@@ -127,36 +127,77 @@ export function TrailMap() {
     }
   };
 
+  const tabs = (
+    <Tabs
+      value={activeTab}
+      onChange={setActiveTab}
+      radius="xs"
+      classNames={{ tabLabel: classes.tabLabel, panel: classes.panel }}
+    >
+      <Tabs.List grow>
+        <Tabs.Tab value="welcome">Map Settings</Tabs.Tab>
+        <Tabs.Tab value="segmentDetailsPanel">Segment Details</Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="welcome">
+        <WelcomePanel
+          segmentStates={segmentStates}
+          toggleSegmentStateVisibility={toggleSegmentStateVisibility}
+          layers={layers}
+        />
+      </Tabs.Panel>
+      <Tabs.Panel value="segmentDetailsPanel">
+        <SegmentDetailsPanel />
+      </Tabs.Panel>
+    </Tabs>
+  );
+
   return (
     <div className={classes.container}>
       <WelcomeModal />
 
-      <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside}>
-        <Tabs
-          value={activeTab}
-          onChange={setActiveTab}
-          radius="xs"
-          classNames={{ tabLabel: classes.tabLabel, panel: classes.panel }}
-        >
-          <Tabs.List grow>
-            <Tabs.Tab value="welcome">Welcome</Tabs.Tab>
-            <Tabs.Tab value="segmentDetailsPanel">Segment Details</Tabs.Tab>
-          </Tabs.List>
+      <Drawer
+        position="bottom"
+        size="md"
+        opened={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        withCloseButton={false}
+        keepMounted
+        radius="md"
+        hiddenFrom="sm"
+      >
+        {tabs}
+      </Drawer>
 
-          <Tabs.Panel value="welcome">
-            <WelcomePanel
-              segmentStates={segmentStates}
-              toggleSegmentStateVisibility={toggleSegmentStateVisibility}
-              layers={layers}
-            />
-          </Tabs.Panel>
-          <Tabs.Panel value="segmentDetailsPanel">
-            <SegmentDetailsPanel />
-          </Tabs.Panel>
-        </Tabs>
+      <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside} visibleFrom="sm">
+        {tabs}
       </ScrollArea>
 
       <div className={classes.body}>
+        <Button
+          styles={{
+            root: {
+              // style
+              color: '#333333',
+              backgroundColor: 'white',
+              boxShadow: '0 0 0 2px rgba(0, 0, 0, .1)',
+              // position
+              zIndex: '1',
+              position: 'absolute',
+              transform: 'translateX(-50%)',
+              bottom: '30px',
+              left: '50%',
+            },
+            label: {
+              fontWeight: 'bold',
+            },
+          }}
+          onClick={() => setDrawerOpen((prev) => !prev)}
+          hiddenFrom="sm"
+        >
+          Open Map Settings
+        </Button>
+
         {LOAD_MAP && (
           <ReactMap
             reuseMaps
@@ -176,9 +217,7 @@ export function TrailMap() {
             }}
           >
             <GeolocateControl position="top-right" />
-            <FullscreenControl position="top-right" />
             <NavigationControl position="top-right" />
-            <ScaleControl />
 
             {popup && (
               <MapPopup

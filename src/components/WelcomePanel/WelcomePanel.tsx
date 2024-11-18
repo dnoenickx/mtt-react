@@ -48,6 +48,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
       {Object.entries(trailStates).map(([value, { label, color, visible, description, style }]) =>
         description ? (
           <Indicator
+            key={value}
             inline
             withBorder
             label="?"
@@ -63,7 +64,6 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
             }}
           >
             <Tooltip
-              key={value}
               label={description}
               multiline
               w={180}
