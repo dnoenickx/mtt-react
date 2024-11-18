@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Layer, Source } from 'react-map-gl';
-import { Feature, feature, featureCollection, Properties } from '@turf/turf';
+import { Feature, feature, FeatureCollection, featureCollection, Properties } from '@turf/turf';
 import { Geometry } from 'geojson';
 import { useMediaQuery } from '@mantine/hooks';
 import { SegmentStates } from '@/pages/TrailMap/TrailMap.config';
@@ -17,41 +17,35 @@ export interface SegmentsLayerProps {
 
 export async function loader() {
   const response = await fetch(`http://localhost:8000/api/segments/`);
-  const segments: Segment[] = await response.json();
+  const segments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = await response.json();
   return { segments };
 }
 
 export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   const multiplier = useMediaQuery('(min-width: 415px)') ? 1 : 1.5;
 
-  const { segments } = useLoaderData() as { segments: Segment[] };
-  const segmentGeoJson = useMemo(() => {
-    if (segments === undefined) return featureCollection([] as Feature<Geometry, Properties>[]);
+  const { segments } = useLoaderData() as { segments: GeoJSON.FeatureCollection<GeoJSON.Geometry> };
 
-    return featureCollection(
-      segments.reduce(
-        (features, segment) => {
-          if (segment) {
-            features.push(
-              feature(
-                segment.geometry!,
-                {
-                  state: segment.state,
-                  weight: states[segment.state].weight,
-                  style: states[segment.state].style,
-                },
-                {
-                  id: segment.id,
-                }
-              )
-            );
+  const styledSegments = useMemo(
+    () =>
+      featureCollection(
+        segments.features.map((feature) => {
+          const { properties } = feature;
+          if (properties) {
+            return {
+              ...feature,
+              properties: {
+                ...properties,
+                weight: states[properties['state']].weight,
+                style: states[properties['state']].style,
+              },
+            };
           }
-          return features;
-        },
-        [] as Feature<Geometry, Properties>[]
-      )
-    );
-  }, [segments]);
+          return feature;
+        })
+      ),
+    [segments, states]
+  );
 
   const visibleStates = Object.entries(states)
     .filter(([, value]) => value.visible)
@@ -103,7 +97,7 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   };
 
   return (
-    <Source type="geojson" data={segmentGeoJson}>
+    <Source type="geojson" data={styledSegments}>
       <Layer
         id={segmentsLayerId}
         type="line"
