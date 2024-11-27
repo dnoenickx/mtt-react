@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import { AppShell, Burger, Group, Text } from '@mantine/core';

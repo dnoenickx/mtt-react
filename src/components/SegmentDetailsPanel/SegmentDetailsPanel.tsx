@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
-import { Accordion, Alert, Button, Divider, Skeleton, Text, Title } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
+import { Accordion, Alert, Divider, Skeleton, Text, Title } from '@mantine/core';
+import { useSearchParams } from 'react-router-dom';
 
-import { Segment, Trail } from '@/types';
+import { Trail } from '@/types';
 import { LoadingTimeline, Timeline } from '../Timeline/Timeline';
 
 import classes from './SegmentDetailsPanel.module.css';
 import { LinkGroup, MultiLineText, SkeletonParagraph } from '../Atomic/Atomic';
-import { useSearchParams } from 'react-router-dom';
 import data from '../../data.json';
 import { DatePrecision } from '../../types';
-import { IconAlertCircle } from '@tabler/icons-react';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -33,7 +33,7 @@ export function SegmentDetailsPanel() {
   const segmentId = searchParams.get('segment');
 
   const segment = useMemo(() => {
-    const seg = data['segments'].find(({ id }) => id.toString() === segmentId);
+    const seg = data.segments.find(({ id }) => id.toString() === segmentId);
 
     if (seg === undefined) {
       return null;
@@ -42,8 +42,8 @@ export function SegmentDetailsPanel() {
     const { name, description, links: linksIds, trails: trailsIds, events: eventsIds } = seg;
 
     return {
-      name: name,
-      description: description,
+      name,
+      description,
       links: data.links.filter(({ id }) => linksIds.includes(id)),
       trails: data.trails
         .filter(({ id }) => trailsIds.includes(id))

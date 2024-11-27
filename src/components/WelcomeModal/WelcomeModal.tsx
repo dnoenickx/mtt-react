@@ -8,9 +8,9 @@ export function WelcomeModal() {
   return (
     <Modal opened={opened} onClose={close} withCloseButton={false} centered>
       <Text>
-        <b>November 2024:</b> Now that it's dark and cold, I have plenty of time to work through the
-        backlog of improvements and updates I've been meaning to make! Keep reaching out with your
-        questions, comments, or suggestions:
+        <b>November 2024:</b> Now that it&apos;s dark and cold, I have plenty of time to work
+        through the backlog of improvements and updates I&apos;ve been meaning to make! Keep
+        reaching out with your questions, comments, or suggestions:
       </Text>
       <Group justify="center" my="md">
         <CopyButton value="mass.trail.tracker@gmail.com" timeout={2000}>

@@ -6,8 +6,9 @@ import {
   NavigationControl,
   Popup as MapPopup,
 } from 'react-map-gl';
-import { Affix, Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
+import { Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
 import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
+import { useSearchParams } from 'react-router-dom';
 import classes from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
@@ -15,7 +16,6 @@ import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
 import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway from '@/components/MapLayers/Subway/Subway.layer';
 import SegmentsLayer, { segmentsLayerId } from '@/components/MapLayers/Segments/Segments.layer';
-import { useSearchParams } from 'react-router-dom';
 import { WelcomeModal } from '@/components/WelcomeModal/WelcomeModal';
 
 export interface Hover {
@@ -33,7 +33,7 @@ const LOAD_MAP = true;
 
 export function TrailMap() {
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -107,7 +107,7 @@ export function TrailMap() {
 
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
 
-    if (layer === segmentsLayerId && id != undefined) {
+    if (layer === segmentsLayerId && id !== undefined) {
       searchParams.set('segment', `${id}`);
       setSearchParams(searchParams);
       setActiveTab('segmentDetailsPanel');

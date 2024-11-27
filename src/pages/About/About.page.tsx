@@ -158,7 +158,7 @@ export default function About() {
           </Accordion.Item>
           <Accordion.Item value="mcrt-route" key="mcrt-route" mb="lg">
             <Accordion.Control>
-              What's the best current route along the Mass Central Rail Trail?
+              What&apos;s the best current route along the Mass Central Rail Trail?
             </Accordion.Control>
             <Accordion.Panel>
               Here is the route from the first RN2B (Ride Northampton to Boston) in Fall 2024

@@ -1,47 +1,46 @@
 import { Skeleton, Text, Timeline as MantineTimeline } from '@mantine/core';
-import {
-  // IconExternalLink,
-  IconBarrierBlock,
-  IconRuler,
-  IconConfetti,
-  IconLicense,
-  IconBulldozer,
-  // Icon,
-  // IconGitBranch,
-  // IconGitPullRequest,
-  // IconGitCommit,
-  // IconMessageDots,
-  // IconPencilDollar,
-  // IconShovel,
-  // IconGardenCart,
-  // IconWreckingBall,
-  // IconEdit,
-  // IconCertificate
-  // IconCertificate2
-  // IconFileCertificate
-} from '@tabler/icons-react';
+import {} from // IconExternalLink,
+// IconBarrierBlock,
+// IconRuler,
+// IconConfetti,
+// IconLicense,
+// IconBulldozer,
+// Icon,
+// IconGitBranch,
+// IconGitPullRequest,
+// IconGitCommit,
+// IconMessageDots,
+// IconPencilDollar,
+// IconShovel,
+// IconGardenCart,
+// IconWreckingBall,
+// IconEdit,
+// IconCertificate
+// IconCertificate2
+// IconFileCertificate
+'@tabler/icons-react';
 import { formatDate } from '@/utils';
 
 import { TrailEvent } from '../../types';
 import { LinkGroup, MultiLineText, SkeletonParagraph } from '../Atomic/Atomic';
 
-function getIcon(iconName: string) {
-  const size = 14;
-  switch (iconName) {
-    case 'IconConfetti':
-      return <IconConfetti size={size} />;
-    case 'IconRuler':
-      return <IconRuler size={size} />;
-    case 'IconBulldozer':
-      return <IconBulldozer size={size + 1} />;
-    case 'IconBarrierBlock':
-      return <IconBarrierBlock size={size} stroke={1.25} />;
-    case 'IconLicense':
-      return <IconLicense />;
-    default:
-      return <></>;
-  }
-}
+// function getIcon(iconName: string) {
+//   const size = 14;
+//   switch (iconName) {
+//     case 'IconConfetti':
+//       return <IconConfetti size={size} />;
+//     case 'IconRuler':
+//       return <IconRuler size={size} />;
+//     case 'IconBulldozer':
+//       return <IconBulldozer size={size + 1} />;
+//     case 'IconBarrierBlock':
+//       return <IconBarrierBlock size={size} stroke={1.25} />;
+//     case 'IconLicense':
+//       return <IconLicense />;
+//     default:
+//       return <></>;
+//   }
+// }
 
 export function Timeline({ events }: { events: TrailEvent[] }) {
   const currentDate = new Date();

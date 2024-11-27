@@ -20,12 +20,12 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   const segments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = useMemo(
     () => ({
       type: 'FeatureCollection',
-      features: data['segments'].map(({ id, geometry, state }) => ({
-        id: id,
+      features: data.segments.map(({ id, geometry, state }) => ({
+        id,
         type: 'Feature',
         geometry: geometry as GeoJSON.MultiLineString,
         properties: {
-          state: state,
+          state,
         },
       })),
     }),
@@ -42,8 +42,8 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
               ...feature,
               properties: {
                 ...properties,
-                weight: states[properties['state']].weight,
-                style: states[properties['state']].style,
+                weight: states[properties.state].weight,
+                style: states[properties.state].style,
               },
             };
           }

@@ -23,7 +23,7 @@ interface SkeletonParagraphProps extends SkeletonProps {
 export const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({ lines, ...props }) => {
   const skeletonLines = [];
 
-  for (let i = 0; i < lines - 1; i++) {
+  for (let i = 0; i < lines - 1; i += 1) {
     skeletonLines.push(<Skeleton key={`line-${i}`} {...props} />);
   }
 
