@@ -86,7 +86,7 @@ export default {
 
 const Template = () => (
   <div style={{ maxWidth: 350 }}>
-    <SegmentDetailsPanel segmentId={99} />
+    <SegmentDetailsPanel />
   </div>
 );
 
