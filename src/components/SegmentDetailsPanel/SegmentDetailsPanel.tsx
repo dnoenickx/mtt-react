@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { Accordion, Alert, Button, Divider, Skeleton, Text, Title } from '@mantine/core';
 
@@ -8,7 +8,9 @@ import { LoadingTimeline, Timeline } from '../Timeline/Timeline';
 import classes from './SegmentDetailsPanel.module.css';
 import { LinkGroup, MultiLineText, SkeletonParagraph } from '../Atomic/Atomic';
 import { useSearchParams } from 'react-router-dom';
-import { IconAlertCircle, IconNewSection } from '@tabler/icons-react';
+import data from '../../data.json';
+import { DatePrecision } from '../../types';
+import { IconAlertCircle } from '@tabler/icons-react';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -30,57 +32,38 @@ export function SegmentDetailsPanel() {
   const [searchParams] = useSearchParams();
   const segmentId = searchParams.get('segment');
 
-  const [segment, setSegment] = useState<Segment | undefined>();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const segment = useMemo(() => {
+    const seg = data['segments'].find(({ id }) => id.toString() === segmentId);
 
-  // Fetch segment
-  const fetchSegment = useCallback(async (segmentId: string | null) => {
-    if (segmentId === null) return;
-    setError(false);
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:8000/api/segments/${segmentId}/`);
-      const data: Segment = await response.json();
-      data.events = data.events.map((event) => ({
-        ...event,
-        date: new Date(event.date),
-      }));
-      setSegment(data);
-    } catch (error) {
-      setError(true);
-    } finally {
-      setLoading(false);
+    if (seg === undefined) {
+      return null;
     }
-  }, []);
 
-  useEffect(() => {
-    fetchSegment(segmentId);
-  }, [segmentId, fetchSegment]);
+    const { name, description, links: linksIds, trails: trailsIds, events: eventsIds } = seg;
 
-  // Error fetching
-  if (error) {
-    return (
-      <Alert
-        variant="light"
-        color="red"
-        title="Failed to load segment details"
-        icon={<IconAlertCircle />}
-      >
-        <Button
-          variant="outline"
-          color="red"
-          size="compact-sm"
-          onClick={() => fetchSegment(segmentId)}
-        >
-          Try Again
-        </Button>
-      </Alert>
-    );
-  }
+    return {
+      name: name,
+      description: description,
+      links: data.links.filter(({ id }) => linksIds.includes(id)),
+      trails: data.trails
+        .filter(({ id }) => trailsIds.includes(id))
+        .map((trail) => ({
+          ...trail,
+          links: data.links.filter(({ id }) => trail.links.includes(id)),
+        })),
+      events: data.trail_events
+        .filter(({ id }) => eventsIds.includes(id))
+        .map((event) => ({
+          ...event,
+          date: new Date(event.date),
+          date_precision: event.date_precision as DatePrecision,
+          links: data.links.filter(({ id }) => event.links.includes(id)),
+        })),
+    };
+  }, [segmentId]);
 
   // No segment selected
-  if (!segment && !loading) {
+  if (!segmentId) {
     return (
       <Text c="dimmed" ta="center">
         Use the map to select a trail segment and learn more.
@@ -88,8 +71,18 @@ export function SegmentDetailsPanel() {
     );
   }
 
-  // Loading and final state
-  const showLoaders = loading || !segment;
+  // Error finding segment
+  if (segment === null) {
+    return (
+      <Alert variant="light" color="red" title="Segment not found" icon={<IconAlertCircle />}>
+        Use the map to select another one!
+      </Alert>
+    );
+  }
+
+  // TODO: use loaders again we needed
+  const showLoaders = false;
+
   return (
     <>
       <Title order={4} mb={15} mt={25} style={{ color: 'var(--mantine-color-trail-green-8)' }}>

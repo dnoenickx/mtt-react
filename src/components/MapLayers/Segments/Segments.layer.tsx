@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Layer, Source } from 'react-map-gl';
-import { Feature, feature, FeatureCollection, featureCollection, Properties } from '@turf/turf';
-import { Geometry } from 'geojson';
+import { featureCollection } from '@turf/turf';
 import { useMediaQuery } from '@mantine/hooks';
 import { SegmentStates } from '@/pages/TrailMap/TrailMap.config';
 import { Hover } from '@/pages/TrailMap/TrailMap.page';
-import { Segment, SegmentState } from '@/types';
-import { useLoaderData } from 'react-router-dom';
+import { SegmentState } from '@/types';
+import data from '../../../data.json';
 
 export const segmentsLayerId = 'segments';
 
@@ -15,16 +14,23 @@ export interface SegmentsLayerProps {
   hover: Hover | undefined;
 }
 
-export async function loader() {
-  const response = await fetch(`http://localhost:8000/api/segments/`);
-  const segments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = await response.json();
-  return { segments };
-}
-
 export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
   const multiplier = useMediaQuery('(min-width: 415px)') ? 1 : 1.5;
 
-  const { segments } = useLoaderData() as { segments: GeoJSON.FeatureCollection<GeoJSON.Geometry> };
+  const segments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = useMemo(
+    () => ({
+      type: 'FeatureCollection',
+      features: data['segments'].map(({ id, geometry, state }) => ({
+        id: id,
+        type: 'Feature',
+        geometry: geometry as GeoJSON.MultiLineString,
+        properties: {
+          state: state,
+        },
+      })),
+    }),
+    [data]
+  );
 
   const styledSegments = useMemo(
     () =>
