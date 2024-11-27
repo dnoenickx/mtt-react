@@ -43,20 +43,23 @@ export function SegmentDetailsPanel() {
       return null;
     }
 
-    const { name, description, links: linksIds, trails: trailsIds, events: eventsIds } = seg;
+    const { name, description, trails: trailIds } = seg;
+
+    const linkIds: number[] = seg.links.length > 0 ? seg.links : [];
+    const eventIds: number[] = seg.events.length > 0 ? seg.events : [];
 
     return {
       name,
       description,
-      links: data.links.filter(({ id }) => linksIds.includes(id)),
+      links: data.links.filter(({ id }) => linkIds.includes(id)),
       trails: data.trails
-        .filter(({ id }) => trailsIds.includes(id))
+        .filter(({ id }) => trailIds.includes(id))
         .map((trail) => ({
           ...trail,
           links: data.links.filter(({ id }) => trail.links.includes(id)),
         })),
       events: data.trail_events
-        .filter(({ id }) => eventsIds.includes(id))
+        .filter(({ id }) => eventIds.includes(id))
         .map((event) => ({
           ...event,
           date: new Date(event.date),
