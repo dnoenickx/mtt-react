@@ -63,6 +63,9 @@ export function TrailMap() {
     { label: 'Subway', visible: subwayVisible, toggle: () => setSubwayVisible((prev) => !prev) },
   ];
 
+  // Base Map ///////////////////////////////////////////////////////////////////////
+  const [baseMap, setBaseMap] = useState<string>('mapbox://styles/dnoen/clp8rwblo001001p84znz9viw');
+
   const [hover, setHover] = useState<Hover | undefined>();
   const [cursorStyle, setCursorStyle] = useState<string>();
 
@@ -111,6 +114,7 @@ export function TrailMap() {
       searchParams.set('segment', `${id}`);
       setSearchParams(searchParams);
       setActiveTab('segmentDetailsPanel');
+      setDrawerOpen(true);
     }
   };
 
@@ -144,6 +148,8 @@ export function TrailMap() {
           segmentStates={segmentStates}
           toggleSegmentStateVisibility={toggleSegmentStateVisibility}
           layers={layers}
+          baseMap={baseMap}
+          setBaseMap={setBaseMap}
         />
       </Tabs.Panel>
       <Tabs.Panel value="segmentDetailsPanel">
@@ -209,7 +215,7 @@ export function TrailMap() {
             cursor={cursorStyle}
             interactiveLayerIds={[segmentsLayerId]}
             mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-            mapStyle="mapbox://styles/dnoen/clp8rwblo001001p84znz9viw"
+            mapStyle={baseMap}
             initialViewState={{
               longitude: -71.68,
               latitude: 42.35,

@@ -1,7 +1,19 @@
 import React from 'react';
-import { Checkbox, Divider, Flex, Grid, Indicator, Text, Title, Tooltip } from '@mantine/core';
+import {
+  Checkbox,
+  Divider,
+  Flex,
+  Grid,
+  Group,
+  Indicator,
+  Select,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { SegmentStates } from '../../pages/TrailMap/TrailMap.config';
 import classes from './WelcomePanel.module.css';
+import { IconInfoCircle, IconInfoSquareRounded } from '@tabler/icons-react';
 
 interface LayerOption {
   label: string;
@@ -12,8 +24,8 @@ interface LayerOption {
 interface WelcomePanelProps {
   segmentStates: SegmentStates;
   toggleSegmentStateVisibility: (value: string) => void;
-  // baseMap: string;
-  // setBaseMap: React.Dispatch<React.SetStateAction<string>>;
+  baseMap: string;
+  setBaseMap: React.Dispatch<React.SetStateAction<string>>;
   layers: LayerOption[];
   // setLayers: React.Dispatch<React.SetStateAction<MapLayer[]>>
 }
@@ -36,6 +48,8 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   segmentStates: trailStates,
   toggleSegmentStateVisibility: toggleTrailState,
   layers,
+  baseMap,
+  setBaseMap,
 }) => (
   <>
     <Text>
@@ -119,30 +133,24 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         </Grid.Col>
       ))}
     </Grid>
+    <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
+    <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
+      Base Map
+    </Title>
+    <Select
+      data={[
+        { value: 'mapbox://styles/dnoen/clp8rwblo001001p84znz9viw', label: 'Outdoors' },
+        { value: 'mapbox://styles/mapbox/satellite-streets-v12', label: 'Satellite Streets' },
+        { value: 'mapbox://styles/mapbox/satellite-v9', label: 'Satellite' },
+        { value: 'mapbox://styles/mapbox/light-v11', label: 'Light' },
+        { value: 'mapbox://styles/mapbox/dark-v11', label: 'Dark' },
+      ]}
+      value={baseMap}
+      onChange={(value) => {
+        if (value) setBaseMap(value);
+      }}
+    />
   </>
 );
 
 export default WelcomePanel;
-
-/* <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
-      <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
-        Base Map
-      </Title>
-      <Grid>
-        {BASE_MAPS.map(({ value, label }) => (
-          <Grid.Col span={6}>
-            <Checkbox
-              id={value}
-              key={value}
-              classNames={classes}
-              color={'slate'}
-              label={label}
-              checked={value === baseMap}
-              onChange={() => setBaseMap(value)}
-              wrapperProps={{
-                onClick: () => setBaseMap(value),
-              }}
-            />
-          </Grid.Col>
-        ))}
-      </Grid> */

@@ -25,7 +25,11 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
     </Accordion.Item>
   ));
 
-  return <Accordion classNames={classes}>{items}</Accordion>;
+  return (
+    <Accordion classNames={classes} defaultValue={trails.length ? trails[0].name : undefined}>
+      {items}
+    </Accordion>
+  );
 }
 
 export function SegmentDetailsPanel() {
