@@ -89,7 +89,7 @@ export default function SegmentsLayer({ states, hover }: SegmentsLayerProps) {
       ['get', 'style'],
       // dashed
       'dashed',
-      ['literal', [3, 1]],
+      ['literal', [3, 1.5]],
       // solid
       ['literal', [1, 0]],
     ],

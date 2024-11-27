@@ -1,5 +1,14 @@
 import React from 'react';
-import { Checkbox, Divider, Flex, Grid, Indicator, Text, Title, Tooltip } from '@mantine/core';
+import {
+  Checkbox,
+  Divider,
+  Flex,
+  Grid,
+  Indicator,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { SegmentStates } from '../../pages/TrailMap/TrailMap.config';
 import classes from './WelcomePanel.module.css';
 

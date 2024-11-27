@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Accordion, Alert, Button, Divider, Skeleton, Text, Title } from '@mantine/core';
 
@@ -8,7 +8,7 @@ import { LoadingTimeline, Timeline } from '../Timeline/Timeline';
 import classes from './SegmentDetailsPanel.module.css';
 import { LinkGroup, MultiLineText, SkeletonParagraph } from '../Atomic/Atomic';
 import { useSearchParams } from 'react-router-dom';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle, IconNewSection } from '@tabler/icons-react';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -34,7 +34,9 @@ export function SegmentDetailsPanel() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  const fetchSegment = async () => {
+  // Fetch segment
+  const fetchSegment = useCallback(async (segmentId: string | null) => {
+    if (segmentId === null) return;
     setError(false);
     setLoading(true);
     try {
@@ -50,14 +52,13 @@ export function SegmentDetailsPanel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    if (segmentId) {
-      fetchSegment();
-    }
-  }, [segmentId]);
+    fetchSegment(segmentId);
+  }, [segmentId, fetchSegment]);
 
+  // Error fetching
   if (error) {
     return (
       <Alert
@@ -66,13 +67,19 @@ export function SegmentDetailsPanel() {
         title="Failed to load segment details"
         icon={<IconAlertCircle />}
       >
-        <Button variant="outline" color="red" size="compact-sm" onClick={fetchSegment}>
+        <Button
+          variant="outline"
+          color="red"
+          size="compact-sm"
+          onClick={() => fetchSegment(segmentId)}
+        >
           Try Again
         </Button>
       </Alert>
     );
   }
 
+  // No segment selected
   if (!segment && !loading) {
     return (
       <Text c="dimmed" ta="center">
@@ -81,8 +88,8 @@ export function SegmentDetailsPanel() {
     );
   }
 
+  // Loading and final state
   const showLoaders = loading || !segment;
-
   return (
     <>
       <Title order={4} mb={15} mt={25} style={{ color: 'var(--mantine-color-trail-green-8)' }}>
@@ -122,6 +129,26 @@ export function SegmentDetailsPanel() {
       </Title>
 
       {showLoaders ? <LoadingTimeline /> : <Timeline events={segment.events} />}
+
+      {/* <Fieldset legend="New Event" variant="filled" radius="md" mt="md">
+        <TextInput label="Title" placeholder="Title" />
+        <Textarea label="Description" placeholder="Description" mt="md" />
+
+        <Group grow mt="sm">
+          <Button variant="outline">Discard</Button>
+          <Button variant="filled">Submit</Button>
+        </Group>
+      </Fieldset>
+
+      <Button
+        justify="center"
+        fullWidth
+        leftSection={<IconNewSection size={14} />}
+        variant="light"
+        mt="md"
+      >
+        Add Event
+      </Button> */}
     </>
   );
 }
