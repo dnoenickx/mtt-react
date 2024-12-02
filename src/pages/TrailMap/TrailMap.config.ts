@@ -4,7 +4,7 @@ export type SegmentStates = {
   // [key in SegmentState]: {
   [key: string]: {
     label: string;
-    description?: string;
+    description: string;
     color: ColorValueHex;
     weight: 'heavy' | 'medium' | 'light';
     style: 'solid' | 'dashed';
@@ -15,6 +15,7 @@ export type SegmentStates = {
 export const SEGMENT_STATES: SegmentStates = {
   paved: {
     label: 'Paved',
+    description: 'Paved with asphalt or concrete.',
     color: '#4D6A63',
     weight: 'heavy',
     style: 'solid',
@@ -31,7 +32,7 @@ export const SEGMENT_STATES: SegmentStates = {
   unimproved: {
     label: 'Protected + Unimproved',
     description:
-      'Trail or corridor on publicly-owned or privately-protected land. Conditions vary; see segment descriptions.',
+      'A publically-owned or privately-protected (i.e. land trust) corridor where a trail could be built. In some cases there is an unimproved path that can be used for hiking or mountain biking, but in others there is no trail at all. See segment descriptions for more information.',
     color: '#4D9DE0',
     weight: 'medium',
     style: 'solid',
@@ -40,14 +41,15 @@ export const SEGMENT_STATES: SegmentStates = {
   onRoad: {
     label: 'On Road',
     description:
-      'Suggested route for connecting trails. Conditions vary; see segment descriptions.',
+      'Suggested routes between trails. Conditions vary. See segment descriptions for more information.',
     color: '#31588c',
     weight: 'medium',
     style: 'dashed',
     visible: true,
   },
   construction: {
-    label: 'Under Construciton',
+    label: 'Under Construction',
+    description: 'Currently under construction.',
     color: '#F39B53',
     weight: 'medium',
     style: 'solid',
@@ -55,6 +57,8 @@ export const SEGMENT_STATES: SegmentStates = {
   },
   design: {
     label: 'In Design',
+    description:
+      'Currently or recently in a stage of design. Trails with years-old preliminary desings may instead be marked as proposed.',
     color: '#901c7b',
     weight: 'medium',
     style: 'dashed',
@@ -62,7 +66,8 @@ export const SEGMENT_STATES: SegmentStates = {
   },
   proposed: {
     label: 'Proposed',
-    description: 'Concept only, not a set route. May pass through private land.',
+    description:
+      'Concept for a future trail with minimal official progress toward its implementation. Routes are rough ideas, and so they may pass through private land.',
     color: '#565656',
     weight: 'light',
     style: 'dashed',

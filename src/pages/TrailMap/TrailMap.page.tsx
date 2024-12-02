@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useMemo, useState } from 'react';
 import {
   GeolocateControl,
   Map as ReactMap,
@@ -7,6 +7,7 @@ import {
   Popup as MapPopup,
 } from 'react-map-gl';
 import { Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
 import classes from './TrailMap.module.css';
@@ -35,6 +36,8 @@ export function TrailMap() {
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const isSmallViewport = useMediaQuery('(max-width: 768px)');
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Active Tab /////////////////////////////////////////////////////////////////////
@@ -44,24 +47,21 @@ export function TrailMap() {
 
   // Segment States /////////////////////////////////////////////////////////////////
   const [segmentStates, setSegmentStates] = useState<SegmentStates>(SEGMENT_STATES);
-  const toggleSegmentStateVisibility = (value: string) => {
-    setSegmentStates((prev) => ({
-      ...prev,
-      [value]: { ...prev[value], visible: !prev[value].visible },
-    }));
-  };
 
   // Layers /////////////////////////////////////////////////////////////////////////
   const [commuterRailVisible, setCommuterRailVisible] = useState<boolean>(false);
   const [subwayVisible, setSubwayVisible] = useState<boolean>(false);
-  const layers = [
-    {
-      label: 'Commuter Rail',
-      visible: commuterRailVisible,
-      toggle: () => setCommuterRailVisible((prev) => !prev),
-    },
-    { label: 'Subway', visible: subwayVisible, toggle: () => setSubwayVisible((prev) => !prev) },
-  ];
+  const layers = useMemo(
+    () => [
+      {
+        label: 'Commuter Rail',
+        visible: commuterRailVisible,
+        toggle: () => setCommuterRailVisible((prev) => !prev),
+      },
+      { label: 'Subway', visible: subwayVisible, toggle: () => setSubwayVisible((prev) => !prev) },
+    ],
+    [commuterRailVisible, setCommuterRailVisible, subwayVisible, setSubwayVisible]
+  );
 
   // Base Map ///////////////////////////////////////////////////////////////////////
   const [baseMap, setBaseMap] = useState<string>('mapbox://styles/dnoen/clp8rwblo001001p84znz9viw');
@@ -131,53 +131,71 @@ export function TrailMap() {
     }
   };
 
-  const tabs = (
-    <Tabs
-      value={activeTab}
-      onChange={setActiveTab}
-      radius="xs"
-      classNames={{ tabLabel: classes.tabLabel, panel: classes.panel }}
-    >
-      <Tabs.List grow>
-        <Tabs.Tab value="welcome">Map Settings</Tabs.Tab>
-        <Tabs.Tab value="segmentDetailsPanel">Segment Details</Tabs.Tab>
-      </Tabs.List>
+  const tabs = useMemo(
+    () => (
+      <Tabs
+        value={activeTab}
+        onChange={setActiveTab}
+        radius="xs"
+        classNames={{ tabLabel: classes.tabLabel, panel: classes.panel }}
+      >
+        <Tabs.List grow>
+          <Tabs.Tab value="welcome">Map Settings</Tabs.Tab>
+          <Tabs.Tab value="segmentDetailsPanel">Segment Details</Tabs.Tab>
+        </Tabs.List>
 
-      <Tabs.Panel value="welcome">
-        <WelcomePanel
-          segmentStates={segmentStates}
-          toggleSegmentStateVisibility={toggleSegmentStateVisibility}
-          layers={layers}
-          baseMap={baseMap}
-          setBaseMap={setBaseMap}
-        />
-      </Tabs.Panel>
-      <Tabs.Panel value="segmentDetailsPanel">
-        <SegmentDetailsPanel />
-      </Tabs.Panel>
-    </Tabs>
+        <Tabs.Panel value="welcome">
+          <WelcomePanel
+            segmentStates={segmentStates}
+            toggleSegmentStateVisibility={(value: string) => {
+              setSegmentStates((prev) => ({
+                ...prev,
+                [value]: { ...prev[value], visible: !prev[value].visible },
+              }));
+            }}
+            layers={layers}
+            baseMap={baseMap}
+            setBaseMap={setBaseMap}
+          />
+        </Tabs.Panel>
+        <Tabs.Panel value="segmentDetailsPanel">
+          <SegmentDetailsPanel />
+        </Tabs.Panel>
+      </Tabs>
+    ),
+    [activeTab, segmentStates, setSegmentStates, layers, baseMap, setBaseMap]
   );
+
+  const panel = useMemo(() => {
+    if (isSmallViewport) {
+      // Use Drawer for small screens
+      return (
+        <Drawer
+          position="bottom"
+          size="md"
+          opened={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
+          withCloseButton={false}
+          radius="md"
+        >
+          {tabs}
+        </Drawer>
+      );
+    }
+
+    // Use ScrollArea for larger screens
+    return (
+      <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside}>
+        {tabs}
+      </ScrollArea>
+    );
+  }, [isSmallViewport, drawerOpen, setDrawerOpen, classes.aside, tabs]);
 
   return (
     <div className={classes.container}>
       <WelcomeModal />
 
-      <Drawer
-        position="bottom"
-        size="md"
-        opened={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        withCloseButton={false}
-        keepMounted
-        radius="md"
-        hiddenFrom="sm"
-      >
-        {tabs}
-      </Drawer>
-
-      <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside} visibleFrom="sm">
-        {tabs}
-      </ScrollArea>
+      {panel}
 
       <div className={classes.body}>
         <Button

@@ -2,10 +2,6 @@
   display: flex;
   height: calc(100vh - var(--app-shell-header-height));
   height: calc(100dvh - var(--app-shell-header-height));
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    flex-direction: column;
-  }
 }
 
 .panel {
@@ -28,21 +24,10 @@
   box-shadow:
     rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    max-width: none;
-    width: 100%;
-    order: 2;
-  }
 }
 
 .body {
   background-color: #dceae1;
   flex-grow: 2;
   height: 100%;
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    width: 100%;
-    flex-grow: 1;
-  }
 }
