@@ -1,10 +1,6 @@
 import { Layer, Source } from 'react-map-gl';
 import { lines, stations } from './Subway';
 
-export interface SubwayProps {
-  visible: boolean;
-}
-
 const colorMatch: mapboxgl.Expression = [
   'match',
   ['get', 'LINE'],
@@ -19,17 +15,25 @@ const colorMatch: mapboxgl.Expression = [
   /* other */ '#ccc',
 ];
 
-export default function Subway({ visible }: SubwayProps) {
-  const visibility = visible ? 'visible' : 'none';
+const SUBWAY_LINES_SOURCE = 'subway_lines_source';
+const SUBWAY_STATIONS_SOURCE = 'subway_stations_source';
+export const SUBWAY_SOURCE_IDS = [SUBWAY_LINES_SOURCE, SUBWAY_STATIONS_SOURCE];
 
+const SUBWAY_LINES_LAYER = 'subway_lines_layer';
+const SUBWAY_STATIONS_LAYER = 'subway_stations_layer';
+export const SUBWAY_LAYER_IDS = [SUBWAY_LINES_LAYER, SUBWAY_STATIONS_LAYER];
+
+
+export default function Subway() {
   return (
     <>
       {/*
       // @ts-ignore */}
-      <Source type="geojson" data={lines}>
+      <Source id={SUBWAY_LINES_SOURCE} type="geojson" data={lines}>
         <Layer
+          id={SUBWAY_LINES_LAYER}
           type="line"
-          layout={{ visibility }}
+          layout={{ visibility: 'none' }}
           paint={{
             'line-width': 1.5,
             'line-color': colorMatch,
@@ -38,10 +42,11 @@ export default function Subway({ visible }: SubwayProps) {
       </Source>
       {/*
       // @ts-ignore */}
-      <Source type="geojson" data={stations}>
+      <Source id={SUBWAY_STATIONS_SOURCE} type="geojson" data={stations}>
         <Layer
+          id={SUBWAY_STATIONS_LAYER}
           type="circle"
-          layout={{ visibility }}
+          layout={{ visibility: 'none' }}
           paint={{
             'circle-radius': 2.75,
             'circle-color': colorMatch,

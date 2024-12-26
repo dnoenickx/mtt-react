@@ -13,10 +13,10 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { SegmentStates } from '../../pages/TrailMap/TrailMap.config';
+import { SegmentStates, SEGMENT_STATES } from '../../pages/TrailMap/TrailMap.config';
 import classes from './WelcomePanel.module.css';
 
-interface LayerOption {
+export interface LayerOption {
   label: string;
   visible: boolean;
   toggle: () => void;
@@ -56,7 +56,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   const trailExplanation = useMemo(
     () => (
       <>
-        {Object.entries(trailStates).map(
+        {Object.entries(SEGMENT_STATES).map(
           ([value, { label, color, description, style }], index, array) => (
             <Box key={value}>
               <Group gap="xs" align="baseline">
@@ -76,7 +76,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         )}
       </>
     ),
-    [trailStates]
+    []
   );
 
   return (

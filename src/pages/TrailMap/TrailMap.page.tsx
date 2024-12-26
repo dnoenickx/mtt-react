@@ -1,220 +1,225 @@
-import React, { ReactElement, useMemo, useState } from 'react';
-import {
-  GeolocateControl,
-  Map as ReactMap,
-  MapLayerMouseEvent,
-  NavigationControl,
-  Popup as MapPopup,
-} from 'react-map-gl';
-import { Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
+import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import Map, { MapLayerMouseEvent, MapRef, NavigationControl } from 'react-map-gl';
+import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconBrandGoogleMaps, IconMap2 } from '@tabler/icons-react';
 import { useSearchParams } from 'react-router-dom';
-import classes from './TrailMap.module.css';
+import styles from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
-import WelcomePanel from '@/components/WelcomePanel/WelcomePanel';
+import WelcomePanel, { LayerOption } from '@/components/WelcomePanel/WelcomePanel';
 import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
-import CommuterRailLayer from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
-import Subway from '@/components/MapLayers/Subway/Subway.layer';
-import SegmentsLayer, { segmentsLayerId } from '@/components/MapLayers/Segments/Segments.layer';
+import SegmentsLayer, {
+  SEGMENTS_SYMBOLOGY_LAYER_ID,
+  SEGMENTS_SOURCE_ID,
+  SEGMENTS_HOVER_LAYER_ID,
+} from '@/components/MapLayers/Segments/Segments.layer';
 import { WelcomeModal } from '@/components/WelcomeModal/WelcomeModal';
+import CommuterRailLayer, {
+  COMMUTER_RAIL_LAYER_IDS,
+} from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
+import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.layer';
 
-export interface Hover {
-  layer: string;
-  id: string | number | undefined;
-}
+const DEFAULT_BASEMAP = 'mapbox://styles/dnoen/clp8rwblo001001p84znz9viw';
 
-interface Popup {
-  lng: number;
-  lat: number;
-  content: ReactElement;
-}
-
-const LOAD_MAP = true;
-
-export function TrailMap() {
-  const [popup, setPopup] = useState<Popup | undefined>(undefined);
-  const [searchParams, setSearchParams] = useSearchParams();
-
+function MapAside({
+  activeTab,
+  setActiveTab,
+  layers,
+  drawerOpen,
+  setDrawerOpen,
+  mapRef,
+}: {
+  activeTab: string | null;
+  setActiveTab: React.Dispatch<React.SetStateAction<string | null>>;
+  layers: LayerOption[];
+  drawerOpen: boolean;
+  setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  mapRef: React.RefObject<MapRef>;
+}) {
   const isSmallViewport = useMediaQuery('(max-width: 768px)');
+  const [segmentStates, setSegmentStates] = useState<SegmentStates>(SEGMENT_STATES);
+  const [baseMap, setBaseMap] = useState<string>(DEFAULT_BASEMAP);
 
+  const handleStateToggle = (value: string) => {
+    setSegmentStates((prev) => {
+      const newStates = {
+        ...prev,
+        [value]: { ...prev[value], visible: !prev[value].visible },
+      };
+
+      const map = mapRef.current?.getMap();
+      if (map) {
+        if (map.getLayer(SEGMENTS_SYMBOLOGY_LAYER_ID) && map.getLayer(SEGMENTS_HOVER_LAYER_ID)) {
+          const visibleStates = Object.entries(newStates)
+            .filter(([, value]) => value.visible)
+            .map(([key]) => key);
+          map.setFilter(SEGMENTS_SYMBOLOGY_LAYER_ID, ['in', 'state', ...visibleStates]);
+          map.setFilter(SEGMENTS_HOVER_LAYER_ID, ['in', 'state', ...visibleStates]);
+          return newStates;
+        }
+      }
+      return prev;
+    });
+  };
+
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+    if (map) {
+      map.setStyle(baseMap);
+    }
+  }, [baseMap]);
+
+  const tabs = (
+    <Tabs
+      value={activeTab}
+      onChange={setActiveTab}
+      radius="xs"
+      classNames={{ tabLabel: styles.tabLabel, panel: styles.panel }}
+    >
+      <Tabs.List grow>
+        <Tabs.Tab value="welcome">Map Settings</Tabs.Tab>
+        <Tabs.Tab value="segmentDetailsPanel">Segment Details</Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="welcome">
+        <WelcomePanel
+          segmentStates={segmentStates}
+          toggleSegmentStateVisibility={handleStateToggle}
+          layers={layers}
+          baseMap={baseMap}
+          setBaseMap={setBaseMap}
+        />
+      </Tabs.Panel>
+      <Tabs.Panel value="segmentDetailsPanel">
+        <SegmentDetailsPanel />
+      </Tabs.Panel>
+    </Tabs>
+  );
+
+  // Use Drawer for small screens
+  if (isSmallViewport) {
+    return (
+      <Drawer
+        position="bottom"
+        size="md"
+        opened={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        withCloseButton={false}
+        radius="md"
+      >
+        {tabs}
+      </Drawer>
+    );
+  }
+
+  // Use ScrollArea for larger screens
+  return (
+    <ScrollArea h="100%" type="scroll" scrollbars="y" className={styles.aside}>
+      {tabs}
+    </ScrollArea>
+  );
+}
+
+export function TrailMapPage() {
+  const mapRef = useRef<MapRef>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // Active Tab /////////////////////////////////////////////////////////////////////
   const [activeTab, setActiveTab] = useState<string | null>(
     searchParams.get('segment') ? 'segmentDetailsPanel' : 'welcome'
   );
 
-  // Segment States /////////////////////////////////////////////////////////////////
-  const [segmentStates, setSegmentStates] = useState<SegmentStates>(SEGMENT_STATES);
+  // Layers
+  const [layersVisibility, setLayersVisibility] = useState({
+    commuterRail: false,
+    subway: false,
+  });
 
-  // Layers /////////////////////////////////////////////////////////////////////////
-  const [commuterRailVisible, setCommuterRailVisible] = useState<boolean>(false);
-  const [subwayVisible, setSubwayVisible] = useState<boolean>(false);
-  const layers = useMemo(
-    () => [
-      {
-        label: 'Commuter Rail',
-        visible: commuterRailVisible,
-        toggle: () => setCommuterRailVisible((prev) => !prev),
-      },
-      { label: 'Subway', visible: subwayVisible, toggle: () => setSubwayVisible((prev) => !prev) },
-    ],
-    [commuterRailVisible, setCommuterRailVisible, subwayVisible, setSubwayVisible]
-  );
+  const toggleLayerVisibility = (layer: keyof typeof layersVisibility) => {
+    setLayersVisibility((prev) => {
+      const map = mapRef.current?.getMap();
+      if (map) {
+        const visibility = prev[layer] ? 'none' : 'visible';
 
-  // Base Map ///////////////////////////////////////////////////////////////////////
-  const [baseMap, setBaseMap] = useState<string>('mapbox://styles/dnoen/clp8rwblo001001p84znz9viw');
+        let layerIds: string[] = [];
+        switch (layer) {
+          case 'subway':
+            layerIds = SUBWAY_LAYER_IDS;
+            break;
+          case 'commuterRail':
+            layerIds = COMMUTER_RAIL_LAYER_IDS;
+            break;
+          default:
+            return prev;
+        }
 
-  const [hover, setHover] = useState<Hover | undefined>();
-  const [cursorStyle, setCursorStyle] = useState<string>();
+        layerIds.forEach((layerId) => {
+          if (map.getLayer(layerId)) {
+            map.setLayoutProperty(layerId, 'visibility', visibility);
+          }
+        });
 
-  const onContextHandler = (e: MapLayerMouseEvent) => {
-    const [lng, lat] = e.lngLat.toArray();
+        return {
+          ...prev,
+          [layer]: !prev[layer],
+        };
+      }
 
-    if (!e.features || e.features.length === 0) {
-      const googleMapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
-      const appleMapsUrl = `https://maps.apple.com/?ll=${lat},${lng}&q=Dropped%20Pin`;
-
-      setPopup({
-        lng,
-        lat,
-        content: (
-          <Stack gap="xs">
-            <Button
-              leftSection={<IconBrandGoogleMaps size={14} />}
-              variant="default"
-              component="a"
-              target="_blank"
-              href={googleMapsUrl}
-            >
-              Open in Google Maps
-            </Button>
-            <Button
-              leftSection={<IconMap2 size={14} />}
-              variant="default"
-              component="a"
-              target="_blank"
-              href={appleMapsUrl}
-            >
-              Open in Apple Maps
-            </Button>
-          </Stack>
-        ),
-      });
-    }
+      return prev;
+    });
   };
 
-  const onClickHandler = (e: MapLayerMouseEvent) => {
+  const layers = useMemo(
+    () => ({
+      commuterRail: {
+        label: 'Commuter Rail',
+        visible: layersVisibility.commuterRail,
+        toggle: () => toggleLayerVisibility('commuterRail'),
+      },
+      subway: {
+        label: 'Subway',
+        visible: layersVisibility.subway,
+        toggle: () => toggleLayerVisibility('subway'),
+      },
+    }),
+    [layersVisibility]
+  );
+
+  // On Segment Click
+  const onClickHandler = useCallback((e: MapLayerMouseEvent) => {
     if (!e.features || e.features.length === 0) return;
 
     const [id, layer] = [e.features[0].id, e.features[0].layer.id];
 
-    if (layer === segmentsLayerId && id !== undefined) {
+    if (layer === SEGMENTS_HOVER_LAYER_ID && id !== undefined) {
       searchParams.set('segment', `${id}`);
       setSearchParams(searchParams);
       setActiveTab('segmentDetailsPanel');
       setDrawerOpen(true);
     }
-  };
+  }, []);
 
-  const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
-    if (!e.features?.length) {
-      setHover(undefined);
-      setCursorStyle(undefined);
-    } else {
-      const [id, layer] = [e.features[0].id, e.features[0].layer.id];
-      if (!hover || layer !== hover.layer || id !== hover.id) {
-        setHover({ layer, id });
-        setCursorStyle('pointer');
-      }
-    }
-  };
-
-  const tabs = useMemo(
-    () => (
-      <Tabs
-        value={activeTab}
-        onChange={setActiveTab}
-        radius="xs"
-        classNames={{ tabLabel: classes.tabLabel, panel: classes.panel }}
-      >
-        <Tabs.List grow>
-          <Tabs.Tab value="welcome">Map Settings</Tabs.Tab>
-          <Tabs.Tab value="segmentDetailsPanel">Segment Details</Tabs.Tab>
-        </Tabs.List>
-
-        <Tabs.Panel value="welcome">
-          <WelcomePanel
-            segmentStates={segmentStates}
-            toggleSegmentStateVisibility={(value: string) => {
-              setSegmentStates((prev) => ({
-                ...prev,
-                [value]: { ...prev[value], visible: !prev[value].visible },
-              }));
-            }}
-            layers={layers}
-            baseMap={baseMap}
-            setBaseMap={setBaseMap}
-          />
-        </Tabs.Panel>
-        <Tabs.Panel value="segmentDetailsPanel">
-          <SegmentDetailsPanel />
-        </Tabs.Panel>
-      </Tabs>
-    ),
-    [activeTab, segmentStates, setSegmentStates, layers, baseMap, setBaseMap]
+  const mapElement = useMemo(
+    () => <TrailMap mapRef={mapRef} onClick={onClickHandler} />,
+    [mapRef, onClickHandler]
   );
 
-  const panel = useMemo(() => {
-    if (isSmallViewport) {
-      // Use Drawer for small screens
-      return (
-        <Drawer
-          position="bottom"
-          size="md"
-          opened={drawerOpen}
-          onClose={() => setDrawerOpen(false)}
-          withCloseButton={false}
-          radius="md"
-        >
-          {tabs}
-        </Drawer>
-      );
-    }
-
-    // Use ScrollArea for larger screens
-    return (
-      <ScrollArea h="100%" type="scroll" scrollbars="y" className={classes.aside}>
-        {tabs}
-      </ScrollArea>
-    );
-  }, [isSmallViewport, drawerOpen, setDrawerOpen, classes.aside, tabs]);
-
   return (
-    <div className={classes.container}>
+    <div className={styles.container}>
       <WelcomeModal />
 
-      {panel}
+      <MapAside
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        layers={Object.values(layers)}
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
+        mapRef={mapRef}
+      />
 
-      <div className={classes.body}>
+      <div className={styles.body}>
         <Button
-          styles={{
-            root: {
-              // style
-              color: '#333333',
-              backgroundColor: 'white',
-              boxShadow: '0 0 0 2px rgba(0, 0, 0, .1)',
-              // position
-              zIndex: '1',
-              position: 'absolute',
-              transform: 'translateX(-50%)',
-              bottom: '30px',
-              left: '50%',
-            },
-            label: {
-              fontWeight: 'bold',
-            },
+          classNames={{
+            root: styles.buttonRoot,
+            label: styles.buttonLabel,
           }}
           onClick={() => setDrawerOpen((prev) => !prev)}
           hiddenFrom="sm"
@@ -222,47 +227,93 @@ export function TrailMap() {
           Open Map Settings
         </Button>
 
-        {LOAD_MAP && (
-          <ReactMap
-            reuseMaps
-            dragRotate={false}
-            boxZoom={false}
-            onContextMenu={onContextHandler}
-            onMouseMove={onMouseMoveHandler}
-            onClick={onClickHandler}
-            cursor={cursorStyle}
-            interactiveLayerIds={[segmentsLayerId]}
-            mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-            mapStyle={baseMap}
-            initialViewState={{
-              longitude: -71.68,
-              latitude: 42.35,
-              zoom: 8.78,
-            }}
-          >
-            <GeolocateControl position="top-right" />
-            <NavigationControl position="top-right" />
-
-            {popup && (
-              <MapPopup
-                anchor="top-left"
-                longitude={Number(popup.lng)}
-                latitude={Number(popup.lat)}
-                onClose={() => setPopup(undefined)}
-                closeButton={false}
-                closeOnMove
-                style={{ borderTopColor: 'gray' }}
-              >
-                {popup.content}
-              </MapPopup>
-            )}
-
-            <SegmentsLayer states={segmentStates} hover={hover} />
-            {commuterRailVisible && <CommuterRailLayer visible={commuterRailVisible} />}
-            {subwayVisible && <Subway visible={subwayVisible} />}
-          </ReactMap>
-        )}
+        {mapElement}
       </div>
     </div>
+  );
+}
+
+function TrailMap({
+  mapRef,
+  onClick,
+}: {
+  mapRef: React.RefObject<MapRef>;
+  onClick: (e: MapLayerMouseEvent) => void;
+}) {
+  const hoveredSegmentId = useRef<string | null>(null);
+
+  console.log('map render');
+
+  const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: [SEGMENTS_HOVER_LAYER_ID],
+    });
+
+    if (features.length > 0) {
+      const feature = features[0];
+      const featureId = feature.id?.toString();
+
+      if (hoveredSegmentId.current !== featureId) {
+        map.getCanvas().style.cursor = 'pointer';
+
+        // Reset the previously hovered feature
+        if (hoveredSegmentId.current) {
+          map.setFeatureState(
+            { source: SEGMENTS_SOURCE_ID, id: hoveredSegmentId.current },
+            { hover: false }
+          );
+        }
+
+        // Set the new hovered feature
+        if (featureId) {
+          map.setFeatureState({ source: SEGMENTS_SOURCE_ID, id: featureId }, { hover: true });
+          hoveredSegmentId.current = featureId;
+        }
+      }
+    } else {
+      // Reset hover state if no features are under the cursor
+      map.getCanvas().style.cursor = '';
+      if (hoveredSegmentId.current) {
+        map.setFeatureState(
+          { source: SEGMENTS_SOURCE_ID, id: hoveredSegmentId.current },
+          { hover: false }
+        );
+        hoveredSegmentId.current = null;
+      }
+    }
+  };
+
+  return (
+    <Map
+      reuseMaps
+      ref={mapRef}
+      attributionControl={false}
+      mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
+      mapStyle={DEFAULT_BASEMAP}
+      maxZoom={17}
+      minZoom={7}
+      maxBounds={[
+        [-74.5, 40.5],
+        [-69.5, 43.5],
+      ]}
+      boxZoom={false}
+      dragRotate={false}
+      initialViewState={{
+        longitude: -71.68,
+        latitude: 42.35,
+        zoom: 8.78,
+      }}
+      interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
+      onMouseMove={onMouseMoveHandler}
+      onClick={onClick}
+    >
+      <NavigationControl />
+      <SegmentsLayer />
+      <Subway />
+      <CommuterRailLayer />
+    </Map>
   );
 }

@@ -74,29 +74,3 @@ export const SEGMENT_STATES: SegmentStates = {
     visible: true,
   },
 };
-
-// BASE MAPS ///////////////////////////////////////////////
-
-export interface BaseMap {
-  value: string;
-  label: string;
-  description: '';
-}
-
-export const BASE_MAPS: BaseMap[] = [
-  {
-    value: 'default',
-    label: 'Default',
-    description: '',
-  },
-  {
-    value: 'sattellite',
-    label: 'Sattellite',
-    description: '',
-  },
-  {
-    value: 'outdoors',
-    label: 'Outdoors',
-    description: '',
-  },
-];

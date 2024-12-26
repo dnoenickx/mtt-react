@@ -1,21 +1,25 @@
 import { Layer, Source } from 'react-map-gl';
 import { lines, stations } from './CommuterRail';
 
-export interface CommuterRailProps {
-  visible: boolean;
-}
+const COMMUTER_RAIL_LINES_SOURCE = 'commuter_rail_lines_source';
+const COMMUTER_RAIL_STATIONS_SOURCE = 'commuter_rail_stations_source';
+export const COMMUTER_RAIL_SOURCE_IDS = [COMMUTER_RAIL_LINES_SOURCE, COMMUTER_RAIL_STATIONS_SOURCE];
 
-export default function CommuterRailLayer({ visible }: CommuterRailProps) {
-  const visibility = visible ? 'visible' : 'none';
+const COMMUTER_RAIL_LINES_LAYER = 'commuter_rail_lines_layer';
+const COMMUTER_RAIL_STATIONS_LAYER = 'commuter_rail_stations_layer';
+export const COMMUTER_RAIL_LAYER_IDS = [COMMUTER_RAIL_LINES_LAYER, COMMUTER_RAIL_STATIONS_LAYER];
 
+
+export default function CommuterRailLayer() {
   return (
     <>
       {/*
       // @ts-ignore */}
-      <Source type="geojson" data={lines}>
+      <Source id={COMMUTER_RAIL_LINES_SOURCE} type="geojson" data={lines}>
         <Layer
+          id={COMMUTER_RAIL_LINES_LAYER}
           type="line"
-          layout={{ visibility }}
+          layout={{ visibility: 'none' }}
           paint={{
             'line-width': 1.5,
             'line-color': '#B3439E',
@@ -24,10 +28,11 @@ export default function CommuterRailLayer({ visible }: CommuterRailProps) {
       </Source>
       {/*
       // @ts-ignore */}
-      <Source type="geojson" data={stations}>
+      <Source id={COMMUTER_RAIL_STATIONS_SOURCE} type="geojson" data={stations}>
         <Layer
+          id={COMMUTER_RAIL_STATIONS_LAYER}
           type="circle"
-          layout={{ visibility }}
+          layout={{ visibility: 'none' }}
           paint={{
             'circle-radius': 2.75,
             'circle-color': '#B3439E',
