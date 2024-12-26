@@ -1,5 +1,5 @@
-import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
-import Map, { MapLayerMouseEvent, MapRef, NavigationControl } from 'react-map-gl';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
+import Map, { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -18,8 +18,6 @@ import CommuterRailLayer, {
 } from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.layer';
 
-const DEFAULT_BASEMAP = 'mapbox://styles/dnoen/clp8rwblo001001p84znz9viw';
-
 function MapAside({
   activeTab,
   setActiveTab,
@@ -37,7 +35,6 @@ function MapAside({
 }) {
   const isSmallViewport = useMediaQuery('(max-width: 768px)');
   const [segmentStates, setSegmentStates] = useState<SegmentStates>(SEGMENT_STATES);
-  const [baseMap, setBaseMap] = useState<string>(DEFAULT_BASEMAP);
 
   const handleStateToggle = (value: string) => {
     setSegmentStates((prev) => {
@@ -61,13 +58,6 @@ function MapAside({
     });
   };
 
-  useEffect(() => {
-    const map = mapRef.current?.getMap();
-    if (map) {
-      map.setStyle(baseMap);
-    }
-  }, [baseMap]);
-
   const tabs = (
     <Tabs
       value={activeTab}
@@ -85,8 +75,6 @@ function MapAside({
           segmentStates={segmentStates}
           toggleSegmentStateVisibility={handleStateToggle}
           layers={layers}
-          baseMap={baseMap}
-          setBaseMap={setBaseMap}
         />
       </Tabs.Panel>
       <Tabs.Panel value="segmentDetailsPanel">
@@ -242,8 +230,6 @@ function TrailMap({
 }) {
   const hoveredSegmentId = useRef<string | null>(null);
 
-  console.log('map render');
-
   const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
     const map = mapRef.current?.getMap();
     if (!map) return;
@@ -288,11 +274,8 @@ function TrailMap({
 
   return (
     <Map
-      reuseMaps
       ref={mapRef}
       attributionControl={false}
-      mapboxAccessToken={import.meta.env.VITE_MAPBOX_ACCESS_TOKEN}
-      mapStyle={DEFAULT_BASEMAP}
       maxZoom={17}
       minZoom={7}
       maxBounds={[
@@ -306,11 +289,27 @@ function TrailMap({
         latitude: 42.35,
         zoom: 8.78,
       }}
+      mapStyle={{
+        version: 8,
+        sources: {
+          stadia: {
+            type: 'raster',
+            tiles: ['https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}@2x.png'],
+            tileSize: 256,
+          },
+        },
+        layers: [
+          {
+            id: 'stadia-layer',
+            type: 'raster',
+            source: 'stadia',
+          },
+        ],
+      }}
       interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
       onMouseMove={onMouseMoveHandler}
       onClick={onClick}
     >
-      <NavigationControl />
       <SegmentsLayer />
       <Subway />
       <CommuterRailLayer />

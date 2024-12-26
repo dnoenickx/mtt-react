@@ -44,7 +44,7 @@ export const SEGMENT_STATES: SegmentStates = {
       'Suggested routes between trails. Conditions vary. See segment descriptions for more information.',
     color: '#31588c',
     weight: 'medium',
-    style: 'dashed',
+    style: 'solid',
     visible: true,
   },
   construction: {
@@ -61,7 +61,7 @@ export const SEGMENT_STATES: SegmentStates = {
       'Currently or recently in a stage of design. Trails with years-old preliminary desings may instead be marked as proposed.',
     color: '#901c7b',
     weight: 'medium',
-    style: 'dashed',
+    style: 'solid',
     visible: true,
   },
   proposed: {
@@ -70,7 +70,7 @@ export const SEGMENT_STATES: SegmentStates = {
       'Concept for a future trail with minimal official progress toward its implementation. Routes are rough ideas, and so they may pass through private land.',
     color: '#565656',
     weight: 'light',
-    style: 'dashed',
+    style: 'solid',
     visible: true,
   },
 };

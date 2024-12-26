@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Layer, Source } from 'react-map-gl';
+import { Layer, Source } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import DATA from '../../../data.json';
@@ -55,15 +55,7 @@ export default function SegmentsLayer() {
             // thinner otherwise
             1 * multiplier,
           ],
-          'line-dasharray': [
-            'match',
-            ['get', 'style'],
-            // dashed
-            'dashed',
-            ['literal', [3, 1.5]],
-            // solid
-            ['literal', [1, 0]],
-          ],
+          // @ts-ignore
           'line-color': [
             'match',
             ['get', 'state'],

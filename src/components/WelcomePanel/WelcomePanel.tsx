@@ -25,8 +25,6 @@ export interface LayerOption {
 interface WelcomePanelProps {
   segmentStates: SegmentStates;
   toggleSegmentStateVisibility: (value: string) => void;
-  baseMap: string;
-  setBaseMap: React.Dispatch<React.SetStateAction<string>>;
   layers: LayerOption[];
 }
 
@@ -48,8 +46,6 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   segmentStates: trailStates,
   toggleSegmentStateVisibility: toggleTrailState,
   layers,
-  baseMap,
-  setBaseMap,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
 
@@ -143,23 +139,6 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
           </Grid.Col>
         ))}
       </Grid>
-      <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
-      <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
-        Base Map
-      </Title>
-      <Select
-        data={[
-          { value: 'mapbox://styles/dnoen/clp8rwblo001001p84znz9viw', label: 'Outdoors' },
-          { value: 'mapbox://styles/mapbox/satellite-streets-v12', label: 'Satellite Streets' },
-          { value: 'mapbox://styles/mapbox/satellite-v9', label: 'Satellite' },
-          { value: 'mapbox://styles/mapbox/light-v11', label: 'Light' },
-          { value: 'mapbox://styles/mapbox/dark-v11', label: 'Dark' },
-        ]}
-        value={baseMap}
-        onChange={(value) => {
-          if (value) setBaseMap(value);
-        }}
-      />
     </>
   );
 };
