@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useCallback } from 'react';
-import Map, { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import Map, { AttributionControl, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import CommuterRailLayer, {
   COMMUTER_RAIL_LAYER_IDS,
 } from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.layer';
+import { mapStyle } from './MapStyle';
 
 function MapAside({
   activeTab,
@@ -275,12 +276,11 @@ function TrailMap({
   return (
     <Map
       ref={mapRef}
-      attributionControl={false}
       maxZoom={17}
       minZoom={7}
       maxBounds={[
-        [-74.5, 40.5],
-        [-69.5, 43.5],
+        [-74.563994, 40.935011],
+        [-69.07083, 43.405765],
       ]}
       boxZoom={false}
       dragRotate={false}
@@ -289,23 +289,8 @@ function TrailMap({
         latitude: 42.35,
         zoom: 8.78,
       }}
-      mapStyle={{
-        version: 8,
-        sources: {
-          stadia: {
-            type: 'raster',
-            tiles: ['https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}@2x.png'],
-            tileSize: 256,
-          },
-        },
-        layers: [
-          {
-            id: 'stadia-layer',
-            type: 'raster',
-            source: 'stadia',
-          },
-        ],
-      }}
+      // @ts-ignore
+      mapStyle={mapStyle}
       interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
       onMouseMove={onMouseMoveHandler}
       onClick={onClick}
