@@ -1,4 +1,4 @@
-import { Layer, Source } from 'react-map-gl';
+import { Layer, Source } from 'react-map-gl/maplibre';
 import { lines, stations } from './CommuterRail';
 
 const COMMUTER_RAIL_LINES_SOURCE = 'commuter_rail_lines_source';
@@ -8,7 +8,6 @@ export const COMMUTER_RAIL_SOURCE_IDS = [COMMUTER_RAIL_LINES_SOURCE, COMMUTER_RA
 const COMMUTER_RAIL_LINES_LAYER = 'commuter_rail_lines_layer';
 const COMMUTER_RAIL_STATIONS_LAYER = 'commuter_rail_stations_layer';
 export const COMMUTER_RAIL_LAYER_IDS = [COMMUTER_RAIL_LINES_LAYER, COMMUTER_RAIL_STATIONS_LAYER];
-
 
 export default function CommuterRailLayer() {
   return (

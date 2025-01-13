@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import {
+  ActionIcon,
   Box,
   Checkbox,
   Divider,
@@ -7,14 +8,16 @@ import {
   Grid,
   Group,
   Modal,
-  Pill,
-  Select,
+  Space,
   Text,
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { IconQuestionMark } from '@tabler/icons-react';
+import { formatDistance } from 'date-fns';
 import { SegmentStates, SEGMENT_STATES } from '../../pages/TrailMap/TrailMap.config';
 import classes from './WelcomePanel.module.css';
+import { useData } from '../DataProvider/DataProvider';
 
 export interface LayerOption {
   label: string;
@@ -48,6 +51,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   layers,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
+  const { lastUpdated } = useData();
 
   const trailExplanation = useMemo(
     () => (
@@ -81,12 +85,18 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         Welcome! Configure the map settings below and select a trail on the map to learn more.
       </Text>
       <Group gap="sm">
-        <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
+        <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
           Trails
         </Title>
-        <Pill c="dimmed" onClick={open}>
-          ?
-        </Pill>
+        <ActionIcon
+          variant="light"
+          onClick={open}
+          radius="xl"
+          title="Show status explanations"
+          aria-label="Show status explanations"
+        >
+          <IconQuestionMark style={{ width: '70%', height: '70%' }} stroke={2} />
+        </ActionIcon>
         <Modal
           opened={opened}
           onClose={close}
@@ -119,8 +129,8 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
           />
         ))}
       </Flex>
-      <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
-      <Title order={4} style={{ margin: '15px 0', color: 'var(--mantine-color-trail-green-8)' }}>
+      <Divider size="xs" mt="xl" mb="md" />
+      <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
         Layers
       </Title>
       <Grid>
@@ -139,6 +149,13 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
           </Grid.Col>
         ))}
       </Grid>
+      <Space h="xl" />
+      <Text c="dimmed" size="xs" ta="center">
+        Last Updated: {formatDistance(lastUpdated, new Date(), { addSuffix: true })}
+      </Text>
+      <Text c="dimmed" size="xs" ta="center" td="underline">
+        mass.trail.tracker@gmail.com
+      </Text>
     </>
   );
 };

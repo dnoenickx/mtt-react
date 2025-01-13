@@ -19,14 +19,14 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^17.0.0",
     "@mantine/core": "^7.5.0",
     "@mantine/form": "^7.8.1",
     "@mantine/hooks": "^7.5.0",
+    "@mantine/notifications": "^7.15.2",
     "@tabler/icons-react": "^2.44.0",
     "@turf/turf": "^6.5.0",
-    "@types/mapbox-gl": "^2.7.19",
     "date-fns": "^3.6.0",
-    "mapbox-gl": "^3.0.1",
     "maplibre-gl": "^4.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -75,5 +75,5 @@
     "vite-tsconfig-paths": "^4.2.1",
     "vitest": "^0.34.6"
   },
-  "packageManager": "yarn@4.0.1"
+  "packageManager": "yarn@4.5.3"
 }

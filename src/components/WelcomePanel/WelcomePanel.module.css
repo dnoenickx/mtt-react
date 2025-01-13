@@ -1,22 +1,14 @@
 .root {
-  border: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
   border-radius: var(--mantine-radius-md);
+  font-weight: 500;
   transition:
     color 100ms ease,
     background-color 100ms ease,
     border-color 100ms ease;
   cursor: pointer;
 
-  .body {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-  }
-
-  .inner {
-    margin-right: 0.5rem;
-  }
 
   &[data-checked] {
     background-color: var(--checkbox-color);

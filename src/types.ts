@@ -1,12 +1,4 @@
-import { MultiLineString, LineString } from 'geojson';
-
-export type Trail = {
-  id: number;
-  slug: string;
-  name: string;
-  description: string;
-  links: Link[];
-};
+import { MultiLineString } from 'geojson';
 
 export type SegmentState =
   | 'paved'
@@ -17,16 +9,37 @@ export type SegmentState =
   | 'design'
   | 'proposed';
 
+export type DatePrecision = 'd' | 'm' | 'y';
+
+// Main types within app ///////////////////////////////////////////////////
+
+export type Trail = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  links: Link[];
+};
+
 export type Segment = {
   id: number;
-  trails: Trail[];
-  events: TrailEvent[];
   name: string;
   description: string;
   state: SegmentState;
-  geometry?: MultiLineString | LineString;
+  geometry: MultiLineString;
+  trails: Trail[];
+  events: TrailEvent[];
   links: Link[];
 };
+
+export type Link = {
+  url: string;
+  text: string;
+};
+
+// Raw types for loading/exporting  ///////////////////////////////////////////////////
+
+export type RawTrail = Trail;
 
 export type TrailEvent = {
   id: number;
@@ -34,30 +47,61 @@ export type TrailEvent = {
   date: Date;
   date_precision: DatePrecision;
   description: string;
-  icon?: string;
   links: Link[];
 };
 
-export type DatePrecision = 'd' | 'm' | 'y';
-
-export type Link = {
+export type RawSegment = {
   id: number;
-  url: string;
-  text: string;
+  name: string;
+  description: string;
+  state: SegmentState;
+  geometry: MultiLineString;
+  trails: number[];
+  events: number[];
+  links: Link[];
 };
+
+export type RawTrailEvent = {
+  id: number;
+  headline: string;
+  date: string;
+  date_precision: DatePrecision;
+  description: string;
+  links: Link[];
+};
+
+// Groupings of above components  ///////////////////////////////////////////////////
+
+export type MappedKeys = 'trails' | 'segments' | 'trailEvents';
+
+export type MappedChanges = {
+  trails: { [id: number]: DeletableWithId<RawTrail> };
+  segments: { [id: number]: DeletableWithId<RawSegment> };
+  trailEvents: { [id: number]: DeletableWithId<RawTrailEvent> };
+};
+
+export type ChangesImport = MappedChanges & {
+  lastModified: Date;
+};
+
+export type MappedOriginal = {
+  trails: { [id: number]: RawTrail };
+  segments: { [id: number]: RawSegment };
+  trailEvents: { [id: number]: RawTrailEvent };
+};
+
+export type RawOriginal = {
+  trails: RawTrail[];
+  segments: RawSegment[];
+  trailEvents: RawTrailEvent[];
+  lastUpdated: string;
+};
+
+// helpers  ///////////////////////////////////////////////////
+
+type DeletableWithId<T> = Partial<T> & { id: number; deleted?: boolean };
 
 /** Construct a type with the properties of T where those in type K are optional. */
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
-
-/**
- * A type for tracking original and new objects of type T.
- *
- * Setting an id to undefined within `new` represents that the value should be
- * deleted from the original list.
- */
-export type Tracker<T> = {
-  original: { [id: number]: T };
-  new: { [id: number]: T | undefined };
-};
 
 export type ColorValueHex = `#${string}`;

@@ -1,7 +1,7 @@
-import { Layer, Source } from 'react-map-gl';
+import { Layer, Source } from 'react-map-gl/maplibre';
 import { lines, stations } from './Subway';
 
-const colorMatch: mapboxgl.Expression = [
+const colorMatch = [
   'match',
   ['get', 'LINE'],
   'RED',
@@ -23,7 +23,6 @@ const SUBWAY_LINES_LAYER = 'subway_lines_layer';
 const SUBWAY_STATIONS_LAYER = 'subway_stations_layer';
 export const SUBWAY_LAYER_IDS = [SUBWAY_LINES_LAYER, SUBWAY_STATIONS_LAYER];
 
-
 export default function Subway() {
   return (
     <>
@@ -36,6 +35,7 @@ export default function Subway() {
           layout={{ visibility: 'none' }}
           paint={{
             'line-width': 1.5,
+            // @ts-ignore
             'line-color': colorMatch,
           }}
         />
@@ -49,6 +49,7 @@ export default function Subway() {
           layout={{ visibility: 'none' }}
           paint={{
             'circle-radius': 2.75,
+            // @ts-ignore
             'circle-color': colorMatch,
             'circle-stroke-color': '#FFFFFF',
             'circle-stroke-width': 0.5,

@@ -2,19 +2,25 @@ import React, { useMemo } from 'react';
 import { Layer, Source } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
-import DATA from '../../../data.json';
+import { useData } from '@/components/DataProvider/DataProvider';
 
 export const SEGMENTS_SOURCE_ID = 'segments_source';
-export const SEGMENTS_SYMBOLOGY_LAYER_ID = 'segments_symbology_layer';
 export const SEGMENTS_HOVER_LAYER_ID = 'segments_hover_layer';
+const SEGMENTS_SYMBOLOGY_LAYERS = {
+  white: 'segments_symbology_white',
+  solid: 'segments_symbology_solid',
+  dashed: 'segments_symbology_dashed',
+};
+export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAYERS);
 
 export default function SegmentsLayer() {
-  const multiplier = useMediaQuery('(min-width: 415px)') ? 1 : 1.5;
+  const isMobile = useMediaQuery('(min-width: 415px)');
+  const { currentData } = useData();
 
-  const styledSegments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = useMemo(() => {
-    return {
+  const styledSegments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = useMemo(
+    () => ({
       type: 'FeatureCollection',
-      features: DATA.segments.map(({ id, geometry, state }) => ({
+      features: Object.values(currentData.segments).map(({ id, geometry, state }) => ({
         id,
         type: 'Feature',
         geometry: geometry as GeoJSON.MultiLineString,
@@ -24,36 +30,64 @@ export default function SegmentsLayer() {
           style: SEGMENT_STATES[state]?.style,
         },
       })),
-    };
-  }, []);
+    }),
+    []
+  );
+
+  const HOVER_TARGET = 22;
+  const HOVERED = 8;
+  const HEAVY = 2.75;
+  const MEDIUM = 2.5;
+  const LIGHT = 2.25;
+
+  const outline = (val: number) => val + 2;
+  const multiplier = (val: number) => (isMobile ? val : val * 1.5);
+  const dashed = (val: number) => val / 1.25;
 
   return (
     <Source id={SEGMENTS_SOURCE_ID} type="geojson" data={styledSegments}>
       <Layer
         id={SEGMENTS_HOVER_LAYER_ID}
         type="line"
-        paint={{ 'line-width': 25, 'line-opacity': 0 }}
+        paint={{ 'line-width': HOVER_TARGET, 'line-opacity': 0 }}
       />
       <Layer
-        id={SEGMENTS_SYMBOLOGY_LAYER_ID}
+        id={SEGMENTS_SYMBOLOGY_LAYERS.white}
         type="line"
         paint={{
           'line-width': [
             'case',
-            // thicker when hovered
             ['boolean', ['feature-state', 'hover'], false],
-            10,
-            // heavy thickness
+            outline(HOVERED),
             ['==', ['get', 'weight'], 'heavy'],
-            2.5 * multiplier,
-            // medium thickness
+            outline(multiplier(HEAVY)),
             ['==', ['get', 'weight'], 'medium'],
-            2.25 * multiplier,
-            // light thickness
-            ['==', ['get', 'weight'], 'light'],
-            1.5 * multiplier,
-            // thinner otherwise
-            1 * multiplier,
+            outline(multiplier(MEDIUM)),
+            // else light
+            outline(multiplier(LIGHT)),
+          ],
+          // @ts-ignore
+          'line-color': '#ffffff',
+        }}
+        layout={{
+          'line-join': 'round',
+          'line-cap': 'round',
+        }}
+      />
+      <Layer
+        id={SEGMENTS_SYMBOLOGY_LAYERS.solid}
+        type="line"
+        paint={{
+          'line-width': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            HOVERED,
+            ['==', ['get', 'weight'], 'heavy'],
+            multiplier(HEAVY),
+            ['==', ['get', 'weight'], 'medium'],
+            multiplier(MEDIUM),
+            // else light
+            multiplier(LIGHT),
           ],
           // @ts-ignore
           'line-color': [
@@ -66,6 +100,30 @@ export default function SegmentsLayer() {
         layout={{
           'line-join': 'round',
           'line-cap': 'round',
+        }}
+      />
+
+      <Layer
+        id={SEGMENTS_SYMBOLOGY_LAYERS.dashed}
+        type="line"
+        paint={{
+          'line-width': [
+            'case',
+            ['boolean', ['feature-state', 'hover'], false],
+            dashed(HOVERED),
+            ['==', ['get', 'weight'], 'heavy'],
+            dashed(multiplier(HEAVY)),
+            ['==', ['get', 'weight'], 'medium'],
+            dashed(multiplier(MEDIUM)),
+            // else light
+            dashed(multiplier(LIGHT)),
+          ],
+          'line-color': '#ffffff',
+          'line-dasharray': ['literal', [1, 2.5]],
+        }}
+        filter={['==', ['get', 'style'], 'dashed']} // filter only dashed
+        layout={{
+          'line-join': 'round',
         }}
       />
     </Source>

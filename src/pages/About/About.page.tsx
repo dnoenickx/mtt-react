@@ -7,11 +7,12 @@ import {
   ThemeIcon,
   rem,
   Anchor,
-  CopyButton,
   Button,
+  Group,
 } from '@mantine/core';
-import { IconCircleCheck, IconCircleX, IconCopy, IconExternalLink } from '@tabler/icons-react';
+import { IconCircleCheck, IconCircleX, IconExternalLink } from '@tabler/icons-react';
 import { Footer } from '@/components/Footer/Footer';
+import { EmailButton } from '@/components/Atomic/Atomic';
 
 const listCheck = (
   <ThemeIcon variant="outline" color="teal" style={{ border: 0 }}>
@@ -131,21 +132,10 @@ export default function About() {
           <Accordion.Item value="features" key="features" mb="lg">
             <Accordion.Control>Can I report a bug/request a feature?</Accordion.Control>
             <Accordion.Panel>
-              Yes. Email me:
-              <CopyButton value="mass.trail.tracker@gmail.com" timeout={2000}>
-                {({ copied, copy }) => (
-                  <Button
-                    variant="outline"
-                    color={copied ? 'green' : 'gray'}
-                    onClick={copy}
-                    leftSection={<IconCopy />}
-                    ml="md"
-                  >
-                    {copied ? 'Email copied' : 'mass.trail.tracker@gmail.com'}
-                  </Button>
-                )}
-              </CopyButton>
-              <br />
+              <Group>
+                <span>Yes. Email me:</span>
+                <EmailButton />
+              </Group>
               Here is a{' '}
               <Anchor
                 target="_blank"

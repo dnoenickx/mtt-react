@@ -9,7 +9,7 @@ const Logo: React.FC<LogoProps> = ({ color, ...rest }) => {
   const defaultColor = theme.colors[theme.primaryColor][9];
 
   return (
-    <Box {...rest}>
+    <Box {...rest} title="Mass Trail Tracker">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         xmlSpace="preserve"

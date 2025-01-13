@@ -1,4 +1,4 @@
-import { Skeleton, Text, Timeline as MantineTimeline } from '@mantine/core';
+import { Text, Timeline as MantineTimeline } from '@mantine/core';
 import {} from // IconExternalLink,
 // IconBarrierBlock,
 // IconRuler,
@@ -22,7 +22,7 @@ import {} from // IconExternalLink,
 import { formatDate } from '@/utils';
 
 import { TrailEvent } from '../../types';
-import { LinkGroup, MultiLineText, SkeletonParagraph } from '../Atomic/Atomic';
+import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 
 // function getIcon(iconName: string) {
 //   const size = 14;
@@ -63,23 +63,6 @@ export function Timeline({ events }: { events: TrailEvent[] }) {
             <LinkGroup links={links} />
           </MantineTimeline.Item>
         ))}
-    </MantineTimeline>
-  );
-}
-
-export function LoadingTimeline() {
-  return (
-    <MantineTimeline lineWidth={3} bulletSize={24}>
-      <MantineTimeline.Item>
-        <Skeleton height={24} radius="lg" width="65%" />
-        <Skeleton height={12} mt={4} radius="lg" width="30%" />
-        <SkeletonParagraph lines={4} height={12} mt={4} radius="xl" />
-      </MantineTimeline.Item>
-      <MantineTimeline.Item>
-        <Skeleton height={24} radius="lg" width="65%" />
-        <Skeleton height={12} mt={4} radius="lg" width="30%" />
-        <SkeletonParagraph lines={4} height={12} mt={4} radius="xl" />
-      </MantineTimeline.Item>
     </MantineTimeline>
   );
 }

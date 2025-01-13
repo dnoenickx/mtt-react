@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useCallback } from 'react';
-import Map, { AttributionControl, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import Map, { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDet
 import WelcomePanel, { LayerOption } from '@/components/WelcomePanel/WelcomePanel';
 import { SegmentStates, SEGMENT_STATES } from './TrailMap.config';
 import SegmentsLayer, {
-  SEGMENTS_SYMBOLOGY_LAYER_ID,
+  SEGMENTS_SYMBOLOGY_LAYER_IDS,
   SEGMENTS_SOURCE_ID,
   SEGMENTS_HOVER_LAYER_ID,
 } from '@/components/MapLayers/Segments/Segments.layer';
@@ -46,12 +46,27 @@ function MapAside({
 
       const map = mapRef.current?.getMap();
       if (map) {
-        if (map.getLayer(SEGMENTS_SYMBOLOGY_LAYER_ID) && map.getLayer(SEGMENTS_HOVER_LAYER_ID)) {
+        if (
+          SEGMENTS_SYMBOLOGY_LAYER_IDS.every((layerId) => map.getLayer(layerId)) &&
+          map.getLayer(SEGMENTS_HOVER_LAYER_ID)
+        ) {
           const visibleStates = Object.entries(newStates)
-            .filter(([, value]) => value.visible)
+            .filter(([, state]) => state.visible)
             .map(([key]) => key);
-          map.setFilter(SEGMENTS_SYMBOLOGY_LAYER_ID, ['in', 'state', ...visibleStates]);
-          map.setFilter(SEGMENTS_HOVER_LAYER_ID, ['in', 'state', ...visibleStates]);
+
+          const stateFilter = ['match', ['get', 'state'], visibleStates, true, false];
+
+          SEGMENTS_SYMBOLOGY_LAYER_IDS.forEach((layerId) => {
+            if (layerId === 'segments_symbology_dashed') {
+              // @ts-ignore
+              map.setFilter(layerId, ['all', ['==', ['get', 'style'], 'dashed'], stateFilter]);
+            } else {
+              // @ts-ignore
+              map.setFilter(layerId, stateFilter);
+            }
+          });
+          // @ts-ignore
+          map.setFilter(SEGMENTS_HOVER_LAYER_ID, stateFilter);
           return newStates;
         }
       }
@@ -105,6 +120,86 @@ function MapAside({
     <ScrollArea h="100%" type="scroll" scrollbars="y" className={styles.aside}>
       {tabs}
     </ScrollArea>
+  );
+}
+
+function TrailMap({
+  mapRef,
+  onClick,
+}: {
+  mapRef: React.RefObject<MapRef>;
+  onClick: (e: MapLayerMouseEvent) => void;
+}) {
+  const hoveredSegmentId = useRef<string | null>(null);
+
+  const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: [SEGMENTS_HOVER_LAYER_ID],
+    });
+
+    if (features.length > 0) {
+      const feature = features[0];
+      const featureId = feature.id?.toString();
+
+      if (hoveredSegmentId.current !== featureId) {
+        map.getCanvas().style.cursor = 'pointer';
+
+        // Reset the previously hovered feature
+        if (hoveredSegmentId.current) {
+          map.setFeatureState(
+            { source: SEGMENTS_SOURCE_ID, id: hoveredSegmentId.current },
+            { hover: false }
+          );
+        }
+
+        // Set the new hovered feature
+        if (featureId) {
+          map.setFeatureState({ source: SEGMENTS_SOURCE_ID, id: featureId }, { hover: true });
+          hoveredSegmentId.current = featureId;
+        }
+      }
+    } else {
+      // Reset hover state if no features are under the cursor
+      map.getCanvas().style.cursor = '';
+      if (hoveredSegmentId.current) {
+        map.setFeatureState(
+          { source: SEGMENTS_SOURCE_ID, id: hoveredSegmentId.current },
+          { hover: false }
+        );
+        hoveredSegmentId.current = null;
+      }
+    }
+  };
+
+  return (
+    <Map
+      ref={mapRef}
+      maxZoom={17}
+      minZoom={7}
+      maxBounds={[
+        [-74.563994, 40.935011],
+        [-69.07083, 43.405765],
+      ]}
+      boxZoom={false}
+      dragRotate={false}
+      initialViewState={{
+        longitude: -71.68,
+        latitude: 42.35,
+        zoom: 8.78,
+      }}
+      // @ts-ignore
+      mapStyle={mapStyle}
+      interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
+      onMouseMove={onMouseMoveHandler}
+      onClick={onClick}
+    >
+      <SegmentsLayer />
+      <Subway />
+      <CommuterRailLayer />
+    </Map>
   );
 }
 
@@ -219,85 +314,5 @@ export function TrailMapPage() {
         {mapElement}
       </div>
     </div>
-  );
-}
-
-function TrailMap({
-  mapRef,
-  onClick,
-}: {
-  mapRef: React.RefObject<MapRef>;
-  onClick: (e: MapLayerMouseEvent) => void;
-}) {
-  const hoveredSegmentId = useRef<string | null>(null);
-
-  const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
-
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: [SEGMENTS_HOVER_LAYER_ID],
-    });
-
-    if (features.length > 0) {
-      const feature = features[0];
-      const featureId = feature.id?.toString();
-
-      if (hoveredSegmentId.current !== featureId) {
-        map.getCanvas().style.cursor = 'pointer';
-
-        // Reset the previously hovered feature
-        if (hoveredSegmentId.current) {
-          map.setFeatureState(
-            { source: SEGMENTS_SOURCE_ID, id: hoveredSegmentId.current },
-            { hover: false }
-          );
-        }
-
-        // Set the new hovered feature
-        if (featureId) {
-          map.setFeatureState({ source: SEGMENTS_SOURCE_ID, id: featureId }, { hover: true });
-          hoveredSegmentId.current = featureId;
-        }
-      }
-    } else {
-      // Reset hover state if no features are under the cursor
-      map.getCanvas().style.cursor = '';
-      if (hoveredSegmentId.current) {
-        map.setFeatureState(
-          { source: SEGMENTS_SOURCE_ID, id: hoveredSegmentId.current },
-          { hover: false }
-        );
-        hoveredSegmentId.current = null;
-      }
-    }
-  };
-
-  return (
-    <Map
-      ref={mapRef}
-      maxZoom={17}
-      minZoom={7}
-      maxBounds={[
-        [-74.563994, 40.935011],
-        [-69.07083, 43.405765],
-      ]}
-      boxZoom={false}
-      dragRotate={false}
-      initialViewState={{
-        longitude: -71.68,
-        latitude: 42.35,
-        zoom: 8.78,
-      }}
-      // @ts-ignore
-      mapStyle={mapStyle}
-      interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
-      onMouseMove={onMouseMoveHandler}
-      onClick={onClick}
-    >
-      <SegmentsLayer />
-      <Subway />
-      <CommuterRailLayer />
-    </Map>
   );
 }

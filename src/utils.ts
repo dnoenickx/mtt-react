@@ -1,6 +1,5 @@
-import { MultiLineString, Position, multiLineString } from '@turf/turf';
 import { format, startOfDay, startOfMonth, startOfYear } from 'date-fns';
-import { DatePrecision, TrailEvent, Segment, Trail } from './types';
+import { DatePrecision } from './types';
 
 export function formatDate(date: Date, precision: DatePrecision) {
   switch (precision) {
@@ -15,77 +14,18 @@ export function formatDate(date: Date, precision: DatePrecision) {
   }
 }
 
-export function generateRandomId(existing: number[]): number {
-  const min = 1;
-  const max = 9999;
+export const sortById = <T extends { id: number }>(items: Record<number, T>): T[] =>
+  Object.values(items).sort((a, b) => a.id - b.id);
 
-  let randomNumber: number;
-  do {
-    randomNumber = Math.floor(min + Math.random() * (max - min + 1));
-  } while (existing.includes(randomNumber));
-
-  return randomNumber;
-}
-
-export function filterObject(obj: any, keys: string[]): any {
-  return Object.fromEntries(Object.entries(obj).filter(([key]) => keys.includes(key)));
-}
-
-export function normalizeMultiLineString(geoJSONString: string): MultiLineString {
-  const geoJSONObject = JSON.parse(geoJSONString);
-
-  const lines: Position[][] = [];
-
-  const processInput = (data: any) => {
-    if (Array.isArray(data)) {
-      data.forEach((item) => processInput(item));
-    } else if (typeof data === 'object' && data !== null) {
-      if (data.type === 'LineString') {
-        lines.push(data.coordinates);
-      } else if (data.type === 'MultiLineString') {
-        data.coordinates.forEach((line: number[][]) => lines.push(line));
-      } else if (data.type === 'Feature') {
-        processInput(data.geometry);
-      } else if (data.type === 'FeatureCollection') {
-        data.features.forEach((feature: any) => processInput(feature));
-      } else {
-        throw new SyntaxError("Invalid value for key 'type' in GeoJSON.");
-      }
-    }
-  };
-
-  processInput(geoJSONObject);
-  return multiLineString(lines).geometry;
-}
-
-export function getItem(key: string, location = localStorage, value = {}) {
-  function replaceNullWithUndefined(obj: any): any {
-    if (Array.isArray(obj)) {
-      return obj.map(replaceNullWithUndefined);
-    }
-    if (typeof obj === 'object' && obj !== null) {
-      return Object.fromEntries(
-        Object.entries(obj).map(([k, v]) => [
-          k,
-          v === null ? undefined : replaceNullWithUndefined(v),
-        ])
-      );
-    }
-    return obj;
-  }
-
-  return replaceNullWithUndefined(JSON.parse(location.getItem(key) ?? JSON.stringify(value)));
-}
-
-export function createMapping(list: any[], key: string) {
+export function createMapping(list: any[], key: string = 'id') {
   if (!list.every((obj) => key in obj)) {
     throw new Error(`Key '${key}' does not exist in any of the objects.`);
   }
 
-  return list.reduce((map, obj) => ({ ...map, [obj[key]]: obj }), {});
+  return Object.fromEntries(list.map((item) => [item[key], item]));
 }
 
-function deepEqual(a: any, b: any): boolean {
+export function deepEqual(a: any, b: any): boolean {
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
     return a.every((element, index) => deepEqual(element, b[index]));
@@ -119,43 +59,4 @@ export function simpleDiff(oldVal: any, newVal: any) {
   });
 
   return diff;
-}
-
-interface submitChangesParams {
-  trails?: { [id: number]: Trail | undefined };
-  segments?: { [id: number]: Segment | undefined };
-  newsflashes?: { [id: number]: TrailEvent | undefined };
-}
-
-export function submitChanges({ trails, segments, newsflashes }: submitChangesParams) {
-  const user_id =
-    localStorage.getItem('user_id') ?? (crypto.randomUUID ? crypto.randomUUID() : 'test');
-  localStorage.setItem('user_id', user_id);
-
-  const url = 'https://elzjlaxywew5ucecydqyfrkb440irert.lambda-url.us-east-1.on.aws/';
-  const data: any = {
-    user: user_id,
-    trails,
-    segments,
-    newsflashes,
-  };
-
-  // Omit properties that are undefined
-  Object.keys(data).forEach((key) => data[key] === undefined && delete data[key]);
-
-  return (
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((val) => {
-        localStorage.setItem('last_submitted', new Date().toISOString());
-        return val.status;
-      })
-      // eslint-disable-next-line no-console
-      .catch((err) => console.log(err))
-  );
 }

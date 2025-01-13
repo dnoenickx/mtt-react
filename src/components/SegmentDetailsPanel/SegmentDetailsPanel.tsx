@@ -1,16 +1,28 @@
 import React, { useMemo } from 'react';
 
-import { IconAlertCircle } from '@tabler/icons-react';
-import { Accordion, Alert, Divider, Skeleton, Text, Title } from '@mantine/core';
-import { useSearchParams } from 'react-router-dom';
+import { IconAlertCircle, IconPencil } from '@tabler/icons-react';
+import {
+  Accordion,
+  Alert,
+  Badge,
+  Button,
+  Divider,
+  Flex,
+  Group,
+  Menu,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
+import { Link, useSearchParams } from 'react-router-dom';
 
-import { Trail } from '@/types';
-import { LoadingTimeline, Timeline } from '../Timeline/Timeline';
+import { Segment, Trail } from '@/types';
+import { Timeline } from '../Timeline/Timeline';
 
 import classes from './SegmentDetailsPanel.module.css';
-import { LinkGroup, MultiLineText, SkeletonParagraph } from '../Atomic/Atomic';
-import data from '../../data.json';
-import { DatePrecision } from '../../types';
+import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
+import { useData } from '../DataProvider/DataProvider';
+import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -34,40 +46,10 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
 
 export function SegmentDetailsPanel() {
   const [searchParams] = useSearchParams();
-  const segmentId = searchParams.get('segment');
+  const segmentId = Number(searchParams.get('segment'));
 
-  const segment = useMemo(() => {
-    const seg = data.segments.find(({ id }) => id.toString() === segmentId);
-
-    if (seg === undefined) {
-      return null;
-    }
-
-    const { name, description, trails: trailIds } = seg;
-
-    const linkIds: number[] = seg.links.length > 0 ? seg.links : [];
-    const eventIds: number[] = seg.events.length > 0 ? seg.events : [];
-
-    return {
-      name,
-      description,
-      links: data.links.filter(({ id }) => linkIds.includes(id)),
-      trails: data.trails
-        .filter(({ id }) => trailIds.includes(id))
-        .map((trail) => ({
-          ...trail,
-          links: data.links.filter(({ id }) => trail.links.includes(id)),
-        })),
-      events: data.trail_events
-        .filter(({ id }) => eventIds.includes(id))
-        .map((event) => ({
-          ...event,
-          date: new Date(event.date),
-          date_precision: event.date_precision as DatePrecision,
-          links: data.links.filter(({ id }) => event.links.includes(id)),
-        })),
-    };
-  }, [segmentId]);
+  const { getSegment, editingEnabled } = useData();
+  const segment: Segment | null = useMemo(() => getSegment(segmentId), [segmentId]);
 
   // No segment selected
   if (!segmentId) {
@@ -87,68 +69,79 @@ export function SegmentDetailsPanel() {
     );
   }
 
-  // TODO: use loaders again we needed
-  const showLoaders = false;
-
   return (
     <>
-      <Title order={4} mb={15} mt={25} style={{ color: 'var(--mantine-color-trail-green-8)' }}>
-        Segment
-      </Title>
-
-      {showLoaders ? (
-        <>
-          <Skeleton height={18} mt={6} radius="lg" />
-          <SkeletonParagraph lines={2} height={16} mt={8.4} radius="xl" />
-        </>
-      ) : (
-        <>
-          {segment.name && <Title order={5}>{segment.name}</Title>}
-          <MultiLineText m={0} text={segment.description} />
-          <LinkGroup links={segment.links} />
-        </>
-      )}
+      <Group align="baseline" justify="space-between">
+        <Title order={4} mb="md" mt="sm" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+          Segment
+        </Title>
+        {editingEnabled && (
+          <Menu
+            trigger="click-hover"
+            loop={false}
+            withinPortal={false}
+            trapFocus={false}
+            menuItemTabIndex={0}
+            shadow="md"
+            width={200}
+          >
+            <Menu.Target>
+              <Button
+                variant="outline"
+                leftSection={<IconPencil style={{ width: '70%', height: '70%' }} />}
+                size="compact-sm"
+                styles={{
+                  section: {
+                    margin: 0,
+                  },
+                }}
+              >
+                edit
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Label>Segments</Menu.Label>
+              <Menu.Item component={Link} to={`/admin/segments/${segment.id}`} key={segment.id}>
+                {segment.name || `Segment ${segment.id}`}
+              </Menu.Item>
+              <Menu.Label>Trails</Menu.Label>
+              {segment.trails.map(({ id, name }) => (
+                <Menu.Item component={Link} to={`/admin/trails/${id}`} key={id}>
+                  {name}
+                </Menu.Item>
+              ))}
+            </Menu.Dropdown>
+          </Menu>
+        )}
+      </Group>
+      <Flex justify="space-between" wrap="wrap" rowGap="xs" mb="sm">
+        {segment.name && <Title order={5}>{segment.name}</Title>}
+        <Tooltip
+          multiline
+          w={220}
+          withArrow
+          transitionProps={{ duration: 200 }}
+          label={SEGMENT_STATES[segment.state].description}
+        >
+          <Badge variant="outline" color={SEGMENT_STATES[segment.state].color}>
+            {SEGMENT_STATES[segment.state].label}
+          </Badge>
+        </Tooltip>
+      </Flex>
+      <MultiLineText m={0} text={segment.description} />
+      <LinkGroup links={segment.links} />
 
       <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
-      <Title order={4} my={15} style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+      <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
         Trails
       </Title>
-
-      {showLoaders ? (
-        <>
-          <Skeleton height={48} mt={6} />
-          <Skeleton height={48} mt={6} />
-        </>
-      ) : (
-        <TrailAccordion trails={segment.trails} />
-      )}
+      <TrailAccordion trails={segment.trails} />
 
       <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
-      <Title order={4} my={15} style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+      <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
         Timeline
       </Title>
-
-      {showLoaders ? <LoadingTimeline /> : <Timeline events={segment.events} />}
-
-      {/* <Fieldset legend="New Event" variant="filled" radius="md" mt="md">
-        <TextInput label="Title" placeholder="Title" />
-        <Textarea label="Description" placeholder="Description" mt="md" />
-
-        <Group grow mt="sm">
-          <Button variant="outline">Discard</Button>
-          <Button variant="filled">Submit</Button>
-        </Group>
-      </Fieldset>
-
-      <Button
-        justify="center"
-        fullWidth
-        leftSection={<IconNewSection size={14} />}
-        variant="light"
-        mt="md"
-      >
-        Add Event
-      </Button> */}
+      <Timeline events={segment.events} />
     </>
   );
 }

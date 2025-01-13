@@ -1,5 +1,5 @@
-import { IconExternalLink } from '@tabler/icons-react';
-import { Button, Flex, TextProps, Text, Skeleton, SkeletonProps } from '@mantine/core';
+import { IconCopy, IconExternalLink } from '@tabler/icons-react';
+import { Button, Flex, TextProps, Text, Skeleton, SkeletonProps, CopyButton } from '@mantine/core';
 import { Link } from '@/types';
 
 export interface MultiLineTextProps extends TextProps {
@@ -59,4 +59,19 @@ export const LinkGroup = ({ links }: { links: Link[] }) => (
       </a>
     ))}
   </Flex>
+);
+
+export const EmailButton = () => (
+  <CopyButton value="mass.trail.tracker@gmail.com" timeout={2000}>
+    {({ copied, copy }) => (
+      <Button
+        variant="outline"
+        color={copied ? 'green' : 'gray'}
+        onClick={copy}
+        leftSection={<IconCopy />}
+      >
+        {copied ? 'Email copied' : 'mass.trail.tracker@gmail.com'}
+      </Button>
+    )}
+  </CopyButton>
 );

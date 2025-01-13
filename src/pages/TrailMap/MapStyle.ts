@@ -7,7 +7,7 @@ export const mapStyle = {
       type: 'vector',
       attribution:
         '<a href="https://github.com/protomaps/basemaps">Protomaps</a> © <a href="https://openstreetmap.org">OpenStreetMap</a>',
-      url: 'https://d1zbfk1zoo09ac.cloudfront.net/ma_region.json',
+      url: import.meta.env.VITE_TILE_URL,
     },
   },
   layers: [
@@ -15,7 +15,7 @@ export const mapStyle = {
       id: 'background',
       type: 'background',
       paint: {
-        'background-color': '#e2dfda',
+        'background-color': '#E6E4DE',
       },
     },
     {
@@ -25,7 +25,7 @@ export const mapStyle = {
       source: 'protomaps',
       'source-layer': 'earth',
       paint: {
-        'fill-color': '#e2dfda',
+        'fill-color': '#E6E4DE',
       },
     },
     {
@@ -110,7 +110,7 @@ export const mapStyle = {
           '#e2e0d7',
           ['in', ['get', 'kind'], ['literal', ['military', 'naval_base', 'airfield']]],
           '#c6dcdc',
-          '#e2dfda',
+          '#E6E4DE',
         ],
       },
     },
@@ -142,7 +142,7 @@ export const mapStyle = {
       'source-layer': 'landuse',
       filter: ['==', 'kind', 'industrial'],
       paint: {
-        'fill-color': '#e2dfda',
+        'fill-color': '#E6E4DE',
       },
     },
     {
@@ -751,15 +751,7 @@ export const mapStyle = {
       paint: {
         'line-color': '#f28c8c',
         'line-width': 3,
-        'line-opacity': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          10,
-          0,
-          12,
-          0.15,
-        ],
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0, 12, 0.15],
       },
       minzoom: 10,
     },
@@ -774,15 +766,7 @@ export const mapStyle = {
         'line-color': '#c21828',
         'line-width': 1,
         'line-dasharray': [6, 4, 2, 4, 2, 4],
-        'line-opacity': [
-          'interpolate',
-          ['linear'],
-          ['zoom'],
-          10,
-          0,
-          12,
-          0.35,
-        ],
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0, 12, 0.35],
       },
       minzoom: 10,
     },
@@ -2566,7 +2550,7 @@ export const mapStyle = {
             ],
           ],
           '#6A5B8F',
-          '#e2dfda',
+          '#E6E4DE',
         ],
       },
     },
