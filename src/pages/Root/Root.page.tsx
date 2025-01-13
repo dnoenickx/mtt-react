@@ -13,7 +13,7 @@ export function Root() {
   const navLinks = [
     { link: '/', label: 'Map' },
     { link: '/about', label: 'About' },
-    ...(editingEnabled ? [{ link: '/admin', label: 'Admin' }] : []),
+    { link: '/admin', label: 'Admin' },
   ];
 
   const navButtons = navLinks.map(({ link, label }) => (
