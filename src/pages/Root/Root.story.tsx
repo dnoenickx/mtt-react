@@ -1,4 +1,4 @@
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Root as RootComponent } from './Root.page';
 
 export default {
@@ -6,7 +6,7 @@ export default {
 };
 
 export const Root = () => (
-  <HashRouter>
+  <BrowserRouter>
     <RootComponent />
-  </HashRouter>
+  </BrowserRouter>
 );
