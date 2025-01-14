@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useRef, useCallback } from 'react';
 import Map, { MapGeoJSONFeature, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery, useSessionStorage } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
 import styles from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
@@ -177,6 +177,15 @@ function TrailMap({
     }
   };
 
+  const [viewState, setViewState] = useSessionStorage({
+    key: 'viewState',
+    defaultValue: {
+      longitude: -71.68,
+      latitude: 42.35,
+      zoom: 8.78,
+    },
+  });
+
   return (
     <Map
       ref={mapRef}
@@ -188,16 +197,13 @@ function TrailMap({
       ]}
       boxZoom={false}
       dragRotate={false}
-      initialViewState={{
-        longitude: -71.68,
-        latitude: 42.35,
-        zoom: 8.78,
-      }}
       // @ts-ignore
       mapStyle={mapStyle}
       interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
       onMouseMove={onMouseMoveHandler}
       onClick={onClick}
+      {...viewState}
+      onMove={(evt) => setViewState(evt.viewState)}
     >
       <SegmentsLayer />
       <Subway />
