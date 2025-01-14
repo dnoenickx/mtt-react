@@ -37,18 +37,20 @@ export type Link = {
   text: string;
 };
 
-// Raw types for loading/exporting  ///////////////////////////////////////////////////
-
-export type RawTrail = Trail;
-
 export type TrailEvent = {
   id: number;
   headline: string;
-  date: Date;
+  date: string;
   date_precision: DatePrecision;
   description: string;
   links: Link[];
 };
+
+// Raw types for loading/exporting  ///////////////////////////////////////////////////
+
+export type RawTrail = Trail;
+
+export type RawTrailEvent = TrailEvent;
 
 export type RawSegment = {
   id: number;
@@ -58,15 +60,6 @@ export type RawSegment = {
   geometry: MultiLineString;
   trails: number[];
   events: number[];
-  links: Link[];
-};
-
-export type RawTrailEvent = {
-  id: number;
-  headline: string;
-  date: string;
-  date_precision: DatePrecision;
-  description: string;
   links: Link[];
 };
 

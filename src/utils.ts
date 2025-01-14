@@ -1,16 +1,27 @@
 import { format, startOfDay, startOfMonth, startOfYear } from 'date-fns';
 import { DatePrecision } from './types';
 
-export function formatDate(date: Date, precision: DatePrecision) {
+function adjustForTimezoneOffset(date: string) {
+  const dt = new Date(date);
+  return new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000);
+}
+
+export function formatDateString(date: string) {
+  return format(adjustForTimezoneOffset(date), 'yyyy-MM-dd');
+}
+
+export function formatDateWithPrecision(date: string, precision: DatePrecision): string {
+  const adjustedDate = adjustForTimezoneOffset(date);
+
   switch (precision) {
     case 'd':
-      return format(startOfDay(date), 'MMMM d, yyyy');
+      return format(startOfDay(adjustedDate), 'MMMM d, yyyy');
     case 'm':
-      return format(startOfMonth(date), 'MMMM yyyy');
+      return format(startOfMonth(adjustedDate), 'MMMM yyyy');
     case 'y':
-      return format(startOfYear(date), 'yyyy');
+      return format(startOfYear(adjustedDate), 'yyyy');
     default:
-      return date.toDateString();
+      return adjustedDate.toDateString();
   }
 }
 

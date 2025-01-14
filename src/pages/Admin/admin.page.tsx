@@ -32,7 +32,7 @@ import {
 } from '@tabler/icons-react';
 import { showNotification } from '@mantine/notifications';
 import { Link } from '@/types';
-import { formatDate, sortById } from '@/utils';
+import { sortById } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import ConfirmationButton from '@/components/ConfirmationButton';
 // import { useClipboard } from '@mantine/hooks';
@@ -336,20 +336,20 @@ export default function Admin() {
         render: linkCell,
       },
     ],
-    trailEvents: [
-      { key: 'id', label: 'ID' },
-      { key: 'headline', label: 'Headline' },
-      {
-        key: 'date',
-        label: 'Date',
-        render: (item) => formatDate(new Date(item.date), item.date_precision),
-      },
-      {
-        key: 'links',
-        label: 'Links',
-        render: linkCell,
-      },
-    ],
+    // trailEvents: [
+    //   { key: 'id', label: 'ID' },
+    //   { key: 'headline', label: 'Headline' },
+    //   {
+    //     key: 'date',
+    //     label: 'Date',
+    //     render: (item) => formatDate(item.date, item.date_precision),
+    //   },
+    //   {
+    //     key: 'links',
+    //     label: 'Links',
+    //     render: linkCell,
+    //   },
+    // ],
   };
 
   const handleRowDelete = (type: keyof typeof currentData, id: number) => {

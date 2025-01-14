@@ -13,6 +13,8 @@ const SEGMENTS_SYMBOLOGY_LAYERS = {
 };
 export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAYERS);
 
+const BEFORE_ID = 'pois';
+
 export default function SegmentsLayer() {
   const isMobile = useMediaQuery('(min-width: 415px)');
   const { currentData } = useData();
@@ -54,6 +56,7 @@ export default function SegmentsLayer() {
       <Layer
         id={SEGMENTS_SYMBOLOGY_LAYERS.white}
         type="line"
+        beforeId={BEFORE_ID}
         paint={{
           'line-width': [
             'case',
@@ -77,6 +80,7 @@ export default function SegmentsLayer() {
       <Layer
         id={SEGMENTS_SYMBOLOGY_LAYERS.solid}
         type="line"
+        beforeId={BEFORE_ID}
         paint={{
           'line-width': [
             'case',
@@ -106,6 +110,7 @@ export default function SegmentsLayer() {
       <Layer
         id={SEGMENTS_SYMBOLOGY_LAYERS.dashed}
         type="line"
+        beforeId={BEFORE_ID}
         paint={{
           'line-width': [
             'case',

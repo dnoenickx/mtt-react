@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef, useCallback } from 'react';
-import Map, { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import Map, { MapGeoJSONFeature, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -136,9 +136,12 @@ function TrailMap({
     const map = mapRef.current?.getMap();
     if (!map) return;
 
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: [SEGMENTS_HOVER_LAYER_ID],
-    });
+    let features: MapGeoJSONFeature[] = [];
+    if (map.getLayer(SEGMENTS_HOVER_LAYER_ID)) {
+      features = map.queryRenderedFeatures(e.point, {
+        layers: [SEGMENTS_HOVER_LAYER_ID],
+      });
+    }
 
     if (features.length > 0) {
       const feature = features[0];

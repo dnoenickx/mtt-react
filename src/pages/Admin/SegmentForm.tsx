@@ -28,9 +28,9 @@ import { randomId } from '@mantine/hooks';
 import { IconTrash, IconPlus, IconSearch, IconArrowRight } from '@tabler/icons-react';
 import { multiLineString } from '@turf/turf';
 import { format } from 'date-fns';
-import { RawSegment, RawTrailEvent, Segment, TrailEvent } from '@/types';
+import { RawSegment, RawTrailEvent } from '@/types';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
-import { deepEqual } from '@/utils';
+import { deepEqual, formatDateString } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import LinksField, { FormLink } from './LinksField';
 import { cleanToMultiLineString, toGeoJsonIO, validateMultiLineString } from '@/geospatialUtils';
@@ -42,7 +42,7 @@ interface EventComboboxItem extends ComboboxItem {
   date: string;
 }
 
-type FormSegment = Omit<Segment, 'trails' | 'geometry' | 'links' | 'events'> & {
+type FormSegment = Omit<RawSegment, 'trails' | 'geometry' | 'links' | 'events'> & {
   trails: string[];
   geometry: string;
   links: FormLink[];
@@ -80,7 +80,7 @@ const SegmentForm = () => {
       };
     }
 
-    const segment: Segment | null = getSegment(Number(id));
+    const segment = getSegment(Number(id));
     if (segment === null) return null;
 
     return {
@@ -97,7 +97,7 @@ const SegmentForm = () => {
           ...link,
           id: randomId(),
         })),
-        date: format(event.date, 'yyyy-MM-dd'),
+        date: formatDateString(event.date),
       })),
     };
   }, [id]);
@@ -146,14 +146,16 @@ const SegmentForm = () => {
         geometry: cleanToMultiLineString(JSON.parse(formSegment.geometry)),
       };
 
-      const rawEvents: RawTrailEvent[] = formSegment.events.map((e) => ({
-        ...e,
-        date: format(new Date(e.date), 'yyyy-MM-dd'),
+      const rawEvents: RawTrailEvent[] = formSegment.events.map((event) => ({
+        ...event,
+        date: formatDateString(event.date),
+        links: event.links.map((link) => ({
+          text: link.text,
+          url: link.url,
+        })),
       }));
 
       saveChanges({ segments: [rawSegment], trailEvents: rawEvents });
-
-      console.log(rawSegment.id);
 
       showNotification({
         withBorder: true,
@@ -372,10 +374,10 @@ const SegmentForm = () => {
                       if (value === null) return;
                       const selectedEvent = currentData.trailEvents[Number(value)];
                       if (selectedEvent) {
-                        const trailEvent: TrailEvent = {
+                        const trailEvent: RawTrailEvent = {
                           id: selectedEvent.id,
                           headline: selectedEvent.headline,
-                          date: new Date(selectedEvent.date),
+                          date: selectedEvent.date,
                           date_precision: 'd',
                           description: selectedEvent.description,
                           links: [],

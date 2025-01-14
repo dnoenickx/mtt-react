@@ -19,7 +19,7 @@ import {} from // IconExternalLink,
 // IconCertificate2
 // IconFileCertificate
 '@tabler/icons-react';
-import { formatDate } from '@/utils';
+import { formatDateWithPrecision } from '@/utils';
 
 import { TrailEvent } from '../../types';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
@@ -44,7 +44,7 @@ import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 
 export function Timeline({ events }: { events: TrailEvent[] }) {
   const currentDate = new Date();
-  const past = events.filter((event) => event.date < currentDate).length - 1;
+  const past = events.filter((event) => new Date(event.date) < currentDate).length - 1;
 
   return (
     <MantineTimeline active={past} reverseActive lineWidth={3} bulletSize={24}>
@@ -54,10 +54,10 @@ export function Timeline({ events }: { events: TrailEvent[] }) {
           <MantineTimeline.Item
             key={id}
             title={headline}
-            lineVariant={date < currentDate ? 'solid' : 'dashed'}
+            lineVariant={new Date(date) < currentDate ? 'solid' : 'dashed'}
           >
             <Text size="xs" mt={4}>
-              {formatDate(date, date_precision)}
+              {formatDateWithPrecision(date, date_precision)}
             </Text>
             <MultiLineText c="dimmed" size="sm" text={description} />
             <LinkGroup links={links} />

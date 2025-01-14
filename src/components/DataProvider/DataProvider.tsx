@@ -9,6 +9,9 @@ import {
   RawOriginal,
   MappedOriginal,
   MappedKeys,
+  RawSegment,
+  RawTrail,
+  RawTrailEvent,
 } from '@/types';
 import { importChanges } from './importUtil';
 
@@ -35,7 +38,11 @@ const emptyChanges: MappedChanges = {
 type DataContextType = {
   currentData: MappedOriginal;
   getOriginalItem: (type: MappedKeys, id: number) => any | undefined;
-  saveChanges: (updates: { [type in MappedKeys]?: any[] }) => void;
+  saveChanges: (updates: {
+    segments?: RawSegment[];
+    trails?: RawTrail[];
+    trailEvents?: RawTrailEvent[];
+  }) => void;
   getNextId: (type: MappedKeys, otherIds?: number[]) => number;
   getSegment: (id: number) => Segment | null;
   deleteItem: (type: MappedKeys, id: number) => void;
@@ -62,6 +69,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastModified, setLastModified] = useLocalStorage<Date | undefined>({
     key: 'lastModified',
     defaultValue: undefined,
+    deserialize: (value) => (value ? new Date(value) : undefined),
+    serialize: (value) => (value ? value.toISOString() : ''),
   });
 
   const updateLastModified = () => setLastModified(new Date());
@@ -111,7 +120,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const saveChanges = (updates: {
     [type in MappedKeys]?: any[];
   }) => {
-    const newChanges: Record<string, Record<number, any>> = {};
+    const newChanges: Partial<Record<MappedKeys, Record<number, any>>> = {};
 
     Object.entries(updates).forEach(([type, updatesForType]) => {
       const typeKey = type as MappedKeys;
@@ -134,8 +143,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (Object.keys(newChanges).length > 0) {
       setChanges((prevState) => ({
-        ...prevState,
-        ...newChanges,
+        trails: {
+          ...prevState.trails,
+          ...(newChanges.trails ?? {}),
+        },
+        segments: {
+          ...prevState.segments,
+          ...(newChanges.segments ?? {}),
+        },
+        trailEvents: {
+          ...prevState.trailEvents,
+          ...(newChanges.trailEvents ?? {}),
+        },
       }));
       updateLastModified();
     }
@@ -152,7 +171,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const event = currentData.trailEvents[eventId];
         return {
           ...event,
-          date: new Date(event.date),
+          date: event.date,
           date_precision: event.date_precision as DatePrecision,
         };
       }),

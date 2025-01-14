@@ -15,12 +15,12 @@ import {
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
 import { randomId } from '@mantine/hooks';
-import { Trail } from '@/types';
+import { RawTrail } from '@/types';
 import { deepEqual } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import LinksField, { FormLink } from './LinksField';
 
-type FormTrail = Omit<Trail, 'links'> & {
+type FormTrail = Omit<RawTrail, 'links'> & {
   links: FormLink[];
 };
 
@@ -75,8 +75,16 @@ const TrailForm = () => {
   });
 
   const handleSubmit = (formTrail: FormTrail) => {
-    if (!deepEqual(initialTrail, formTrail)) {
-      saveChanges({ trails: [formTrail] });
+    const trail: RawTrail = {
+      ...formTrail,
+      links: formTrail.links.map((link) => ({
+        text: link.text,
+        url: link.url,
+      })),
+    };
+
+    if (!deepEqual(initialTrail, trail)) {
+      saveChanges({ trails: [trail] });
       showNotification({
         withBorder: true,
         withCloseButton: false,
