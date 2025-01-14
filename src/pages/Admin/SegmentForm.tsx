@@ -138,7 +138,7 @@ const SegmentForm = () => {
       const rawSegment: RawSegment = {
         ...formSegment,
         trails: formSegment.trails.map((trailId) => Number(trailId)),
-        events: formSegment.events.map((segmentId) => Number(segmentId)),
+        events: formSegment.events.map(({ id: eventId }) => eventId),
         links: formSegment.links.map((link) => ({
           text: link.text,
           url: link.url,
