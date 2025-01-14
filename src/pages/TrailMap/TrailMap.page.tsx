@@ -204,6 +204,7 @@ function TrailMap({
       onClick={onClick}
       {...viewState}
       onMove={(evt) => setViewState(evt.viewState)}
+      attributionControl={false}
     >
       <SegmentsLayer />
       <Subway />
@@ -321,6 +322,11 @@ export function TrailMapPage() {
         </Button>
 
         {mapElement}
+
+        <div className={styles['corner-text']}>
+          <a href="https://protomaps.com">Protomaps</a> |{' '}
+          <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a>
+        </div>
       </div>
     </div>
   );

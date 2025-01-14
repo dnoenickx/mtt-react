@@ -48,3 +48,22 @@
 .buttonLabel {
   font-weight: bold;
 }
+
+.corner-text {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #eee;
+  padding: 0 5px;
+  font-size: 12px;
+}
+
+.corner-text a {
+  color: #eee;
+  text-decoration: none;
+}
+
+.corner-text a:hover {
+  text-decoration: underline;
+}
