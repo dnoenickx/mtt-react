@@ -71,3 +71,21 @@ export function simpleDiff(oldVal: any, newVal: any) {
 
   return diff;
 }
+
+export const handleDownload = (
+  fileName: string,
+  data: string,
+  appendDate: boolean = true
+): void => {
+  try {
+    const blob = new Blob([data], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = appendDate
+      ? `${fileName}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.json`
+      : `${fileName}.json`;
+    link.click();
+  } catch (error) {
+    console.error('Failed to download file:', error);
+  }
+};

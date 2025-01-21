@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
-import { createMapping, deepEqual } from '@/utils';
+import { createMapping, deepEqual, handleDownload, sortById } from '@/utils';
 import RAW_DATA_IMPORT from '../../data.json';
 import {
   MappedChanges,
@@ -14,6 +14,7 @@ import {
   RawTrailEvent,
 } from '@/types';
 import { importChanges } from './importUtil';
+import { Button, Group, Modal } from '@mantine/core';
 
 const fetchRawData = (): [MappedOriginal, Date] => {
   const data = RAW_DATA_IMPORT as RawOriginal;
@@ -51,6 +52,8 @@ type DataContextType = {
   clearChanges: () => void;
   importChanges: (data: string) => boolean;
   changes: MappedChanges;
+  getCurrentJSON: () => string;
+  getChangesJSON: () => string;
   lastModified: Date | undefined;
   lastUpdated: Date;
 };
@@ -189,10 +192,32 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateLastModified();
   };
 
+  const clearChanges = () => {
+    setChanges(emptyChanges);
+    setLastModified(undefined);
+  };
+
+  const getCurrentJSON = (): string =>
+    JSON.stringify({
+      segments: sortById(currentData.segments),
+      trailEvents: sortById(currentData.trailEvents),
+      trails: sortById(currentData.trails),
+    });
+
+  const getChangesJSON = (): string =>
+    JSON.stringify({
+      segments: sortById(changes.segments),
+      trailEvents: sortById(changes.trailEvents),
+      trails: sortById(changes.trails),
+      lastModified: (lastModified ?? new Date()).toISOString(),
+    });
+
   console.log('changes:');
   console.log(changes);
   console.log(`lastModified: ${lastModified} (${typeof lastModified})`);
   console.log(`lastUpdated: ${lastUpdated} (${typeof lastUpdated})`);
+
+  const hasUpdated = lastModified !== undefined && lastUpdated > lastModified;
 
   return (
     <DataContext.Provider
@@ -205,10 +230,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         deleteItem,
         editingEnabled,
         setEditingEnabled,
-        clearChanges: () => {
-          setChanges(emptyChanges);
-          setLastModified(undefined);
-        },
+        clearChanges,
         changes,
         importChanges: (data) => {
           const newImport = importChanges(data);
@@ -218,10 +240,36 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setLastModified(importLastModified);
           return true;
         },
+        getCurrentJSON,
+        getChangesJSON,
         lastModified,
         lastUpdated,
       }}
     >
+      <Modal
+        centered
+        withCloseButton={false}
+        closeOnClickOutside={false}
+        opened={hasUpdated}
+        onClose={() => undefined}
+        title="Map Data Update"
+        overlayProps={{
+          backgroundOpacity: 0.55,
+        }}
+      >
+        <p>
+          I have updated the map data since you last visited. You must clear your local edits to
+          prevent conflicts.
+        </p>
+        <Group justify="flex-end">
+          <Button variant="outline" onClick={() => handleDownload('changes', getChangesJSON())}>
+            Download Your Edits
+          </Button>
+          <Button color="red" onClick={clearChanges}>
+            Clear Edits
+          </Button>
+        </Group>
+      </Modal>
       {children}
     </DataContext.Provider>
   );

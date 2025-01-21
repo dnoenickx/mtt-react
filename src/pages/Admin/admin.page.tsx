@@ -32,10 +32,9 @@ import {
 } from '@tabler/icons-react';
 import { showNotification } from '@mantine/notifications';
 import { Link } from '@/types';
-import { sortById } from '@/utils';
+import { handleDownload } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import ConfirmationButton from '@/components/ConfirmationButton';
-// import { useClipboard } from '@mantine/hooks';
 import { EmailButton } from '@/components/Atomic/Atomic';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
 
@@ -56,40 +55,14 @@ const linkCell = (item: Record<string, any>): JSX.Element | string => (
 
 function DataOptionsMenu() {
   const navigate = useNavigate();
-  const { currentData, clearChanges, changes, importChanges, editingEnabled, lastModified } =
-    useData();
-  // const changesClipboard = useClipboard({ timeout: 500 });
-  // const dataClipboard = useClipboard({ timeout: 500 });
-
-  const getCurrentJSON = (): string =>
-    JSON.stringify({
-      segments: sortById(currentData.segments),
-      trailEvents: sortById(currentData.trailEvents),
-      trails: sortById(currentData.trails),
-    });
-
-  const getChangesJSON = (): string =>
-    JSON.stringify({
-      segments: sortById(changes.segments),
-      trailEvents: sortById(changes.trailEvents),
-      trails: sortById(changes.trails),
-      lastModified: (lastModified ?? new Date()).toISOString(),
-    });
-
-  const handleDownload = (fileName: string, data: string): void => {
-    try {
-      const blob = new Blob([data], { type: 'application/json' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `${fileName}_${new Date()
-        .toISOString()
-        .split('T')[0]
-        .replace(/-/g, '')}.json`;
-      link.click();
-    } catch (error) {
-      console.error('Failed to download file:', error);
-    }
-  };
+  const {
+    clearChanges,
+    importChanges,
+    editingEnabled,
+    lastModified,
+    getChangesJSON,
+    getCurrentJSON,
+  } = useData();
 
   const handleUploadChanges = (): void => {
     const input = document.createElement('input');
@@ -138,27 +111,6 @@ function DataOptionsMenu() {
 
     input.click();
   };
-
-  // const handlePasteChanges = () => {
-  //   navigator.clipboard.readText().then((text) => {
-  //     try {
-  //       const data = JSON.parse(text);
-  //       setChanges(mapFromRawData(data));
-
-  //       showNotification({
-  //         withBorder: true,
-  //         withCloseButton: false,
-  //         title: 'Upload Successful',
-  //         message: `Loaded changes from clipboard`,
-  //         position: 'bottom-left',
-  //         icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
-  //         m: 'lg',
-  //       });
-  //     } catch (error) {
-  //       console.error('Failed to parse pasted changes:', error);
-  //     }
-  //   });
-  // };
 
   return (
     <Menu trigger="click-hover" shadow="md" keepMounted>
@@ -210,28 +162,6 @@ function DataOptionsMenu() {
         >
           Download All Data
         </Menu.Item>
-
-        {/* <Menu.Divider />
-        <Menu.Item
-          leftSection={<IconCopy style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => dataClipboard.copy(getCurrentJSON())}
-        >
-          {dataClipboard.copied ? 'Copied Data' : 'Copy Data'}
-        </Menu.Item>
-        <Menu.Item
-          disabled={!editingEnabled}
-          leftSection={<IconCopy style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => changesClipboard.copy(getChangesJSON())}
-        >
-          {changesClipboard.copied ? 'Copied Changes' : 'Copy Changes'}
-        </Menu.Item>
-        <Menu.Item
-          disabled={!editingEnabled}
-          leftSection={<IconClipboardText style={{ width: rem(14), height: rem(14) }} />}
-          onClick={handlePasteChanges}
-        >
-          Paste Changes
-        </Menu.Item> */}
 
         <Menu.Divider />
 
