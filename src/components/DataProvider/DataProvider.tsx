@@ -106,16 +106,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [original, changes, editingEnabled]);
 
   const getNextId = (type: MappedKeys, otherIds: number[] = []) => {
-    const allIds = new Set([
-      ...Object.keys(original[type]).map(Number),
-      ...Object.keys(changes[type as MappedKeys]).map(Number),
-      ...otherIds,
-    ]);
+    const originalIds = Object.keys(original[type]).map(Number);
+    const changesIds = Object.keys(changes[type as MappedKeys]).map(Number);
+    const maxOriginalId = Math.max(...originalIds);
+
+    const allIds = new Set([...originalIds, ...changesIds, ...otherIds]);
 
     let newId: number;
     do {
       newId = Math.floor(Math.random() * 1_000_000);
-    } while (allIds.has(newId));
+    } while (allIds.has(newId) && newId <= maxOriginalId + 1_000);
 
     return newId;
   };
