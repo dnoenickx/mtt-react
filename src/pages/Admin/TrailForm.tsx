@@ -102,7 +102,7 @@ const TrailForm = () => {
     { title: 'Admin', href: '/admin' },
     { title: 'Trails', href: '/admin/trails' },
     {
-      title: isCreating ? 'New Trail ' : `Segment ${initialTrail.id}`,
+      title: isCreating ? 'New Trail ' : `Trail ${initialTrail.id}`,
       href: isCreating ? '/admin/trails/create' : `/admin/trails/${initialTrail.id}`,
     },
   ].map((item, index) => (

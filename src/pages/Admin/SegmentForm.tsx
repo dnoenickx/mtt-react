@@ -138,7 +138,9 @@ const SegmentForm = () => {
       const rawSegment: RawSegment = {
         ...formSegment,
         trails: formSegment.trails.map((trailId) => Number(trailId)),
-        events: formSegment.events.map(({ id: eventId }) => eventId),
+        events: formSegment.events
+          .sort((a, b) => +new Date(b.date) - +new Date(a.date))
+          .map(({ id: eventId }) => eventId),
         links: formSegment.links.map((link) => ({
           text: link.text,
           url: link.url,
@@ -199,12 +201,7 @@ const SegmentForm = () => {
   };
 
   const eventsFields = form.values.events.map((event, index) => (
-    <Fieldset
-      legend={event.headline}
-      key={event.id || randomId()}
-      variant="filled"
-      p={{ base: 'xs', sm: 'md' }}
-    >
+    <Fieldset key={event.id || randomId()} variant="filled" p={{ base: 'xs', sm: 'md' }} mt="xs">
       <Group align="flex-end">
         <TextInput
           label="Headline"
