@@ -10,6 +10,20 @@ export function formatDateString(date: string) {
   return format(adjustForTimezoneOffset(date), 'yyyy-MM-dd');
 }
 
+function getSeason(date: Date) {
+  const month = date.getMonth() + 1;
+  switch (true) {
+    case month >= 3 && month <= 5:
+      return 'Spring';
+    case month >= 6 && month <= 8:
+      return 'Summer';
+    case month >= 9 && month <= 11:
+      return 'Fall';
+    default:
+      return 'Winter';
+  }
+}
+
 export function formatDateWithPrecision(date: string, precision: DatePrecision): string {
   const adjustedDate = adjustForTimezoneOffset(date);
 
@@ -18,6 +32,8 @@ export function formatDateWithPrecision(date: string, precision: DatePrecision):
       return format(startOfDay(adjustedDate), 'MMMM d, yyyy');
     case 'm':
       return format(startOfMonth(adjustedDate), 'MMMM yyyy');
+    case 's':
+      return `${getSeason(adjustedDate)} ${adjustedDate.getFullYear()}`;
     case 'y':
       return format(startOfYear(adjustedDate), 'yyyy');
     default:

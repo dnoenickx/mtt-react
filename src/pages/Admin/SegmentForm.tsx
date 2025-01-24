@@ -226,6 +226,7 @@ const SegmentForm = () => {
           data={[
             { value: 'd', label: 'Day' },
             { value: 'm', label: 'Month' },
+            { value: 's', label: 'Season' },
             { value: 'y', label: 'Year' },
           ]}
           value={form.values.events[index].date_precision || ''}

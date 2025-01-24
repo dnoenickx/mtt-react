@@ -9,7 +9,7 @@ export type SegmentState =
   | 'design'
   | 'proposed';
 
-export type DatePrecision = 'd' | 'm' | 'y';
+export type DatePrecision = 'd' | 'm' | 's' | 'y';
 
 // Main types within app ///////////////////////////////////////////////////
 
