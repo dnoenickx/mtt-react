@@ -12,6 +12,7 @@ import {
   RawSegment,
   RawTrail,
   RawTrailEvent,
+  DeletableWithId,
 } from '@/types';
 import { importChanges } from './importUtil';
 import { Button, Group, Modal } from '@mantine/core';
@@ -121,7 +122,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const saveChanges = (updates: {
-    [type in MappedKeys]?: any[];
+    [type in MappedKeys]?:
+      | DeletableWithId<RawTrail>[]
+      | DeletableWithId<RawSegment>[]
+      | DeletableWithId<RawTrailEvent>[];
   }) => {
     const newChanges: Partial<Record<MappedKeys, Record<number, any>>> = {};
 
@@ -182,14 +186,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteItem = (type: MappedKeys, id: number) => {
-    setChanges((prevState) => ({
-      ...prevState,
-      [type]: {
-        ...prevState[type],
-        [id]: { id, deleted: true },
-      },
-    }));
-    updateLastModified();
+    let updatedSegments: RawSegment[] = [];
+    if (type === 'trails') {
+      updatedSegments = Object.values(currentData.segments)
+        .filter((s) => s.trails.includes(id))
+        .map((s) => ({ ...s, trails: s.trails.filter((trail) => trail !== id) }));
+    } else if (type === 'trailEvents') {
+      updatedSegments = Object.values(currentData.segments)
+        .filter((s) => s.events.includes(id))
+        .map((s) => ({ ...s, events: s.events.filter((event) => event !== id) }));
+    }
+
+    saveChanges({ segments: updatedSegments, [type]: [{ id, deleted: true }] });
   };
 
   const clearChanges = () => {

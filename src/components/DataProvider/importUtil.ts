@@ -1,7 +1,5 @@
-import { Link, MappedChanges, RawSegment, RawTrail, RawTrailEvent } from '@/types';
+import { DeletableWithId, Link, MappedChanges, RawSegment, RawTrail, RawTrailEvent } from '@/types';
 import { createMapping } from '@/utils';
-
-type DeletableWithId<T> = Partial<T> & { id: number; deleted?: boolean };
 
 type Trail = DeletableWithId<RawTrail>;
 type Segment = DeletableWithId<RawSegment>;

@@ -92,7 +92,7 @@ export type RawOriginal = {
 
 // helpers  ///////////////////////////////////////////////////
 
-type DeletableWithId<T> = Partial<T> & { id: number; deleted?: boolean };
+export type DeletableWithId<T> = Partial<T> & { id: number; deleted?: boolean };
 
 /** Construct a type with the properties of T where those in type K are optional. */
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
