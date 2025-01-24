@@ -27,8 +27,7 @@ import { showNotification } from '@mantine/notifications';
 import { randomId } from '@mantine/hooks';
 import { IconTrash, IconPlus, IconSearch, IconArrowRight } from '@tabler/icons-react';
 import { multiLineString } from '@turf/turf';
-import { format } from 'date-fns';
-import { RawSegment, RawTrailEvent } from '@/types';
+import { DatePrecision, RawSegment, RawTrailEvent } from '@/types';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
 import { deepEqual, formatDateString } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
@@ -42,11 +41,15 @@ interface EventComboboxItem extends ComboboxItem {
   date: string;
 }
 
+type FormTrailEvent = Omit<RawTrailEvent, 'date_precision'> & {
+  date_precision: DatePrecision | null;
+};
+
 type FormSegment = Omit<RawSegment, 'trails' | 'geometry' | 'links' | 'events'> & {
   trails: string[];
   geometry: string;
   links: FormLink[];
-  events: RawTrailEvent[];
+  events: FormTrailEvent[];
 };
 
 const createOptionsFilter =
@@ -129,6 +132,7 @@ const SegmentForm = () => {
           Number.isNaN(new Date(value).getTime())
             ? 'Invalid date format. Must be yyyy-mm-dd format.'
             : null,
+        date_precision: (value) => (value === null ? 'Date precision is required' : null),
       },
     },
   });
@@ -148,14 +152,16 @@ const SegmentForm = () => {
         geometry: cleanToMultiLineString(JSON.parse(formSegment.geometry)),
       };
 
-      const rawEvents: RawTrailEvent[] = formSegment.events.map((event) => ({
-        ...event,
-        date: formatDateString(event.date),
-        links: event.links.map((link) => ({
-          text: link.text,
-          url: link.url,
-        })),
-      }));
+      const rawEvents: RawTrailEvent[] = formSegment.events
+        .filter((event): event is RawTrailEvent => event.date_precision !== null)
+        .map((event) => ({
+          ...event,
+          date: formatDateString(event.date),
+          links: event.links.map((link) => ({
+            text: link.text,
+            url: link.url,
+          })),
+        }));
 
       saveChanges({ segments: [rawSegment], trailEvents: rawEvents });
 
@@ -186,14 +192,14 @@ const SegmentForm = () => {
   };
 
   const handleCreateNewTrailEvent = () => {
-    const trailEvent: RawTrailEvent = {
+    const trailEvent: FormTrailEvent = {
       id: getNextId(
         'trailEvents',
         form.values.events.map((event) => event.id)
       ),
       headline: '',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      date_precision: 'd',
+      date: '',
+      date_precision: null,
       description: '',
       links: [],
     };
@@ -216,11 +222,13 @@ const SegmentForm = () => {
         />
         <Select
           label="Date Precision"
+          placeholder="Select precision"
           data={[
             { value: 'd', label: 'Day' },
             { value: 'm', label: 'Month' },
             { value: 'y', label: 'Year' },
           ]}
+          value={form.values.events[index].date_precision || ''}
           {...form.getInputProps(`events.${index}.date_precision`)}
         />
         <ActionIcon
