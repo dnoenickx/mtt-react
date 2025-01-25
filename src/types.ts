@@ -65,7 +65,7 @@ export type RawSegment = {
 
 // Groupings of above components  ///////////////////////////////////////////////////
 
-export type MappedKeys = 'trails' | 'segments' | 'trailEvents';
+export type MappedKeys = keyof MappedChanges;
 
 export type MappedChanges = {
   trails: { [id: number]: DeletableWithId<RawTrail> };

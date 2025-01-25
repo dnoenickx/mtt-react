@@ -12,7 +12,6 @@ import {
   RawSegment,
   RawTrail,
   RawTrailEvent,
-  DeletableWithId,
 } from '@/types';
 import { importChanges } from './importUtil';
 import { Button, Group, Modal } from '@mantine/core';
@@ -55,6 +54,7 @@ type DataContextType = {
   changes: MappedChanges;
   getCurrentJSON: () => string;
   getChangesJSON: () => string;
+  getMinimalChangesJSON: () => string;
   lastModified: Date | undefined;
   lastUpdated: Date;
 };
@@ -122,10 +122,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const saveChanges = (updates: {
-    [type in MappedKeys]?:
-      | DeletableWithId<RawTrail>[]
-      | DeletableWithId<RawSegment>[]
-      | DeletableWithId<RawTrailEvent>[];
+    [type in MappedKeys]?: MappedChanges[type][number][];
   }) => {
     const newChanges: Partial<Record<MappedKeys, Record<number, any>>> = {};
 
@@ -220,10 +217,46 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       lastModified: (lastModified ?? new Date()).toISOString(),
     });
 
-  console.log('changes:');
-  console.log(changes);
-  console.log(`lastModified: ${lastModified} (${typeof lastModified})`);
-  console.log(`lastUpdated: ${lastUpdated} (${typeof lastUpdated})`);
+  const getMinimalChangesJSON = (): string => {
+    const minimalChanges: MappedChanges = {
+      trails: {},
+      segments: {},
+      trailEvents: {},
+    };
+
+    (Object.keys(changes) as MappedKeys[]).forEach((type) => {
+      (
+        Object.values(changes[type as keyof MappedChanges]) as MappedChanges[typeof type][number][]
+      ).forEach((item) => {
+        const id: number = item.id;
+        if (item.deleted) {
+          minimalChanges[type][id] = { id, deleted: true };
+        } else {
+          const originalItem = original[type][+id] || {};
+          const diff: Record<string, any> = {};
+
+          Object.entries(item).forEach(([key, value]) => {
+            if (!deepEqual(originalItem[key as keyof typeof originalItem], value)) {
+              diff[key] = value;
+            }
+          });
+
+          if (Object.keys(diff).length > 0) {
+            minimalChanges[type][+id] = {
+              id: +id,
+              ...diff,
+            };
+          }
+        }
+      });
+    });
+
+    return JSON.stringify({
+      segments: sortById(minimalChanges.segments),
+      trailEvents: sortById(minimalChanges.trailEvents),
+      trails: sortById(minimalChanges.trails),
+    });
+  };
 
   const hasUpdated = lastModified !== undefined && lastUpdated > lastModified;
 
@@ -250,6 +283,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
         getCurrentJSON,
         getChangesJSON,
+        getMinimalChangesJSON,
         lastModified,
         lastUpdated,
       }}
