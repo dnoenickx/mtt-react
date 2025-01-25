@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
-import { randomId } from '@mantine/hooks';
+import { randomId, useDocumentTitle } from '@mantine/hooks';
 import { RawTrail } from '@/types';
 import { deepEqual } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
@@ -29,6 +29,7 @@ const TrailForm = () => {
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
   const { currentData, saveChanges, getNextId } = useData();
+  useDocumentTitle(isCreating ? 'New Trail' : `Trail ${id} | Edit`);
 
   const initialTrail = useMemo(() => {
     if (id === undefined) return null;

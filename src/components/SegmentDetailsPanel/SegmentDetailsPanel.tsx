@@ -23,6 +23,7 @@ import classes from './SegmentDetailsPanel.module.css';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 import { useData } from '../DataProvider/DataProvider';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
+import { useDocumentTitle } from '@mantine/hooks';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -50,6 +51,12 @@ export function SegmentDetailsPanel() {
 
   const { getSegment, editingEnabled } = useData();
   const segment: Segment | null = useMemo(() => getSegment(segmentId), [segmentId]);
+
+  const title =
+    !segmentId || segment === null
+      ? 'Mass Trail Tracker'
+      : segment.name || segment.trails.find(({ name }) => name)?.name || 'Mass Trail Tracker';
+  useDocumentTitle(title);
 
   // No segment selected
   if (!segmentId) {

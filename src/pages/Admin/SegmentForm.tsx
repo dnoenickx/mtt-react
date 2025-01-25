@@ -24,7 +24,7 @@ import {
 } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { showNotification } from '@mantine/notifications';
-import { randomId } from '@mantine/hooks';
+import { randomId, useDocumentTitle } from '@mantine/hooks';
 import { IconTrash, IconPlus, IconSearch, IconArrowRight } from '@tabler/icons-react';
 import { multiLineString } from '@turf/turf';
 import { DatePrecision, RawSegment, RawTrailEvent } from '@/types';
@@ -66,6 +66,7 @@ const SegmentForm = () => {
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
   const { currentData, getSegment, getNextId, saveChanges, deleteItem, editingEnabled } = useData();
+  useDocumentTitle(isCreating ? 'New Segment' : `Segment ${id} | Edit`);
 
   const initialSegment: FormSegment | null = useMemo(() => {
     if (id === undefined) return null;

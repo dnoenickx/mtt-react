@@ -13,6 +13,7 @@ import {
 import { IconCircleCheck, IconCircleX, IconExternalLink } from '@tabler/icons-react';
 import { Footer } from '@/components/Footer/Footer';
 import { EmailButton } from '@/components/Atomic/Atomic';
+import { useDocumentTitle } from '@mantine/hooks';
 
 const listCheck = (
   <ThemeIcon variant="outline" color="teal" style={{ border: 0 }}>
@@ -27,6 +28,8 @@ const listX = (
 );
 
 export default function About() {
+  useDocumentTitle('About | Mass Trail Tracker');
+
   return (
     <>
       <Container size="sm" py="xl">

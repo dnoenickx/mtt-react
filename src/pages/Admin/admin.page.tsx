@@ -32,11 +32,12 @@ import {
 } from '@tabler/icons-react';
 import { showNotification } from '@mantine/notifications';
 import { Link } from '@/types';
-import { handleDownload } from '@/utils';
+import { handleDownload, toCapitalCase } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import ConfirmationButton from '@/components/ConfirmationButton';
 import { EmailButton } from '@/components/Atomic/Atomic';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
+import { useDocumentTitle } from '@mantine/hooks';
 
 const linkCell = (item: Record<string, any>): JSX.Element | string => (
   <List size="sm">
@@ -200,6 +201,8 @@ export default function Admin() {
   const navigate = useNavigate();
   const { tabValue } = useParams<{ tabValue?: string }>();
   const { currentData, deleteItem, editingEnabled, setEditingEnabled } = useData();
+
+  useDocumentTitle(`${toCapitalCase(tabValue)} | Admin`);
 
   const TABLE_FIELDS: Record<
     string,
