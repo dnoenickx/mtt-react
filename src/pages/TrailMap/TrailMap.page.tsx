@@ -1,5 +1,13 @@
 import React, { useMemo, useState, useRef, useCallback } from 'react';
-import Map, { MapGeoJSONFeature, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import Map, {
+  FullscreenControl,
+  GeolocateControl,
+  MapGeoJSONFeature,
+  MapLayerMouseEvent,
+  MapRef,
+  NavigationControl,
+  ScaleControl,
+} from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery, useSessionStorage } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -196,7 +204,6 @@ function TrailMap({
         [-69.07083, 43.405765],
       ]}
       boxZoom={false}
-      dragRotate={false}
       // @ts-ignore
       mapStyle={mapStyle}
       interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
@@ -204,8 +211,11 @@ function TrailMap({
       onClick={onClick}
       {...viewState}
       onMove={(evt) => setViewState(evt.viewState)}
-      attributionControl={false}
     >
+      <GeolocateControl />
+      <NavigationControl />
+      <ScaleControl unit="imperial" />
+
       <SegmentsLayer />
       <Subway />
       <CommuterRailLayer />
@@ -322,11 +332,6 @@ export function TrailMapPage() {
         </Button>
 
         {mapElement}
-
-        <div className={styles['corner-text']}>
-          <a href="https://protomaps.com">Protomaps</a> |{' '}
-          <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap</a>
-        </div>
       </div>
     </div>
   );
