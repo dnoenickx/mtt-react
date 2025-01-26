@@ -142,3 +142,12 @@ const LinksField = ({ value = [], onChange, description, ...boxProps }: LinksFie
 };
 
 export default LinksField;
+
+export function toRawLinks(links: FormLink[]) {
+  return links
+    .map((link) => ({
+      text: link.text,
+      url: link.url,
+    }))
+    .filter((link) => link.text !== '' || link.url !== '');
+}

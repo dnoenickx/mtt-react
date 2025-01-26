@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { useLocalStorage } from '@mantine/hooks';
-import { createMapping, deepEqual, handleDownload, sortById } from '@/utils';
+import { randomId, useLocalStorage } from '@mantine/hooks';
+import { createMapping, deepEqual, sortById } from '@/utils';
 import RAW_DATA_IMPORT from '../../data.json';
 import {
   MappedChanges,
@@ -14,7 +14,7 @@ import {
   RawTrailEvent,
 } from '@/types';
 import { importChanges } from './importUtil';
-import { Button, Group, Modal } from '@mantine/core';
+import { ClearChangesModal, GetContactInfoModal } from './Modals';
 
 const fetchRawData = (): [MappedOriginal, Date] => {
   const data = RAW_DATA_IMPORT as RawOriginal;
@@ -63,7 +63,7 @@ const DataContext = createContext<DataContextType | null>(null);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [editingEnabled, setEditingEnabled] = useLocalStorage<boolean>({
-    key: 'editingEnabled',
+    key: 'editing-enabled',
     defaultValue: false,
   });
   const [changes, setChanges] = useLocalStorage<MappedChanges>({
@@ -71,10 +71,24 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     defaultValue: emptyChanges,
   });
   const [lastModified, setLastModified] = useLocalStorage<Date | undefined>({
-    key: 'lastModified',
+    key: 'last-modified',
     defaultValue: undefined,
     deserialize: (value) => (value ? new Date(value) : undefined),
     serialize: (value) => (value ? value.toISOString() : ''),
+  });
+
+  const [editId, setEditId] = useLocalStorage({
+    key: 'edit-id',
+    defaultValue: randomId(''),
+  });
+
+  const [contact] = useLocalStorage<{
+    name: string;
+    email: string;
+    organization: string;
+  } | null>({
+    key: 'contact-info',
+    defaultValue: null,
   });
 
   const updateLastModified = () => setLastModified(new Date());
@@ -200,6 +214,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearChanges = () => {
     setChanges(emptyChanges);
     setLastModified(undefined);
+    setEditId(randomId(''));
   };
 
   const getCurrentJSON = (): string =>
@@ -211,18 +226,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const getChangesJSON = (): string =>
     JSON.stringify({
+      meta: {
+        ...contact,
+        editId,
+        lastModified: (lastModified ?? new Date()).toISOString(),
+      },
       segments: sortById(changes.segments),
       trailEvents: sortById(changes.trailEvents),
       trails: sortById(changes.trails),
-      lastModified: (lastModified ?? new Date()).toISOString(),
     });
 
   const getMinimalChangesJSON = (): string => {
-    const minimalChanges: MappedChanges = {
-      trails: {},
-      segments: {},
-      trailEvents: {},
-    };
+    const minimalChanges: MappedChanges = emptyChanges;
 
     (Object.keys(changes) as MappedKeys[]).forEach((type) => {
       (
@@ -252,13 +267,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return JSON.stringify({
+      meta: {
+        ...contact,
+        editId,
+        lastModified: (lastModified ?? new Date()).toISOString(),
+      },
       segments: sortById(minimalChanges.segments),
       trailEvents: sortById(minimalChanges.trailEvents),
       trails: sortById(minimalChanges.trails),
     });
   };
-
-  const hasUpdated = lastModified !== undefined && lastUpdated > lastModified;
 
   return (
     <DataContext.Provider
@@ -274,6 +292,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         clearChanges,
         changes,
         importChanges: (data) => {
+          // TODO: this doesn't work with the changes I've made to export
           const newImport = importChanges(data);
           if (!newImport) return false;
           const { lastModified: importLastModified, ...newChanges } = newImport;
@@ -288,30 +307,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         lastUpdated,
       }}
     >
-      <Modal
-        centered
-        withCloseButton={false}
-        closeOnClickOutside={false}
-        opened={hasUpdated}
-        onClose={() => undefined}
-        title="Map Data Update"
-        overlayProps={{
-          backgroundOpacity: 0.55,
-        }}
-      >
-        <p>
-          I have updated the map data since you last visited. You must clear your local edits to
-          prevent conflicts.
-        </p>
-        <Group justify="flex-end">
-          <Button variant="outline" onClick={() => handleDownload('changes', getChangesJSON())}>
-            Download Your Edits
-          </Button>
-          <Button color="red" onClick={clearChanges}>
-            Clear Edits
-          </Button>
-        </Group>
-      </Modal>
+      <ClearChangesModal />
+      <GetContactInfoModal />
       {children}
     </DataContext.Provider>
   );

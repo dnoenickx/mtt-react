@@ -27,11 +27,11 @@ import { showNotification } from '@mantine/notifications';
 import { randomId, useDocumentTitle } from '@mantine/hooks';
 import { IconTrash, IconPlus, IconSearch, IconArrowRight } from '@tabler/icons-react';
 import { multiLineString } from '@turf/turf';
-import { DatePrecision, RawSegment, RawTrailEvent } from '@/types';
+import { DatePrecision, RawSegment, RawTrailEvent, SegmentState } from '@/types';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
 import { deepEqual, formatDateString } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
-import LinksField, { FormLink } from './LinksField';
+import LinksField, { FormLink, toRawLinks } from './LinksField';
 import { cleanToMultiLineString, toGeoJsonIO, validateMultiLineString } from '@/geospatialUtils';
 import ConfirmationButton from '@/components/ConfirmationButton';
 
@@ -41,11 +41,13 @@ interface EventComboboxItem extends ComboboxItem {
   date: string;
 }
 
-type FormTrailEvent = Omit<RawTrailEvent, 'date_precision'> & {
+type FormTrailEvent = Omit<RawTrailEvent, 'date_precision' | 'links'> & {
   date_precision: DatePrecision | null;
+  links: FormLink[];
 };
 
-type FormSegment = Omit<RawSegment, 'trails' | 'geometry' | 'links' | 'events'> & {
+type FormSegment = Omit<RawSegment, 'state' | 'trails' | 'geometry' | 'links' | 'events'> & {
+  state: SegmentState | null;
   trails: string[];
   geometry: string;
   links: FormLink[];
@@ -76,7 +78,7 @@ const SegmentForm = () => {
         id: getNextId('segments'),
         name: '',
         description: '',
-        state: 'paved',
+        state: null,
         geometry: JSON.stringify(multiLineString([]).geometry),
         trails: [],
         events: [],
@@ -128,7 +130,11 @@ const SegmentForm = () => {
     initialValues: initialSegment,
     validateInputOnBlur: true,
     validate: {
+      state: (value) => (value === null ? 'State is required' : null),
+      // geometry: (value) =>
+      //   value === JSON.stringify(multiLineString([]).geometry) ? 'Geometry cannot be empty' : null,
       events: {
+        headline: (value) => (value == '' ? 'Headline required' : null),
         date: (value) =>
           Number.isNaN(new Date(value).getTime())
             ? 'Invalid date format. Must be yyyy-mm-dd format.'
@@ -142,27 +148,22 @@ const SegmentForm = () => {
     if (!deepEqual(initialSegment, formSegment)) {
       const rawSegment: RawSegment = {
         ...formSegment,
+        state: formSegment.state as SegmentState,
         trails: formSegment.trails.map((trailId) => Number(trailId)),
         events: formSegment.events
           .sort((a, b) => +new Date(b.date) - +new Date(a.date))
           .map(({ id: eventId }) => eventId),
-        links: formSegment.links.map((link) => ({
-          text: link.text,
-          url: link.url,
-        })),
+        links: toRawLinks(formSegment.links),
         geometry: cleanToMultiLineString(JSON.parse(formSegment.geometry)),
       };
 
       const rawEvents: RawTrailEvent[] = formSegment.events
-        .filter((event): event is RawTrailEvent => event.date_precision !== null)
         .map((event) => ({
           ...event,
           date: formatDateString(event.date),
-          links: event.links.map((link) => ({
-            text: link.text,
-            url: link.url,
-          })),
-        }));
+          links: toRawLinks(event.links),
+        }))
+        .filter((event): event is RawTrailEvent => event.date_precision !== null);
 
       saveChanges({ segments: [rawSegment], trailEvents: rawEvents });
 
@@ -208,6 +209,7 @@ const SegmentForm = () => {
   };
 
   const eventsFields = form.values.events.map((event, index) => (
+    // TODO: can I delete randomId() in line below?
     <Fieldset key={event.id || randomId()} variant="filled" p={{ base: 'xs', sm: 'md' }} mt="xs">
       <Group align="flex-end">
         <TextInput

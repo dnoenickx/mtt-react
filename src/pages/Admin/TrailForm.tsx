@@ -18,7 +18,7 @@ import { randomId, useDocumentTitle } from '@mantine/hooks';
 import { RawTrail } from '@/types';
 import { deepEqual } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
-import LinksField, { FormLink } from './LinksField';
+import LinksField, { FormLink, toRawLinks } from './LinksField';
 
 type FormTrail = Omit<RawTrail, 'links'> & {
   links: FormLink[];
@@ -78,10 +78,7 @@ const TrailForm = () => {
   const handleSubmit = (formTrail: FormTrail) => {
     const trail: RawTrail = {
       ...formTrail,
-      links: formTrail.links.map((link) => ({
-        text: link.text,
-        url: link.url,
-      })),
+      links: toRawLinks(formTrail.links),
     };
 
     if (!deepEqual(initialTrail, trail)) {
@@ -119,7 +116,7 @@ const TrailForm = () => {
         {isCreating ? 'New Trail ' : `Trail ${initialTrail.id}`}
       </Title>
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput label="Name" {...form.getInputProps('name')} />
+        <TextInput label="Name" required {...form.getInputProps('name')} />
         <TextInput label="Slug" {...form.getInputProps('slug')} />
         <Textarea autosize minRows={3} label="Description" {...form.getInputProps('description')} />
         <Divider my="xl" />
