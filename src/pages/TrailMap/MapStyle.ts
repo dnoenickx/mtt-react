@@ -225,7 +225,7 @@ export const mapStyle = {
       source: 'protomaps',
       'source-layer': 'water',
       paint: {
-        'fill-color': '#bbc7dd',
+        'fill-color': '#b6cde4',
       },
     },
     {
@@ -236,7 +236,7 @@ export const mapStyle = {
       minzoom: 14,
       filter: ['in', 'kind', 'stream'],
       paint: {
-        'line-color': '#bbc7dd',
+        'line-color': '#b6cde4',
         'line-width': 0.5,
       },
     },
@@ -248,7 +248,7 @@ export const mapStyle = {
       minzoom: 9,
       filter: ['in', 'kind', 'river'],
       paint: {
-        'line-color': '#bbc7dd',
+        'line-color': '#b6cde4',
         'line-width': ['interpolate', ['exponential', 1.6], ['zoom'], 9, 0, 9.5, 1, 18, 12],
       },
     },
@@ -751,7 +751,7 @@ export const mapStyle = {
       paint: {
         'line-color': '#f28c8c',
         'line-width': 3,
-        'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0, 12, 0.15],
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0, 10.5, 0.15],
       },
       minzoom: 10,
     },
@@ -766,20 +766,35 @@ export const mapStyle = {
         'line-color': '#c21828',
         'line-width': 1,
         'line-dasharray': [6, 4, 2, 4, 2, 4],
-        'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0, 12, 0.35],
+        'line-opacity': ['interpolate', ['linear'], ['zoom'], 10, 0, 10.5, 0.35],
       },
       minzoom: 10,
     },
+    // Light wide red base
     {
-      id: 'boundaries',
+      id: 'boundaries_state_base',
       type: 'line',
       source: 'protomaps',
       'source-layer': 'boundaries',
-      filter: ['>', 'kind_detail', 2],
+      filter: ['all', ['==', 'kind_detail', 4]],
       paint: {
-        'line-color': '#adadad',
-        'line-width': 0.5,
-        'line-dasharray': [3, 2],
+        'line-color': '#f28c8c',
+        'line-width': 3.5,
+        'line-opacity': 0.15,
+      },
+    },
+    // Darker dashed red line
+    {
+      id: 'boundaries_state_dash',
+      type: 'line',
+      source: 'protomaps',
+      'source-layer': 'boundaries',
+      filter: ['all', ['==', 'kind_detail', 4]],
+      paint: {
+        'line-color': '#c21828',
+        'line-width': 1.75,
+        'line-dasharray': [5, 1, 2, 1],
+        'line-opacity': 0.25,
       },
     },
     {

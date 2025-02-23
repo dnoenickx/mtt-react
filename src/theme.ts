@@ -39,7 +39,7 @@ export const theme = createTheme({
   components: {
     Anchor: Anchor.extend({
       styles: {
-        root: { color: 'var(--mantine-primary-color-9)' },
+        root: { color: 'var(--mantine-primary-color-9)', textDecoration: 'underline' },
       },
     }),
   },
