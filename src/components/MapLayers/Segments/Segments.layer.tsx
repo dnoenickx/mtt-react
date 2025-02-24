@@ -37,7 +37,7 @@ export default function SegmentsLayer() {
   );
 
   const HOVER_TARGET = 22;
-  const HOVERED = 8;
+  const HOVERED = 6;
   const HEAVY = 2.75;
   const MEDIUM = 2.5;
   const LIGHT = 2.25;

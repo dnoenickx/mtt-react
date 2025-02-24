@@ -5,17 +5,25 @@ import '@mantine/notifications/styles.css';
 
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Router } from './Router';
 import { theme } from './theme';
 import { DataProvider } from './components/DataProvider/DataProvider';
+import { ClearChangesModal, GetContactInfoModal } from './components/Modals';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <MantineProvider theme={theme}>
-      <Notifications />
-      <DataProvider>
-        <Router />
-      </DataProvider>
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider theme={theme}>
+        <Notifications />
+        <DataProvider>
+          <ClearChangesModal />
+          <GetContactInfoModal />
+          <Router />
+        </DataProvider>
+      </MantineProvider>
+    </QueryClientProvider>
   );
 }

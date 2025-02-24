@@ -123,6 +123,9 @@ function updateData(data) {
   };
 }
 
+// Parse command line arguments
+const minified = process.argv.includes('--minify');
+
 // Read the data from the file
 const filePath = path.join(__dirname, '../src/data.json');
 fs.readFile(filePath, 'utf8', (err, data) => {
@@ -134,8 +137,11 @@ fs.readFile(filePath, 'utf8', (err, data) => {
   const parsedData = JSON.parse(data);
   const updatedData = updateData(parsedData);
 
+  // Set space parameter based on minify flag
+  const space = minified ? 0 : 2;
+
   // Write the updated data back to the file
-  fs.writeFile(filePath, JSON.stringify(updatedData, null, 2), (err) => {
+  fs.writeFile(filePath, JSON.stringify(updatedData, null, space), (err) => {
     if (err) {
       console.error('Error writing file:', err);
     } else {

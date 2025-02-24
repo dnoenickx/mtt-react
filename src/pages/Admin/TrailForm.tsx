@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from '@mantine/form';
 import {
   Container,
@@ -13,7 +13,6 @@ import {
   Anchor,
 } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { showNotification } from '@mantine/notifications';
 import { randomId, useDocumentTitle } from '@mantine/hooks';
 import { RawTrail } from '@/types';
 import { deepEqual } from '@/utils';
@@ -31,6 +30,9 @@ const TrailForm = () => {
   const { currentData, saveChanges, getNextId } = useData();
   useDocumentTitle(isCreating ? 'New Trail' : `Trail ${id} | Edit`);
 
+  // Reset scroll on page load
+  useEffect(() => window.scrollTo(0, 0), [navigate]);
+
   const initialTrail = useMemo(() => {
     if (id === undefined) return null;
 
@@ -38,7 +40,6 @@ const TrailForm = () => {
       return {
         id: getNextId('trails'),
         name: '',
-        slug: '',
         description: '',
         links: [],
       };
@@ -83,15 +84,6 @@ const TrailForm = () => {
 
     if (!deepEqual(initialTrail, trail)) {
       saveChanges({ trails: [trail] });
-      showNotification({
-        withBorder: true,
-        withCloseButton: false,
-        title: 'Changes Submitted',
-        message: 'We will review your changes shortly!',
-        position: 'top-center',
-      });
-    } else {
-      console.log('no changes');
     }
     navigate(-1);
   };
@@ -117,7 +109,6 @@ const TrailForm = () => {
       </Title>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput label="Name" required {...form.getInputProps('name')} />
-        <TextInput label="Slug" {...form.getInputProps('slug')} />
         <Textarea autosize minRows={3} label="Description" {...form.getInputProps('description')} />
         <Divider my="xl" />
         <LinksField {...form.getInputProps('links')} />

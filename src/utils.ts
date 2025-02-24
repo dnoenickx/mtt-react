@@ -102,6 +102,7 @@ export const handleDownload = (
       : `${fileName}.json`;
     link.click();
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to download file:', error);
   }
 };
@@ -115,3 +116,12 @@ export function toCapitalCase(str: string | undefined) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
+
+export const createSlug = (name: string) =>
+  name
+    .toLowerCase() // Convert to lowercase
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^\w-]+/g, '') // Remove non-alphanumeric characters
+    .replace(/--+/g, '-') // Replace multiple hyphens with a single one
+    .replace(/^-+/, '') // Remove leading hyphens
+    .replace(/-+$/, ''); // Remove trailing hyphens

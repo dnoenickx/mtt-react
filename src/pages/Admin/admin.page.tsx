@@ -14,9 +14,11 @@ import {
   Menu,
   Switch,
   Badge,
+  ScrollArea,
+  Box,
+  Spoiler,
 } from '@mantine/core';
 import {
-  IconBarrierBlock,
   IconEdit,
   IconEraser,
   IconEye,
@@ -30,6 +32,7 @@ import {
   IconCirclePlus,
   IconX,
 } from '@tabler/icons-react';
+import { useDocumentTitle } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { Link } from '@/types';
 import { handleDownload, toCapitalCase } from '@/utils';
@@ -37,7 +40,6 @@ import { useData } from '@/components/DataProvider/DataProvider';
 import ConfirmationButton from '@/components/ConfirmationButton';
 import { EmailButton } from '@/components/Atomic/Atomic';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
-import { useDocumentTitle } from '@mantine/hooks';
 
 const linkCell = (item: Record<string, any>): JSX.Element | string => (
   <List size="sm">
@@ -55,7 +57,6 @@ const linkCell = (item: Record<string, any>): JSX.Element | string => (
 );
 
 function DataOptionsMenu() {
-  const navigate = useNavigate();
   const {
     clearChanges,
     importChanges,
@@ -84,7 +85,7 @@ function DataOptionsMenu() {
                 withBorder: true,
                 withCloseButton: false,
                 title: 'Upload Successful',
-                message: 'Loaded changes from file',
+                message: 'Loaded edits from file',
                 position: 'bottom-left',
                 icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
                 m: 'lg',
@@ -102,7 +103,8 @@ function DataOptionsMenu() {
               });
             }
           } catch (error) {
-            console.error('Failed to parse uploaded changes:', error);
+            // eslint-disable-next-line no-console
+            console.error('Failed to parse uploaded edits:', error);
           }
         };
 
@@ -123,28 +125,11 @@ function DataOptionsMenu() {
 
       <Menu.Dropdown>
         <Menu.Item
-          disabled={!editingEnabled}
-          leftSection={<IconCirclePlus style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => navigate('/admin/segments/create')}
-        >
-          Add Segment
-        </Menu.Item>
-        <Menu.Item
-          disabled={!editingEnabled}
-          leftSection={<IconCirclePlus style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => navigate('/admin/trails/create')}
-        >
-          Add Trail
-        </Menu.Item>
-
-        <Menu.Divider />
-
-        <Menu.Item
           disabled={!editingEnabled || lastModified === undefined}
           leftSection={<IconPencilDown style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => handleDownload('changes', getChangesJSON())}
+          onClick={() => handleDownload('edits', getChangesJSON())}
         >
-          Download Changes
+          Download Edits
         </Menu.Item>
 
         <Menu.Item
@@ -152,7 +137,7 @@ function DataOptionsMenu() {
           leftSection={<IconPencilUp style={{ width: rem(14), height: rem(14) }} />}
           onClick={handleUploadChanges}
         >
-          Upload Changes
+          Upload Edits
         </Menu.Item>
 
         <Menu.Divider />
@@ -168,28 +153,31 @@ function DataOptionsMenu() {
 
         {/* Danger Zone */}
         <ConfirmationButton
-          confirmationText="Are you sure you want to clear changes?"
+          confirmationText="All edits will be cleared from your browser. Submitted changes will still be available for me to review, but any unsubmitted changes will be permanently lost."
           onConfirm={() => {
             clearChanges();
             showNotification({
               withBorder: true,
               withCloseButton: false,
-              title: 'Changes Cleared',
-              message: 'You are now viewing the current publicly available data.',
-              position: 'bottom-left',
+              title: 'Edits Cleared',
+              message: 'Now viewing current published data',
+              position: 'top-center',
               icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
               m: 'lg',
             });
           }}
           confirmButtonText="Clear"
           cancelButtonText="Cancel"
+          modalProps={{
+            title: 'Clear edits?',
+          }}
         >
           <Menu.Item
             disabled={!editingEnabled}
             leftSection={<IconEraser style={{ width: rem(14), height: rem(14) }} />}
             color="red"
           >
-            Clear Changes
+            Clear Edits
           </Menu.Item>
         </ConfirmationButton>
       </Menu.Dropdown>
@@ -261,7 +249,6 @@ export default function Admin() {
     trails: [
       { key: 'id', label: 'ID' },
       { key: 'name', label: 'Name' },
-      // { key: 'slug', label: 'Slug' },
       { key: 'description', label: 'Description' },
       {
         key: 'links',
@@ -285,39 +272,14 @@ export default function Admin() {
     // ],
   };
 
-  const handleRowDelete = (type: keyof typeof currentData, id: number) => {
-    deleteItem(type, id);
-
-    showNotification({
-      withBorder: true,
-      withCloseButton: false,
-      title: 'Delete Submitted',
-      message: 'We will review your suggested changes soon!',
-      position: 'bottom-left',
-      icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
-      m: 'lg',
-    });
-  };
-
   return (
     <>
-      <Alert
-        variant="filled"
-        color="red"
-        title="Under Construction"
-        icon={<IconBarrierBlock />}
-        mb="lg"
-        px="xl"
-      >
-        The admin features are still under development. Your changes will only be saved in your
-        browser and may be lost.
-      </Alert>
       <Container size="lg" py="xl">
         <Group justify="space-between">
           <Switch
             checked={editingEnabled}
             onChange={(event) => setEditingEnabled(event.currentTarget.checked)}
-            label="Enable Editing + View Changes"
+            label="Enable Editing + View Edits"
             onLabel={<IconEye style={{ width: rem(14), height: rem(14) }} />}
             offLabel={<IconPencilOff style={{ width: rem(14), height: rem(14) }} />}
           />
@@ -325,75 +287,115 @@ export default function Admin() {
         </Group>
 
         <Alert variant="outline" title="Welcome" my="xl">
-          <ul>
-            <li>This page allows you to suggest changes to the map data!</li>
-            <li>
-              You&apos;ll be able to see your edits throughout the site, but they won&apos;t be
-              visible to anyone else until I approve them.
-            </li>
-          </ul>
-          <ul>
-            <li>A trail is a collection of segments. Segments can belong to multiple trails.</li>
-            <li>
-              Both trails and segments can have names, descriptions, and links attached to them.
-            </li>
-            <li>
-              Segments have timeliens comprised of events. Events can be shared across segments.
-            </li>
-          </ul>
-          <Group>
-            <span>Reach out if you have any questions:</span>
-            <EmailButton />
-          </Group>
+          <Spoiler initialState maxHeight={0} showLabel="Show more" hideLabel="Show less">
+            <ul>
+              <li>This page allows you to suggest edits to the map data!</li>
+              <li>
+                You&apos;ll be able to see your edits throughout the site, but they won&apos;t be
+                visible to anyone else until I approve them.
+              </li>
+            </ul>
+            <ul>
+              <li>A trail is a collection of segments. Segments can belong to multiple trails.</li>
+              <li>
+                Both trails and segments can have names, descriptions, and links attached to them.
+              </li>
+              <li>
+                Segments have timelines comprised of events. Events can be shared across segments.
+              </li>
+            </ul>
+            <Group>
+              <span>Reach out if you have any questions:</span>
+              <EmailButton />
+            </Group>
+          </Spoiler>
         </Alert>
 
         <Tabs variant="outline" value={tabValue} onChange={(value) => navigate(`/admin/${value}`)}>
           <Tabs.List>
-            <Tabs.Tab value="segments">Segments</Tabs.Tab>
-            <Tabs.Tab value="trails">Trails</Tabs.Tab>
-            {/* <Tabs.Tab value="trailEvents">Events</Tabs.Tab> */}
+            <Tabs.Tab value="segments" component={Box}>
+              <Group>
+                Segments
+                {tabValue === 'segments' && editingEnabled && (
+                  <Button
+                    variant="light"
+                    onClick={(event: any) => {
+                      event.stopPropagation();
+                      navigate('/admin/segments/create');
+                    }}
+                    size="compact-xs"
+                    leftSection={<IconCirclePlus size="1rem" />}
+                    m={0}
+                  >
+                    Create segment
+                  </Button>
+                )}
+              </Group>
+            </Tabs.Tab>
+            <Tabs.Tab value="trails" component={Box}>
+              <Group>
+                Trails
+                {tabValue === 'trails' && editingEnabled && (
+                  <Button
+                    variant="light"
+                    onClick={(event: any) => {
+                      event.stopPropagation();
+                      navigate('/admin/trails/create');
+                    }}
+                    size="compact-xs"
+                    leftSection={<IconCirclePlus size="1rem" />}
+                    m={0}
+                  >
+                    Create trail
+                  </Button>
+                )}
+              </Group>
+            </Tabs.Tab>
           </Tabs.List>
 
           {(['segments', 'trails'] as (keyof typeof currentData)[]).map((type) => (
             <Tabs.Panel key={type} value={type}>
-              <Table
-                highlightOnHover
-                data={{
-                  head: [...TABLE_FIELDS[type].map((field) => field.label), 'Actions'],
-                  body: Object.values(currentData[type]).map((item: Record<string, any>) => [
-                    ...TABLE_FIELDS[type].map((field) =>
-                      field.render ? field.render(item) : item[field.key]
-                    ),
-                    <Group wrap="nowrap">
-                      <ActionIcon
-                        aria-label="Edit"
-                        onClick={() => navigate(`/admin/${type}/${item.id}`)}
-                      >
-                        {editingEnabled ? (
-                          <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                        ) : (
-                          <IconEye style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                        )}
-                      </ActionIcon>
-                      <ConfirmationButton
-                        confirmationText="Are you sure you want to delete this?"
-                        onConfirm={() => handleRowDelete(type, item.id)}
-                        confirmButtonText="Delete"
-                        cancelButtonText="Cancel"
-                      >
+              <ScrollArea>
+                <Table
+                  highlightOnHover
+                  data={{
+                    head: [...TABLE_FIELDS[type].map((field) => field.label), 'Actions'],
+                    body: Object.values(currentData[type]).map((item: Record<string, any>) => [
+                      ...TABLE_FIELDS[type].map((field) =>
+                        field.render ? field.render(item) : item[field.key]
+                      ),
+                      <Group wrap="nowrap">
                         <ActionIcon
-                          color="red"
-                          variant="outline"
-                          aria-label="Delete"
-                          disabled={!editingEnabled}
+                          aria-label="Edit"
+                          component={RouterLink}
+                          to={`/admin/${type}/${item.id}`}
                         >
-                          <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                          {editingEnabled ? (
+                            <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                          ) : (
+                            <IconEye style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                          )}
                         </ActionIcon>
-                      </ConfirmationButton>
-                    </Group>,
-                  ]),
-                }}
-              />
+                        <ConfirmationButton
+                          confirmationText="Are you sure you want to delete this?"
+                          onConfirm={() => deleteItem(type, item.id)}
+                          confirmButtonText="Delete"
+                          cancelButtonText="Cancel"
+                        >
+                          <ActionIcon
+                            color="red"
+                            variant="outline"
+                            aria-label="Delete"
+                            disabled={!editingEnabled}
+                          >
+                            <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                          </ActionIcon>
+                        </ConfirmationButton>
+                      </Group>,
+                    ]),
+                  }}
+                />
+              </ScrollArea>
             </Tabs.Panel>
           ))}
         </Tabs>

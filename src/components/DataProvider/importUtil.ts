@@ -39,7 +39,6 @@ const isTrail = (value: any): value is Trail =>
   value !== null &&
   typeof value.id === 'number' &&
   typeof value.name === 'string' &&
-  typeof value.slug === 'string' &&
   typeof value.description === 'string' &&
   Array.isArray(value.links) &&
   value.links.every(isLink) &&
@@ -82,6 +81,7 @@ export const importChanges = (
   try {
     const data: any = JSON.parse(value);
 
+    /* eslint-disable no-console */
     if (typeof data !== 'object' || data === null) {
       console.error('Invalid data: must be an object');
       return undefined;
@@ -106,6 +106,7 @@ export const importChanges = (
       console.error('Invalid trailEvents:', data.trailEvents);
       return undefined;
     }
+    /* eslint-enable no-console */
 
     return {
       lastModified: new Date(data.lastModified),

@@ -28,14 +28,9 @@ const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
 
   const handleConfirm = async () => {
     setIsProcessing(true);
-    try {
-      await onConfirm();
-    } catch (error) {
-      console.error('Error executing confirm action:', error);
-    } finally {
-      setIsProcessing(false);
-      setModalOpened(false);
-    }
+    await onConfirm();
+    setIsProcessing(false);
+    setModalOpened(false);
   };
 
   const triggerButton = cloneElement(children, {

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useLocalStorage } from '@mantine/hooks';
-import { handleDownload } from '@/utils';
 import { Button, Group, TextInput, Modal, Text, Stack } from '@mantine/core';
-import { useData } from './DataProvider';
 import { useForm } from '@mantine/form';
 import { differenceInMinutes } from 'date-fns';
+import { useData } from './DataProvider/DataProvider';
+import { handleDownload } from '@/utils';
 
 export function ClearChangesModal() {
   const { lastUpdated, lastModified, getChangesJSON, clearChanges } = useData();
@@ -40,7 +40,7 @@ export function ClearChangesModal() {
 }
 
 export function GetContactInfoModal() {
-  const { changes } = useData();
+  const { changes, lastModified } = useData();
   const [opened, setOpened] = useState(false);
   const [lastClosed, setLastClosed] = useLocalStorage<number | null>({
     key: 'contact-info-modal-closed',
@@ -64,19 +64,21 @@ export function GetContactInfoModal() {
   });
 
   useEffect(() => {
-    // Show the modal only if changes exist, 30 mins have passed, and no info in localStorage
+    // Show the modal only if changes exist, 120 mins have passed, and no info in localStorage
     const hasChanges =
       Object.keys(changes.trails).length > 0 ||
       Object.keys(changes.segments).length > 0 ||
       Object.keys(changes.trailEvents).length > 0;
     const thirtyMinutesPassed =
-      lastClosed === null || differenceInMinutes(new Date(), lastClosed) > 30;
+      lastClosed === null || differenceInMinutes(new Date(), lastClosed) > 120;
     const infoNotSaved = contactInfo === null;
+    const modifedInPastMinute =
+      lastModified !== undefined ? Date.now() - lastModified.getTime() < 5 * 60 * 1000 : false;
 
-    if (hasChanges && thirtyMinutesPassed && infoNotSaved) {
+    if (hasChanges && thirtyMinutesPassed && infoNotSaved && modifedInPastMinute) {
       setOpened(true);
     }
-  }, [changes, lastClosed, contactInfo]);
+  }, [changes, lastClosed, contactInfo, lastModified]);
 
   const handleSubmit = (values: { name: string; email: string; organization: string }) => {
     // Save the form data to localStorage
@@ -109,11 +111,11 @@ export function GetContactInfoModal() {
       <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
         <Stack gap="xs">
           <Text c="dimmed" size="sm">
-            It'd be nice to know who you are! I want to know who's a regular editor, reach out if I
-            have questions, and see what organizations are making use of my website.
+            It&apos;d be nice to know who you are! I want to know who&apos;s a regular editor, reach
+            out if I have questions, and see what organizations are making use of my website.
           </Text>
           <Text c="dimmed" size="sm">
-            If you prefer to remain anonymous, that's ok too!
+            If you prefer to remain anonymous, that&apos;s ok too!
           </Text>
         </Stack>
 

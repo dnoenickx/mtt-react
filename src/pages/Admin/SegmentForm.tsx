@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
-import { useForm } from '@mantine/form';
+import { useEffect, useMemo, useState } from 'react';
+import { useForm, UseFormReturnType } from '@mantine/form';
 import {
   Container,
   TextInput,
-  ComboboxItem,
   OptionsFilter,
+  ComboboxParsedItemGroup,
   Textarea,
   Button,
   Select,
@@ -16,16 +16,16 @@ import {
   ActionIcon,
   Divider,
   Fieldset,
-  Popover,
   JsonInput,
   Breadcrumbs,
   Anchor,
   Stack,
+  Modal,
+  Flex,
 } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { showNotification } from '@mantine/notifications';
 import { randomId, useDocumentTitle } from '@mantine/hooks';
-import { IconTrash, IconPlus, IconSearch, IconArrowRight } from '@tabler/icons-react';
+import { IconPlus, IconSearch, IconArrowRight, IconX } from '@tabler/icons-react';
 import { multiLineString } from '@turf/turf';
 import { DatePrecision, RawSegment, RawTrailEvent, SegmentState } from '@/types';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
@@ -34,12 +34,7 @@ import { useData } from '@/components/DataProvider/DataProvider';
 import LinksField, { FormLink, toRawLinks } from './LinksField';
 import { cleanToMultiLineString, toGeoJsonIO, validateMultiLineString } from '@/geospatialUtils';
 import ConfirmationButton from '@/components/ConfirmationButton';
-
-interface EventComboboxItem extends ComboboxItem {
-  headline: string;
-  description: string;
-  date: string;
-}
+import { StickyBox } from '@/components/Atomic/Atomic';
 
 type FormTrailEvent = Omit<RawTrailEvent, 'date_precision' | 'links'> & {
   date_precision: DatePrecision | null;
@@ -54,14 +49,184 @@ type FormSegment = Omit<RawSegment, 'state' | 'trails' | 'geometry' | 'links' | 
   events: FormTrailEvent[];
 };
 
-const createOptionsFilter =
-  <T extends ComboboxItem>(fields: (keyof T)[]): OptionsFilter =>
-  ({ options, search }) => {
-    const searchLower = search.toLowerCase().trim();
-    return (options as T[]).filter((option) =>
-      fields.some((field) => option[field]?.toString().toLowerCase().includes(searchLower))
-    );
-  };
+const normalizeString = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/\s+/g, '')
+    .replace(/[^\w\s]/gi, '');
+
+const optionsFilter: OptionsFilter = (input) => {
+  const { search } = input;
+  const options = input.options as ComboboxParsedItemGroup[];
+
+  if (!search) return options;
+  // TODO: should have a section for events already edited
+
+  const searchNormalized = normalizeString(search);
+
+  // Filter by year (if input is a valid year)
+  const isYear = /^\d{4}$/.test(search);
+  if (isYear) {
+    return options.filter((item) => {
+      if ('group' in item) {
+        return item.group === search;
+      }
+      return false;
+    });
+  }
+
+  // Filter by item label or description
+  return options
+    .map((item) => {
+      const filteredItems = item.items.filter((innerItem) => {
+        // TODO: this search could be a lot better
+        const itemString = typeof innerItem === 'string' ? innerItem : innerItem.label;
+        const normalizedItemString = normalizeString(itemString);
+        return normalizedItemString.includes(searchNormalized);
+      });
+
+      // Return the group if it has any filtered items
+      return filteredItems.length > 0 ? { group: item.group, items: filteredItems } : null;
+    })
+    .filter(Boolean) as ComboboxParsedItemGroup[];
+};
+
+function EventSearch({ form }: { form: UseFormReturnType<FormSegment> }) {
+  const [opened, setOpened] = useState(false);
+  const { currentData } = useData();
+
+  const groupedByYear = Object.values(currentData.trailEvents)
+    .sort((a, b) => (a.date > b.date ? -1 : 1))
+    .reduce((acc: Map<number, RawTrailEvent[]>, event: RawTrailEvent) => {
+      const year = new Date(event.date).getFullYear();
+
+      // Use push to add the event to the array for the corresponding year
+      if (!acc.has(year)) {
+        acc.set(year, []);
+      }
+      acc.get(year)?.push(event);
+
+      return acc;
+    }, new Map());
+
+  const eventData = Array.from(groupedByYear.entries()).map(([year, events]) => ({
+    group: year.toString(),
+    items: events.map((event) => ({
+      value: event.id.toString(),
+      label: event.headline,
+      description: event.description,
+      date: event.date,
+    })),
+  }));
+
+  return (
+    <>
+      <Button variant="light" leftSection={<IconSearch />} onClick={() => setOpened(true)}>
+        Search Events
+      </Button>
+
+      <Modal opened={opened} onClose={() => setOpened(false)} title="Select an Event" centered>
+        <Select
+          label="Search Existing Events"
+          placeholder="Search and select an event"
+          data={eventData}
+          onChange={(value) => {
+            if (value === null) return;
+            const selectedEvent = currentData.trailEvents[Number(value)];
+            if (selectedEvent) {
+              const trailEvent = {
+                id: selectedEvent.id,
+                headline: selectedEvent.headline,
+                date: selectedEvent.date,
+                date_precision: 'd',
+                description: selectedEvent.description,
+                links: [],
+              };
+              form.insertListItem('events', trailEvent);
+              setOpened(false);
+            }
+          }}
+          filter={optionsFilter}
+          nothingFoundMessage="Nothing found..."
+          searchable
+          clearable
+          renderOption={({ option }) => (
+            <Stack gap={0}>
+              <Text size="sm">{option.label}</Text>
+              <Text size="xs" color="dimmed" lineClamp={2}>
+                {currentData.trailEvents[Number(option.value)].description}
+              </Text>
+            </Stack>
+          )}
+        />
+      </Modal>
+    </>
+  );
+}
+
+function EventsEditor({ form }: { form: UseFormReturnType<FormSegment> }) {
+  const events = form.values.events.map((event, index) => (
+    <Fieldset key={event.id} variant="filled" p={{ base: 'xs', sm: 'md' }} mt="xs" pos="relative">
+      {/* Top-right Delete Button */}
+      <ActionIcon
+        title="Remove Event"
+        variant="subtle"
+        color="red"
+        onClick={() => form.removeListItem('events', index)}
+        style={{ position: 'absolute', top: 4, right: 3 }}
+      >
+        <IconX size="1rem" />
+      </ActionIcon>
+
+      <Stack gap="xs">
+        {/* Headline and Date Group */}
+        <Flex gap="xs" direction={{ base: 'column', md: 'row' }}>
+          <TextInput
+            label="Headline"
+            placeholder="Event title"
+            {...form.getInputProps(`events.${index}.headline`)}
+            w={{ base: '100%', md: '55%' }}
+          />
+
+          {/* Date & Precision should wrap together when needed */}
+          <Flex gap="xs" w={{ base: '100%', md: '45%' }} direction={{ base: 'column', xs: 'row' }}>
+            <TextInput
+              label="Date"
+              placeholder="YYYY-MM-DD"
+              {...form.getInputProps(`events.${index}.date`)}
+              w={{ base: '100%', xs: '50%' }}
+            />
+            <Select
+              label="Date Precision"
+              placeholder="Select precision"
+              data={[
+                { value: 'd', label: 'Day' },
+                { value: 'm', label: 'Month' },
+                { value: 's', label: 'Season' },
+                { value: 'y', label: 'Year' },
+              ]}
+              value={form.values.events[index].date_precision || ''}
+              {...form.getInputProps(`events.${index}.date_precision`)}
+              w={{ base: '100%', xs: '50%' }}
+            />
+          </Flex>
+        </Flex>
+
+        {/* Description & Links */}
+        <Textarea
+          label="Description"
+          placeholder="Event description"
+          {...form.getInputProps(`events.${index}.description`)}
+          minRows={3}
+          autosize
+        />
+        <LinksField {...form.getInputProps(`events.${index}.links`)} />
+      </Stack>
+    </Fieldset>
+  ));
+
+  return <Stack px={{ base: 0, sm: 'md' }}>{events}</Stack>;
+}
 
 const SegmentForm = () => {
   const navigate = useNavigate();
@@ -69,6 +234,9 @@ const SegmentForm = () => {
   const isCreating = id === 'create';
   const { currentData, getSegment, getNextId, saveChanges, deleteItem, editingEnabled } = useData();
   useDocumentTitle(isCreating ? 'New Segment' : `Segment ${id} | Edit`);
+
+  // Reset scroll on page load
+  useEffect(() => window.scrollTo(0, 0), [navigate]);
 
   const initialSegment: FormSegment | null = useMemo(() => {
     if (id === undefined) return null;
@@ -134,11 +302,9 @@ const SegmentForm = () => {
       // geometry: (value) =>
       //   value === JSON.stringify(multiLineString([]).geometry) ? 'Geometry cannot be empty' : null,
       events: {
-        headline: (value) => (value == '' ? 'Headline required' : null),
+        headline: (value) => (value === '' ? 'Headline required' : null),
         date: (value) =>
-          Number.isNaN(new Date(value).getTime())
-            ? 'Invalid date format. Must be yyyy-mm-dd format.'
-            : null,
+          Number.isNaN(new Date(value).getTime()) ? 'Expectded yyyy-mm-dd format' : null,
         date_precision: (value) => (value === null ? 'Date precision is required' : null),
       },
     },
@@ -166,14 +332,6 @@ const SegmentForm = () => {
         .filter((event): event is RawTrailEvent => event.date_precision !== null);
 
       saveChanges({ segments: [rawSegment], trailEvents: rawEvents });
-
-      showNotification({
-        withBorder: true,
-        withCloseButton: false,
-        title: 'Changes Submitted',
-        message: 'We will review your suggested changes soon!',
-        position: 'top-center',
-      });
     }
 
     navigate(-1);
@@ -181,15 +339,6 @@ const SegmentForm = () => {
 
   const handleDelete = () => {
     deleteItem('segments', initialSegment.id);
-
-    showNotification({
-      withBorder: true,
-      withCloseButton: false,
-      title: 'Delete Submitted',
-      message: 'We will review your suggested changes soon!',
-      position: 'top-center',
-    });
-
     navigate(-1);
   };
 
@@ -208,55 +357,6 @@ const SegmentForm = () => {
     form.insertListItem('events', trailEvent);
   };
 
-  const eventsFields = form.values.events.map((event, index) => (
-    // TODO: can I delete randomId() in line below?
-    <Fieldset key={event.id || randomId()} variant="filled" p={{ base: 'xs', sm: 'md' }} mt="xs">
-      <Group align="flex-end">
-        <TextInput
-          label="Headline"
-          placeholder="Event title"
-          {...form.getInputProps(`events.${index}.headline`)}
-          style={{ flexGrow: 1 }}
-        />
-        <TextInput
-          label="Date"
-          placeholder="YYYY-MM-DD"
-          {...form.getInputProps(`events.${index}.date`)}
-        />
-        <Select
-          label="Date Precision"
-          placeholder="Select precision"
-          data={[
-            { value: 'd', label: 'Day' },
-            { value: 'm', label: 'Month' },
-            { value: 's', label: 'Season' },
-            { value: 'y', label: 'Year' },
-          ]}
-          value={form.values.events[index].date_precision || ''}
-          {...form.getInputProps(`events.${index}.date_precision`)}
-        />
-        <ActionIcon
-          title="Delete Event"
-          variant="light"
-          color="red"
-          onClick={() => form.removeListItem('events', index)}
-          mb="xs"
-        >
-          <IconTrash size="1rem" />
-        </ActionIcon>
-      </Group>
-      <Textarea
-        label="Description"
-        placeholder="Event description"
-        {...form.getInputProps(`events.${index}.description`)}
-        minRows={3}
-        autosize
-        mt="sm"
-      />
-      <LinksField {...form.getInputProps(`events.${index}.links`)} mt="lg" />
-    </Fieldset>
-  ));
-
   const breadcrumbs = [
     { title: 'Admin', href: '/admin' },
     { title: 'Segments', href: '/admin/segments' },
@@ -271,12 +371,12 @@ const SegmentForm = () => {
   ));
 
   return (
-    <Container size="md" py="xl">
-      <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
-      <Title size="lg" py="md">
-        {isCreating ? 'New Segment ' : `Segment ${initialSegment.id}`}
-      </Title>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Container size="md" py="xl">
+        <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
+        <Title size="lg" py="md">
+          {isCreating ? 'New Segment ' : `Segment ${initialSegment.id}`}
+        </Title>
         <Stack gap="lg">
           <TextInput
             label="Name"
@@ -360,52 +460,10 @@ const SegmentForm = () => {
             <Text color="dimmed" size="12px" lh="14.4px">
               Create new timeline events or lookup existing ones to link them to this segment
             </Text>
-            <Stack px={{ base: 0, sm: 'md' }}>{eventsFields}</Stack>
+            <EventsEditor form={form} />
 
             <Group justify="center" mt="md">
-              <Popover width={300} withArrow trapFocus shadow="md">
-                <Popover.Target>
-                  <Button variant="light" leftSection={<IconSearch />}>
-                    Search Events
-                  </Button>
-                </Popover.Target>
-                <Popover.Dropdown>
-                  <Select
-                    label="Search Existing Events"
-                    placeholder="Search and select an event"
-                    data={Object.values(currentData.trailEvents).map((event) => ({
-                      value: event.id.toString(),
-                      label: event.headline,
-                      description: event.description,
-                      date: event.date,
-                    }))}
-                    onChange={(value) => {
-                      if (value === null) return;
-                      const selectedEvent = currentData.trailEvents[Number(value)];
-                      if (selectedEvent) {
-                        const trailEvent: RawTrailEvent = {
-                          id: selectedEvent.id,
-                          headline: selectedEvent.headline,
-                          date: selectedEvent.date,
-                          date_precision: 'd',
-                          description: selectedEvent.description,
-                          links: [],
-                        };
-                        form.insertListItem('events', trailEvent);
-                      }
-                    }}
-                    filter={createOptionsFilter<EventComboboxItem>([
-                      'label',
-                      'description',
-                      'date',
-                    ])}
-                    nothingFoundMessage="Nothing found..."
-                    comboboxProps={{ withinPortal: false }}
-                    searchable
-                    clearable
-                  />
-                </Popover.Dropdown>
-              </Popover>
+              <EventSearch form={form} />
 
               <Button
                 variant="light"
@@ -418,35 +476,39 @@ const SegmentForm = () => {
           </Box>
           <LinksField
             {...form.getInputProps('links')}
-            description="If link is  more relevant to trail or timeline event, add link there instead"
+            description="If link is more relevant to trail or timeline event, add link there instead"
           />
         </Stack>
 
         <Divider my="xl" />
+      </Container>
 
-        <Group justify="space-between" mb="xl">
-          <ConfirmationButton
-            confirmationText="Are you sure you want to delete this?"
-            onConfirm={handleDelete}
-            confirmButtonText="Delete"
-            cancelButtonText="Cancel"
-          >
-            <Button color="red" variant="outline" disabled={!editingEnabled || isCreating}>
-              Delete Segment
-            </Button>
-          </ConfirmationButton>
+      <StickyBox>
+        <Container size="md">
+          <Group justify="space-between">
+            <ConfirmationButton
+              confirmationText="Are you sure you want to delete this?"
+              onConfirm={handleDelete}
+              confirmButtonText="Delete"
+              cancelButtonText="Cancel"
+            >
+              <Button color="red" variant="outline" disabled={!editingEnabled || isCreating}>
+                Delete Segment
+              </Button>
+            </ConfirmationButton>
 
-          <Group>
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={!editingEnabled} px="xl">
-              Save
-            </Button>
+            <Group>
+              <Button variant="outline" onClick={() => navigate(-1)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={!editingEnabled} px="xl">
+                Save
+              </Button>
+            </Group>
           </Group>
-        </Group>
-      </form>
-    </Container>
+        </Container>
+      </StickyBox>
+    </form>
   );
 };
 

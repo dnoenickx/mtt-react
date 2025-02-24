@@ -11,9 +11,9 @@ import {
   Group,
 } from '@mantine/core';
 import { IconCircleCheck, IconCircleX, IconExternalLink } from '@tabler/icons-react';
+import { useDocumentTitle } from '@mantine/hooks';
 import { Footer } from '@/components/Footer/Footer';
 import { EmailButton } from '@/components/Atomic/Atomic';
-import { useDocumentTitle } from '@mantine/hooks';
 
 const listCheck = (
   <ThemeIcon variant="outline" color="teal" style={{ border: 0 }}>

@@ -16,7 +16,6 @@ export type DatePrecision = 'd' | 'm' | 's' | 'y';
 export type Trail = {
   id: number;
   name: string;
-  slug: string;
   description: string;
   links: Link[];
 };

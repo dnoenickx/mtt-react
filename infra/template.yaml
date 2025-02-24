@@ -1,0 +1,417 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 bucket with API Gateway for uploads and CloudFront for data retrieval, with Cognito authentication
+
+Parameters:
+  Origin:
+    Type: String
+    Default: "'http://localhost:5173'"
+    AllowedValues:
+      - "'http://localhost:5173'"
+      - "'https://masstrailtracker.com'"
+    Description: "The allowed origin for CORS"
+  ApiStage:
+    Type: String
+    Default: "api"
+    Description: "The API stage name"
+
+Resources:
+  ###################
+  # Storage Resources
+  ###################
+  ContentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+            AllowedOrigins:
+              - !Ref Origin
+            MaxAge: 3000
+
+  ContentBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ContentBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity
+                ${CloudFrontOAI}
+            Action:
+              - s3:GetObject
+            Resource: !Sub ${ContentBucket.Arn}/data/*
+
+  ###################
+  # CDN Configuration
+  ###################
+  CloudFrontOAI:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub OAI for ${AWS::StackName}
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - DomainName: !GetAtt ContentBucket.DomainName
+            Id: S3Origin
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOAI}
+        DefaultCacheBehavior:
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          MinTTL: 0
+          DefaultTTL: 3600
+          MaxTTL: 86400
+
+  ###################
+  # Authentication
+  ###################
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub ${AWS::StackName}-user-pool
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: true
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      ClientName: !Sub ${AWS::StackName}-client
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+      PreventUserExistenceErrors: ENABLED
+
+  ###################
+  # API Gateway Configuration
+  ###################
+  AppApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: s3-content-api
+      Description: API for file uploads with CloudFront for retrieval
+      ApiKeySourceType: HEADER
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # API Resources
+  DataResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AppApi
+      ParentId: !GetAtt AppApi.RootResourceId
+      PathPart: data
+
+  DataFileResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AppApi
+      ParentId: !Ref DataResource
+      PathPart: '{fileName}'
+
+  EditsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AppApi
+      ParentId: !GetAtt AppApi.RootResourceId
+      PathPart: edits
+
+  EditsFileResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AppApi
+      ParentId: !Ref EditsResource
+      PathPart: '{fileName}'
+
+  # API Methods
+  DataPutMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AppApi
+      ResourceId: !Ref DataFileResource
+      HttpMethod: PUT
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref CognitoAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: PUT
+        Credentials: !GetAtt ApiGatewayS3Role.Arn
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:s3:path/${ContentBucket}/data/{fileName}
+        RequestParameters:
+          integration.request.path.fileName: method.request.path.fileName
+        IntegrationResponses:
+          - StatusCode: 200
+      RequestParameters:
+        method.request.path.fileName: true
+        method.request.header.Authorization: true
+      MethodResponses:
+        - StatusCode: 200
+
+  EditsOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AppApi
+      ResourceId: !Ref EditsFileResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: !Ref Origin
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,PUT,OPTIONS'"
+        RequestTemplates:
+          application/json: |
+            {"statusCode": 200}
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+
+  EditsPutMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AppApi
+      ResourceId: !Ref EditsFileResource
+      HttpMethod: PUT
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: PUT
+        Credentials: !GetAtt ApiGatewayS3Role.Arn
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:s3:path/${ContentBucket}/edits/{fileName}
+        RequestParameters:
+          integration.request.path.fileName: method.request.path.fileName
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: !Ref Origin
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,PUT,OPTIONS'"
+      RequestParameters:
+        method.request.path.fileName: true
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+
+  EditsGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AppApi
+      ResourceId: !Ref EditsFileResource
+      HttpMethod: GET
+      AuthorizationType: COGNITO_USER_POOLS
+      AuthorizerId: !Ref CognitoAuthorizer
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: GET
+        Credentials: !GetAtt ApiGatewayS3Role.Arn
+        Uri: !Sub arn:aws:apigateway:${AWS::Region}:s3:path/${ContentBucket}/edits/{fileName}
+        RequestParameters:
+          integration.request.path.fileName: method.request.path.fileName
+        IntegrationResponses:
+          - StatusCode: 200
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Origin: !Ref Origin
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,PUT,OPTIONS'"
+      RequestParameters:
+        method.request.path.fileName: true
+      MethodResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Origin: true
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+
+  # API Authorizer
+  CognitoAuthorizer:
+    Type: AWS::ApiGateway::Authorizer
+    Properties:
+      Name: CognitoUserPoolAuthorizer
+      Type: COGNITO_USER_POOLS
+      IdentitySource: method.request.header.Authorization
+      RestApiId: !Ref AppApi
+      ProviderARNs:
+        - !GetAtt UserPool.Arn
+
+  ###################
+  # API Gateway Deployment
+  ###################
+  Deployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - DataPutMethod
+      - EditsOptionsMethod
+      - EditsGetMethod
+      - EditsPutMethod
+    Properties:
+      RestApiId: !Ref AppApi
+
+  Stage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: !Ref ApiStage
+      RestApiId: !Ref AppApi
+      DeploymentId: !Ref Deployment
+      MethodSettings:
+        - DataTraceEnabled: true
+          LoggingLevel: INFO
+          ResourcePath: /*
+          HttpMethod: '*'
+      AccessLogSetting:
+        DestinationArn: !GetAtt ApiGatewayLogGroup.Arn
+        Format: '{ "requestId":"$context.requestId", "ip": "$context.identity.sourceIp",
+          "requestTime":"$context.requestTime",
+          "httpMethod":"$context.httpMethod",
+          "resourcePath":"$context.resourcePath", "status":"$context.status",
+          "responseLength":"$context.responseLength" }'
+
+  ###################
+  # IAM Roles
+  ###################
+  ApiGatewayS3Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: ApiGatewayS3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - !Sub ${ContentBucket.Arn}/edits/*
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - !Sub ${ContentBucket.Arn}/data/*
+                  - !Sub ${ContentBucket.Arn}/edits/*
+
+  ApiGatewayLoggingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: APIGatewayLoggingPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !GetAtt ApiGatewayLogGroup.Arn
+
+  APIGatewayAccountRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+      Path: /
+
+  ###################
+  # Logging Configuration
+  ###################
+  ApiGatewayLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/apigateway/${AWS::StackName}
+      RetentionInDays: 7
+
+  APIGatewayAccountConfig:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt APIGatewayAccountRole.Arn
+
+###################
+# Stack Outputs
+###################
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub https://${AppApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiStage}
+
+  BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref ContentBucket
+
+  CloudFrontDomain:
+    Description: CloudFront Distribution Domain Name
+    Value: !GetAtt CloudFrontDistribution.DomainName
+
+  UserPoolId:
+    Description: Cognito User Pool ID
+    Value: !Ref UserPool
+
+  UserPoolClientId:
+    Description: Cognito User Pool Client ID
+    Value: !Ref UserPoolClient

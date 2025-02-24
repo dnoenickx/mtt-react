@@ -14,7 +14,6 @@ import {
   RawTrailEvent,
 } from '@/types';
 import { importChanges } from './importUtil';
-import { ClearChangesModal, GetContactInfoModal } from './Modals';
 
 const fetchRawData = (): [MappedOriginal, Date] => {
   const data = RAW_DATA_IMPORT as RawOriginal;
@@ -54,9 +53,11 @@ type DataContextType = {
   changes: MappedChanges;
   getCurrentJSON: () => string;
   getChangesJSON: () => string;
-  getMinimalChangesJSON: () => string;
+  getMinimalChangesJSON: () => [string, string];
   lastModified: Date | undefined;
   lastUpdated: Date;
+  isSubmitted: boolean;
+  setIsSubmitted: (value: boolean) => void;
 };
 
 const DataContext = createContext<DataContextType | null>(null);
@@ -82,6 +83,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     defaultValue: randomId(''),
   });
 
+  const [isSubmitted, setIsSubmitted] = useLocalStorage({
+    key: 'is-submitted',
+    defaultValue: true,
+  });
+
   const [contact] = useLocalStorage<{
     name: string;
     email: string;
@@ -91,7 +97,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     defaultValue: null,
   });
 
-  const updateLastModified = () => setLastModified(new Date());
+  const updateLastModified = () => {
+    setIsSubmitted(false);
+    setLastModified(new Date());
+  };
 
   const currentData = useMemo(() => {
     if (!editingEnabled) {
@@ -214,6 +223,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearChanges = () => {
     setChanges(emptyChanges);
     setLastModified(undefined);
+    setIsSubmitted(true);
     setEditId(randomId(''));
   };
 
@@ -236,14 +246,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       trails: sortById(changes.trails),
     });
 
-  const getMinimalChangesJSON = (): string => {
+  const getMinimalChangesJSON = (): [string, string] => {
     const minimalChanges: MappedChanges = emptyChanges;
 
     (Object.keys(changes) as MappedKeys[]).forEach((type) => {
       (
         Object.values(changes[type as keyof MappedChanges]) as MappedChanges[typeof type][number][]
       ).forEach((item) => {
-        const id: number = item.id;
+        const { id } = item;
         if (item.deleted) {
           minimalChanges[type][id] = { id, deleted: true };
         } else {
@@ -266,16 +276,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
     });
 
-    return JSON.stringify({
-      meta: {
-        ...contact,
-        editId,
-        lastModified: (lastModified ?? new Date()).toISOString(),
-      },
-      segments: sortById(minimalChanges.segments),
-      trailEvents: sortById(minimalChanges.trailEvents),
-      trails: sortById(minimalChanges.trails),
-    });
+    return [
+      JSON.stringify({
+        meta: {
+          ...contact,
+          editId,
+          lastModified: (lastModified ?? new Date()).toISOString(),
+        },
+        segments: sortById(minimalChanges.segments),
+        trailEvents: sortById(minimalChanges.trailEvents),
+        trails: sortById(minimalChanges.trails),
+      }),
+      editId,
+    ];
   };
 
   return (
@@ -305,10 +318,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         getMinimalChangesJSON,
         lastModified,
         lastUpdated,
+        isSubmitted,
+        setIsSubmitted,
       }}
     >
-      <ClearChangesModal />
-      <GetContactInfoModal />
       {children}
     </DataContext.Provider>
   );

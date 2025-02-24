@@ -15,6 +15,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { Link, useSearchParams } from 'react-router-dom';
+import { useDocumentTitle } from '@mantine/hooks';
 
 import { Segment, Trail } from '@/types';
 import { Timeline } from '../Timeline/Timeline';
@@ -23,7 +24,6 @@ import classes from './SegmentDetailsPanel.module.css';
 import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
 import { useData } from '../DataProvider/DataProvider';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
-import { useDocumentTitle } from '@mantine/hooks';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ name, description, links }) => (
@@ -47,7 +47,7 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
 
 export function SegmentDetailsPanel() {
   const [searchParams] = useSearchParams();
-  const segmentId = Number(searchParams.get('segment'));
+  const segmentId = Number(searchParams.get('segment')?.split(',')[0]);
 
   const { getSegment, editingEnabled } = useData();
   const segment: Segment | null = useMemo(() => getSegment(segmentId), [segmentId]);

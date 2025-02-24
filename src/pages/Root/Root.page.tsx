@@ -1,9 +1,10 @@
-import { Link, Outlet, ScrollRestoration } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import { AppShell, Burger, Group, Text } from '@mantine/core';
 import Logo from '../../components/Logo/Logo';
 import classes from './Root.module.css';
 import { useData } from '@/components/DataProvider/DataProvider';
+import SubmitEditsBanner from '@/components/SubmitEditsBanner/SubmitEditsBanner';
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
@@ -27,8 +28,6 @@ export function Root() {
       header={{ height: { base: 45, sm: 60 } }}
       navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
     >
-      <ScrollRestoration />
-
       <AppShell.Header>
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
@@ -53,6 +52,7 @@ export function Root() {
       </AppShell.Navbar>
 
       <AppShell.Main>
+        <SubmitEditsBanner />
         <Outlet />
       </AppShell.Main>
     </AppShell>
