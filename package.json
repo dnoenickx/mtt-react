@@ -17,7 +17,8 @@
     "test": "npm run typecheck && npm run prettier && npm run lint && npm run vitest && npm run build",
     "storybook": "storybook dev -p 6006",
     "storybook:build": "storybook build",
-    "update-ids": "node scripts/updateIDs.js"
+    "update-ids": "node scripts/updateIDs.js",
+    "merge-diffs": "node scripts/mergeDiffs.js"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^17.0.0",
