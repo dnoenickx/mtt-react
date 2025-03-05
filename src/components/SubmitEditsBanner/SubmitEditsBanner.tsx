@@ -40,7 +40,7 @@ function SubmitEditsBanner() {
       mounted={!isSubmitted}
       transition="slide-down"
       duration={300}
-      exitDelay={3000}
+      exitDelay={2200}
       timingFunction="ease"
     >
       {(styles) => (

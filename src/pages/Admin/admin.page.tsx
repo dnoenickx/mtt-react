@@ -211,7 +211,7 @@ export default function Admin() {
         key: 'description',
         label: 'Description',
         render: (item) => (
-          <Text size="sm" lineClamp={4} w="300px">
+          <Text size="xs" lineClamp={4} w="300px">
             {item.description}
           </Text>
         ),
@@ -238,7 +238,18 @@ export default function Admin() {
       {
         key: 'state',
         label: 'State',
-        render: (item) => <Badge color={SEGMENT_STATES[item.state].color}>{item.state}</Badge>,
+        render: (item) => (
+          <Badge
+            color={SEGMENT_STATES[item.state].color}
+            styles={{
+              label: {
+                overflow: 'visible',
+              },
+            }}
+          >
+            {item.state}
+          </Badge>
+        ),
       },
       {
         key: 'links',
@@ -295,6 +306,7 @@ export default function Admin() {
                 visible to anyone else until I approve them.
               </li>
             </ul>
+            How the data is organized:
             <ul>
               <li>A trail is a collection of segments. Segments can belong to multiple trails.</li>
               <li>
@@ -302,6 +314,34 @@ export default function Admin() {
               </li>
               <li>
                 Segments have timelines comprised of events. Events can be shared across segments.
+              </li>
+            </ul>
+            Examples of segments with detailed information:
+            <ul>
+              <li>
+                <Anchor size="sm" component={RouterLink} to="/map?segment=130" target="_blank">
+                  Sudbury-Hudson MCRT Extension
+                </Anchor>
+              </li>
+              <li>
+                <Anchor size="sm" component={RouterLink} to="/map?segment=52" target="_blank">
+                  Mystic River Bridge
+                </Anchor>
+              </li>
+              <li>
+                <Anchor size="sm" component={RouterLink} to="/map?segment=172" target="_blank">
+                  Northern Strand Lynn Extension
+                </Anchor>
+              </li>
+              <li>
+                <Anchor size="sm" component={RouterLink} to="/map?segment=4" target="_blank">
+                  Swampscott Rail Trail
+                </Anchor>
+              </li>
+              <li>
+                <Anchor size="sm" component={RouterLink} to="/map?segment=331" target="_blank">
+                  New Hampshire Seacost Greenway
+                </Anchor>
               </li>
             </ul>
             <Group>

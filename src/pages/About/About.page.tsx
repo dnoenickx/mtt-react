@@ -10,10 +10,12 @@ import {
   Button,
   Group,
 } from '@mantine/core';
-import { IconCircleCheck, IconCircleX, IconExternalLink } from '@tabler/icons-react';
+import { IconCircleCheck, IconCircleX, IconDownload, IconExternalLink } from '@tabler/icons-react';
 import { useDocumentTitle } from '@mantine/hooks';
 import { Footer } from '@/components/Footer/Footer';
 import { EmailButton } from '@/components/Atomic/Atomic';
+import { useData } from '@/components/DataProvider/DataProvider';
+import { handleDownload } from '@/utils';
 
 const listCheck = (
   <ThemeIcon variant="outline" color="teal" style={{ border: 0 }}>
@@ -29,6 +31,26 @@ const listX = (
 
 export default function About() {
   useDocumentTitle('About | Mass Trail Tracker');
+
+  const { currentData } = useData();
+
+  const downloadData = () => {
+    const data: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+      type: 'FeatureCollection',
+      features: Object.values(currentData.segments).map(({ id, geometry, state, trails }) => ({
+        id,
+        type: 'Feature',
+        geometry: geometry as GeoJSON.MultiLineString,
+        properties: {
+          state,
+          trails: trails.map((trailId) => currentData.trails[trailId].name),
+          trailIds: trails.map((trailId) => currentData.trails[trailId].id),
+        },
+      })),
+    };
+
+    handleDownload('mtt_export.geojson', JSON.stringify(data), false);
+  };
 
   return (
     <>
@@ -105,6 +127,37 @@ export default function About() {
           Frequently Asked Questions
         </Title>
         <Accordion variant="separated">
+          <Accordion.Item value="mcrt-route" key="mcrt-route" mb="lg">
+            <Accordion.Control>
+              What&apos;s the best current route along the Mass Central Rail Trail?
+            </Accordion.Control>
+            <Accordion.Panel>
+              Here is the route from the Fall 2024 RN2B (Ride Northampton to Boston)
+              <br />
+              <Button
+                component="a"
+                href="https://ridewithgps.com/routes/47996539"
+                onClick={(event) => event.preventDefault()}
+                c="dimmed"
+                leftSection={<IconExternalLink size={14} />}
+                variant="default"
+                styles={{
+                  root: {
+                    height: 'auto',
+                    paddingTop: '3px',
+                    paddingBottom: '3px',
+                  },
+                  label: {
+                    whiteSpace: 'pre-line',
+                    textAlign: 'left',
+                    lineHeight: 1.25,
+                  },
+                }}
+              >
+                Ride With GPS
+              </Button>
+            </Accordion.Panel>
+          </Accordion.Item>
           <Accordion.Item value="what-trails" key="what-trails" mb="lg">
             <Accordion.Control>What trails do you include/exclude?</Accordion.Control>
             <Accordion.Panel>
@@ -128,7 +181,7 @@ export default function About() {
             <Accordion.Control>Why don&lsquo;t you show bike lanes?</Accordion.Control>
             <Accordion.Panel>
               There are too many for me to keep track of and they vary greatly in comfort and
-              quality. I plan to add a MassDot bike lane layer to the map at some point, but do not
+              quality. I plan to add a MassDOT bike lane layer to the map at some point, but do not
               plan to maintain my own catalog of bike lanes.
             </Accordion.Panel>
           </Accordion.Item>
@@ -149,34 +202,11 @@ export default function About() {
               of all the things I plan on fixing/adding.
             </Accordion.Panel>
           </Accordion.Item>
-          <Accordion.Item value="mcrt-route" key="mcrt-route" mb="lg">
-            <Accordion.Control>
-              What&apos;s the best current route along the Mass Central Rail Trail?
-            </Accordion.Control>
+          <Accordion.Item value="data-download" key="data-download" mb="lg">
+            <Accordion.Control>Where can I download the GIS data?</Accordion.Control>
             <Accordion.Panel>
-              Here is the route from the first RN2B (Ride Northampton to Boston) in Fall 2024
-              <br />
-              <Button
-                component="a"
-                href="https://ridewithgps.com/routes/47996539"
-                onClick={(event) => event.preventDefault()}
-                c="dimmed"
-                leftSection={<IconExternalLink size={14} />}
-                variant="default"
-                styles={{
-                  root: {
-                    height: 'auto',
-                    paddingTop: '3px',
-                    paddingBottom: '3px',
-                  },
-                  label: {
-                    whiteSpace: 'pre-line',
-                    textAlign: 'left',
-                    lineHeight: 1.25,
-                  },
-                }}
-              >
-                Ride With GPS
+              <Button onClick={downloadData} leftSection={<IconDownload />}>
+                Download GeoJSON
               </Button>
             </Accordion.Panel>
           </Accordion.Item>

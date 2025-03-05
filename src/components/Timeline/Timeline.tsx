@@ -55,6 +55,7 @@ export function Timeline({ events }: { events: TrailEvent[] }) {
             key={id}
             title={headline}
             lineVariant={new Date(date) < currentDate ? 'solid' : 'dashed'}
+            styles={{ itemTitle: { lineHeight: '24px' } }}
           >
             <Text size="xs" mt={4}>
               {formatDateWithPrecision(date, date_precision)}

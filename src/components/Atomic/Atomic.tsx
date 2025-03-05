@@ -78,7 +78,8 @@ export const EmailButton = () => (
         variant="outline"
         color={copied ? 'green' : 'gray'}
         onClick={copy}
-        leftSection={<IconCopy />}
+        leftSection={<IconCopy style={{ width: '75%', height: '75%' }} />}
+        size="xs"
       >
         {copied ? 'Email copied' : 'mass.trail.tracker@gmail.com'}
       </Button>

@@ -134,15 +134,7 @@ function EventSearch({ form }: { form: UseFormReturnType<FormSegment> }) {
             if (value === null) return;
             const selectedEvent = currentData.trailEvents[Number(value)];
             if (selectedEvent) {
-              const trailEvent = {
-                id: selectedEvent.id,
-                headline: selectedEvent.headline,
-                date: selectedEvent.date,
-                date_precision: 'd',
-                description: selectedEvent.description,
-                links: [],
-              };
-              form.insertListItem('events', trailEvent);
+              form.insertListItem('events', { ...selectedEvent });
               setOpened(false);
             }
           }}
@@ -424,7 +416,7 @@ const SegmentForm = () => {
               </>
             }
             placeholder="Enter MultiLineString GeoJSON"
-            description="Use the geojson.io link to edit the geometry, then paste the result here"
+            description="Use the geojson.io link to edit the geometry, then paste the result here. If you are having trouble, just describe the change in description box and I can do it"
             minRows={4}
             maxRows={6}
             required
