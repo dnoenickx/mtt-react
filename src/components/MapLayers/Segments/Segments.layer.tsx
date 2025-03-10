@@ -3,10 +3,15 @@ import { Layer, Source } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { useData } from '@/components/DataProvider/DataProvider';
+import { FeatureCollection, MultiLineString } from '@turf/turf';
+import { useSearchParams } from 'react-router-dom';
+import { createSlug } from '@/utils';
 
 export const SEGMENTS_SOURCE_ID = 'segments_source';
 export const SEGMENTS_HOVER_LAYER_ID = 'segments_hover_layer';
 const SEGMENTS_SYMBOLOGY_LAYERS = {
+  highlight2: 'segments_symbology_highlight_2',
+  highlight1: 'segments_symbology_highlight_1',
   white: 'segments_symbology_white',
   solid: 'segments_symbology_solid',
   dashed: 'segments_symbology_dashed',
@@ -19,23 +24,17 @@ export default function SegmentsLayer() {
   const isMobile = useMediaQuery('(min-width: 415px)');
   const { currentData } = useData();
 
-  const styledSegments: GeoJSON.FeatureCollection<GeoJSON.Geometry> = useMemo(
-    () => ({
-      type: 'FeatureCollection',
-      features: Object.values(currentData.segments).map(({ id, geometry, state }) => ({
-        id,
-        type: 'Feature',
-        geometry: geometry as GeoJSON.MultiLineString,
-        properties: {
-          state,
-          weight: SEGMENT_STATES[state]?.weight,
-          style: SEGMENT_STATES[state]?.style,
-        },
-      })),
-    }),
-    []
-  );
+  const [searchParams] = useSearchParams();
 
+  const segmentParam = searchParams.get('segment');
+  const segmentIds = segmentParam ? segmentParam.split(',').map((id) => Number(id)) : [];
+
+  const trailNames = (searchParams.get('trail') ?? '').split(',');
+  const trailIds = Object.values(currentData.trails)
+    .filter(({ name }) => trailNames.includes(createSlug(name)))
+    .map(({ id }) => id);
+
+  // Constants for line widths
   const HOVER_TARGET = 22;
   const HOVERED = 6;
   const HEAVY = 2.75;
@@ -46,6 +45,45 @@ export default function SegmentsLayer() {
   const multiplier = (val: number) => (isMobile ? val : val * 1.5);
   const dashed = (val: number) => val / 1.25;
 
+  const styledSegments: FeatureCollection<MultiLineString> = useMemo(
+    () => ({
+      type: 'FeatureCollection',
+      features: Object.values(currentData.segments).map(({ id, geometry, state, trails }) => {
+        // Determine the base width value
+        const weights = { heavy: HEAVY, medium: MEDIUM, light: LIGHT };
+        const baseWidth = multiplier(weights[SEGMENT_STATES[state]?.weight] || LIGHT);
+        const isDashed = SEGMENT_STATES[state]?.style === 'dashed';
+        const isHighlighted = segmentIds.includes(id) || trails.some((id) => trailIds.includes(id));
+
+        const properties = {
+          state,
+          // Pre-calculated widths
+          baseWidth,
+          outlineWidth: outline(baseWidth),
+          // Hover state widths
+          hoverWidth: HOVERED,
+          hoverOutlineWidth: outline(HOVERED),
+          // Original color from segment state
+          color: SEGMENT_STATES[state]?.color || '#ff0000',
+          // Optional dash widths
+          ...(isDashed
+            ? { hoverDashedWidth: dashed(HOVERED), dashedWidth: dashed(baseWidth) }
+            : {}),
+          // Optional highlight
+          ...(isHighlighted ? { highlight: true } : {}),
+        };
+
+        return {
+          id,
+          type: 'Feature',
+          geometry: geometry,
+          properties,
+        };
+      }),
+    }),
+    [isMobile, currentData.segments]
+  );
+
   return (
     <Source id={SEGMENTS_SOURCE_ID} type="geojson" data={styledSegments}>
       <Layer
@@ -54,6 +92,37 @@ export default function SegmentsLayer() {
         paint={{ 'line-width': HOVER_TARGET, 'line-opacity': 0 }}
       />
       <Layer
+        id={SEGMENTS_SYMBOLOGY_LAYERS.highlight2}
+        type="line"
+        beforeId={BEFORE_ID}
+        filter={['==', ['get', 'highlight'], true]}
+        paint={{
+          'line-width': 12,
+          'line-color': 'rgba(255, 255, 0, 0.4)',
+          'line-opacity': 0.4,
+        }}
+        layout={{
+          'line-join': 'bevel',
+          'line-cap': 'butt',
+        }}
+      />
+      <Layer
+        id={SEGMENTS_SYMBOLOGY_LAYERS.highlight1}
+        type="line"
+        beforeId={BEFORE_ID}
+        filter={['==', ['get', 'highlight'], true]}
+        paint={{
+          'line-width': 8,
+          'line-color': 'rgba(255, 255, 0, 0.4)',
+          'line-opacity': 0.4,
+        }}
+        layout={{
+          'line-join': 'bevel',
+          'line-cap': 'butt',
+        }}
+      />
+
+      <Layer
         id={SEGMENTS_SYMBOLOGY_LAYERS.white}
         type="line"
         beforeId={BEFORE_ID}
@@ -61,15 +130,9 @@ export default function SegmentsLayer() {
           'line-width': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            outline(HOVERED),
-            ['==', ['get', 'weight'], 'heavy'],
-            outline(multiplier(HEAVY)),
-            ['==', ['get', 'weight'], 'medium'],
-            outline(multiplier(MEDIUM)),
-            // else light
-            outline(multiplier(LIGHT)),
+            ['get', 'hoverOutlineWidth'],
+            ['get', 'outlineWidth'],
           ],
-          // @ts-ignore
           'line-color': '#ffffff',
         }}
         layout={{
@@ -85,21 +148,10 @@ export default function SegmentsLayer() {
           'line-width': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            HOVERED,
-            ['==', ['get', 'weight'], 'heavy'],
-            multiplier(HEAVY),
-            ['==', ['get', 'weight'], 'medium'],
-            multiplier(MEDIUM),
-            // else light
-            multiplier(LIGHT),
+            ['get', 'hoverWidth'],
+            ['get', 'baseWidth'],
           ],
-          // @ts-ignore
-          'line-color': [
-            'match',
-            ['get', 'state'],
-            ...Object.entries(SEGMENT_STATES).flatMap(([state, { color }]) => [state, color]),
-            '#ff0000', // default color
-          ],
+          'line-color': ['get', 'color'],
         }}
         layout={{
           'line-join': 'round',
@@ -115,18 +167,13 @@ export default function SegmentsLayer() {
           'line-width': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            dashed(HOVERED),
-            ['==', ['get', 'weight'], 'heavy'],
-            dashed(multiplier(HEAVY)),
-            ['==', ['get', 'weight'], 'medium'],
-            dashed(multiplier(MEDIUM)),
-            // else light
-            dashed(multiplier(LIGHT)),
+            ['get', 'hoverDashedWidth'],
+            ['get', 'dashedWidth'],
           ],
           'line-color': '#ffffff',
           'line-dasharray': ['literal', [1, 2.5]],
         }}
-        filter={['==', ['get', 'style'], 'dashed']} // filter only dashed
+        filter={['has', 'dashedWidth']}
         layout={{
           'line-join': 'round',
         }}

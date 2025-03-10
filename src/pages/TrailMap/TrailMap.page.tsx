@@ -2,7 +2,6 @@ import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react'
 import * as turf from '@turf/turf';
 import Map, {
   GeolocateControl,
-  LngLatBoundsLike,
   MapGeoJSONFeature,
   MapLayerMouseEvent,
   MapRef,
@@ -29,7 +28,7 @@ import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.l
 import { mapStyle } from './MapStyle';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
-import { RawSegment } from '@/types';
+import { bbox, feature, featureCollection } from '@turf/turf';
 
 function MapAside({
   activeTab,
@@ -142,6 +141,9 @@ function TrailMap({
   mapRef: React.RefObject<MapRef>;
   onClick: (e: MapLayerMouseEvent) => void;
 }) {
+  const { currentData } = useData();
+  const [searchParams] = useSearchParams();
+
   const hoveredSegmentId = useRef<string | null>(null);
 
   const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
@@ -198,6 +200,57 @@ function TrailMap({
     },
   });
 
+  const zoomToSegments = () => {
+    if (!mapRef.current) return;
+
+    // Parse trail and segment parameters
+    const trailNames = (searchParams.get('trail') || '').split(',');
+    const trailIds = trailNames.length
+      ? Object.values(currentData.trails)
+          .filter((trail) => trailNames.includes(createSlug(trail.name)))
+          .map((trail) => trail.id)
+      : [];
+
+    const segmentParam = searchParams.get('segment') || '';
+    const segmentIds = segmentParam
+      .split(',')
+      .filter(Boolean) // Remove empty strings
+      .map(Number);
+
+    if (!segmentIds.length && !trailIds.length) return;
+
+    // Find segments that match the criteria
+    const segments = Object.values(currentData.segments).filter(
+      (segment) =>
+        segmentIds.includes(segment.id) || segment.trails.some((id) => trailIds.includes(id))
+    );
+
+    if (!segments.length) return;
+
+    // Calculate and set the map bounds
+    const features = segments.map((segment) => feature(segment.geometry));
+    const [minX, minY, maxX, maxY] = bbox(featureCollection(features));
+
+    mapRef.current.fitBounds(
+      [
+        [minX, minY],
+        [maxX, maxY],
+      ],
+      { padding: 50 }
+    );
+  };
+
+  useEffect(() => {
+    const checkMapRef = setInterval(() => {
+      if (mapRef.current) {
+        clearInterval(checkMapRef);
+        zoomToSegments();
+      }
+    }, 100);
+
+    return () => clearInterval(checkMapRef);
+  }, []);
+
   return (
     <Map
       ref={mapRef}
@@ -229,7 +282,6 @@ function TrailMap({
 
 export function TrailMapPage() {
   const mapRef = useRef<MapRef>(null);
-  const { currentData } = useData();
   const [searchParams, setSearchParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(
@@ -310,87 +362,6 @@ export function TrailMapPage() {
     () => <TrailMap mapRef={mapRef} onClick={onClickHandler} />,
     [mapRef, onClickHandler]
   );
-
-  function getSegmentsByTrailNames(trailName: string | null): RawSegment[] {
-    if (trailName === null) return [];
-
-    const trailNames = trailName.split(',');
-    const trails = Object.values(currentData.trails).filter(({ name }) =>
-      trailNames.includes(createSlug(name))
-    );
-
-    if (!trails.length) return [];
-
-    const segments = Object.values(currentData.segments).filter(({ trails: segmentTrails }) =>
-      segmentTrails.some((trailId) => trails.some((trail) => trail.id === trailId))
-    );
-
-    return segments;
-  }
-
-  function getSegmentByIds(id: string | null): RawSegment[] {
-    if (!id) return [];
-    const ids = id.split(',');
-    return ids
-      .map((segId) => (!Number.isNaN(Number(segId)) ? currentData.segments[Number(segId)] : null))
-      .filter((segment): segment is RawSegment => segment !== null);
-  }
-
-  const handleMapUpdate = (segmentIds: number[], bbox: turf.BBox) => {
-    const waitForMap = (attempts = 0): any => {
-      const { current } = mapRef;
-
-      if (!current) {
-        if (attempts >= 10) return;
-        setTimeout(() => waitForMap(attempts + 1), 100);
-        return;
-      }
-
-      const map = current.getMap();
-      const source = map.getSource(SEGMENTS_SOURCE_ID);
-
-      if (!source) {
-        if (attempts >= 10) return;
-        setTimeout(() => waitForMap(attempts + 1), 100);
-        return;
-      }
-
-      const fitToBounds = () =>
-        current.fitBounds(bbox as LngLatBoundsLike, { padding: 20, maxZoom: 14 });
-
-      if (current.isStyleLoaded()) {
-        fitToBounds();
-      } else {
-        current.once('load', () => fitToBounds());
-      }
-
-      const setHoverState = (ids: number[], value: boolean) =>
-        ids.forEach((id) =>
-          map.setFeatureState({ source: SEGMENTS_SOURCE_ID, id }, { hover: value })
-        );
-
-      setHoverState(segmentIds, true);
-      setTimeout(() => setHoverState(segmentIds, false), 3000);
-    };
-
-    waitForMap();
-  };
-
-  useEffect(() => {
-    const segmentId = searchParams.get('segment');
-    const trailName = searchParams.get('trail');
-
-    const segments = [...getSegmentByIds(segmentId), ...getSegmentsByTrailNames(trailName)];
-    if (!segments.length) return;
-
-    const coordinates = segments.flatMap(({ geometry }) => geometry.coordinates.flat());
-    if (!coordinates.length) return;
-
-    handleMapUpdate(
-      segments.map(({ id }) => id),
-      turf.bbox(turf.lineString(coordinates))
-    );
-  }, []);
 
   return (
     <div className={styles.container}>
