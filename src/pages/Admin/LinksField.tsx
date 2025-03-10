@@ -146,8 +146,8 @@ export default LinksField;
 export function toRawLinks(links: FormLink[]) {
   return links
     .map((link) => ({
-      text: link.text,
-      url: link.url,
+      text: link.text.trim(),
+      url: link.url.trim(),
     }))
     .filter((link) => link.text !== '' || link.url !== '');
 }

@@ -308,6 +308,8 @@ const SegmentForm = () => {
     if (!deepEqual(initialSegment, formSegment)) {
       const rawSegment: RawSegment = {
         ...formSegment,
+        name: formSegment.name.trim(),
+        description: formSegment.description.trim(),
         state: formSegment.state as SegmentState,
         trails: formSegment.trails.map((trailId) => Number(trailId)),
         events: formSegment.events
@@ -320,6 +322,8 @@ const SegmentForm = () => {
       const rawEvents: RawTrailEvent[] = formSegment.events
         .map((event) => ({
           ...event,
+          headline: event.headline.trim(),
+          description: event.description.trim(),
           date: formatDateString(event.date),
           links: toRawLinks(event.links),
         }))
