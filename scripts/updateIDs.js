@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const turf = require('@turf/turf');
 
 // Helper function to update IDs for segments, trails, and events
 function generateNewIdMapping(items, threshold) {
@@ -92,12 +93,43 @@ function sortSegmentEvents(segment, trailEvents) {
   return segment;
 }
 
-// Function to round coordinates to 6 decimal places
+// Function to round coordinates to 7 decimal places
 function roundCoordinates(segment) {
   if (segment.geometry && segment.geometry.type === 'MultiLineString') {
     segment.geometry.coordinates = segment.geometry.coordinates.map((line) =>
-      line.map((coords) => coords.map((coord) => Math.round(coord * 1e6) / 1e6))
+      line.map((coords) => coords.map((coord) => Math.round(coord * 1e7) / 1e7))
     );
+  }
+  return segment;
+}
+
+// NEW FUNCTION: Simplify segment geometries to 5 feet tolerance
+function simplifyGeometries(segment) {
+  if (segment.geometry && segment.geometry.type === 'MultiLineString') {
+    // Create a feature collection from the segment's geometry
+    const lines = segment.geometry.coordinates.map((coords) => {
+      return turf.lineString(coords);
+    });
+    const fc = turf.featureCollection(lines);
+
+    // Get the centroid to calculate the tolerance in degrees
+    const referencePoint = turf.centroid(fc);
+
+    // Calculate the distance of 5 feet in degrees at this location
+    const destPoint = turf.destination(referencePoint, 5, 0, { units: 'feet' });
+    const latDiff = destPoint.geometry.coordinates[1] - referencePoint.geometry.coordinates[1];
+
+    // Simplify each line in the MultiLineString
+    const simplifiedLines = lines.map((line) => {
+      return turf.simplify(line, {
+        tolerance: latDiff,
+        highQuality: true,
+        mutate: true,
+      });
+    });
+
+    // Update the segment's geometry with simplified coordinates
+    segment.geometry.coordinates = simplifiedLines.map((line) => line.geometry.coordinates);
   }
   return segment;
 }
@@ -112,7 +144,10 @@ function updateData(data) {
     sortSegmentEvents(segment, updatedData.trailEvents)
   );
 
-  // Round coordinates to 6 decimal places
+  // Simplify geometries with 5 feet tolerance
+  updatedData.segments = updatedData.segments.map((segment) => simplifyGeometries(segment));
+
+  // Round coordinates to 7 decimal places
   updatedData.segments = updatedData.segments.map((segment) => roundCoordinates(segment));
 
   logUnlinkedIDs(updatedData);
