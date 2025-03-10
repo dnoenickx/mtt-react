@@ -16,7 +16,6 @@ import {
   ActionIcon,
   Divider,
   Fieldset,
-  JsonInput,
   Breadcrumbs,
   Anchor,
   Stack,
@@ -24,17 +23,18 @@ import {
   Flex,
 } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { randomId, useDocumentTitle } from '@mantine/hooks';
-import { IconPlus, IconSearch, IconArrowRight, IconX } from '@tabler/icons-react';
-import { multiLineString } from '@turf/turf';
+import { randomId, useDisclosure, useDocumentTitle } from '@mantine/hooks';
+import { IconPlus, IconSearch, IconX, IconMap } from '@tabler/icons-react';
+import { feature, featureCollection, multiLineString } from '@turf/turf';
 import { DatePrecision, RawSegment, RawTrailEvent, SegmentState } from '@/types';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
 import { deepEqual, formatDateString } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import LinksField, { FormLink, toRawLinks } from './LinksField';
-import { cleanToMultiLineString, toGeoJsonIO, validateMultiLineString } from '@/geospatialUtils';
+import { cleanToMultiLineString } from '@/geospatialUtils';
 import ConfirmationButton from '@/components/ConfirmationButton';
 import { StickyBox } from '@/components/Atomic/Atomic';
+import MultiLineEditor from '@/components/MultiLineEditor/MultiLineEditor';
 
 type FormTrailEvent = Omit<RawTrailEvent, 'date_precision' | 'links'> & {
   date_precision: DatePrecision | null;
@@ -227,6 +227,8 @@ const SegmentForm = () => {
   const { currentData, getSegment, getNextId, saveChanges, deleteItem, editingEnabled } = useData();
   useDocumentTitle(isCreating ? 'New Segment' : `Segment ${id} | Edit`);
 
+  const [opened, { open, close }] = useDisclosure(false);
+
   // Reset scroll on page load
   useEffect(() => window.scrollTo(0, 0), [navigate]);
 
@@ -392,49 +394,38 @@ const SegmentForm = () => {
             required
             {...form.getInputProps('state')}
           />
-          <JsonInput
-            label={
-              <>
-                Geometry
-                <Button
-                  size="compact-sm"
-                  variant="transparent"
-                  disabled={validateMultiLineString(form.values.geometry) !== null}
-                  onClick={() => {
-                    const url = toGeoJsonIO(
-                      cleanToMultiLineString(JSON.parse(form.values.geometry))
+
+          <Box>
+            <Text size="sm" fw={500}>
+              Geometry
+            </Text>
+            <Text color="dimmed" size="12px" lh="14.4px">
+              Open the editor to modify geometry, If you are having trouble, just describe the
+              change in the description field above
+            </Text>
+
+            <Group justify="center" mt="md">
+              <Button variant="light" onClick={open} leftSection={<IconMap />}>
+                Open Editor
+              </Button>
+
+              <MultiLineEditor
+                opened={opened}
+                onClose={(value) => {
+                  if (value !== undefined) {
+                    const positionLists = value.features.map((feat) => feat.geometry.coordinates);
+                    form.setFieldValue(
+                      'geometry',
+                      JSON.stringify(multiLineString(positionLists).geometry)
                     );
-                    window.open(url, '_blank');
-                  }}
-                  rightSection={
-                    <IconArrowRight style={{ width: '70%', height: '70%' }} stroke={2} />
                   }
-                  styles={{ section: { margin: 0 } }}
-                >
-                  edit in geojson.io
-                </Button>
-              </>
-            }
-            placeholder="Enter MultiLineString GeoJSON"
-            description="Use the geojson.io link to edit the geometry, then paste the result here. If you are having trouble, just describe the change in description box and I can do it"
-            minRows={4}
-            maxRows={6}
-            required
-            autosize
-            validationError="Invalid geometry: must be a JSON object"
-            {...form.getInputProps('geometry')}
-            onBlur={(event) => {
-              const error = validateMultiLineString(event.target.value);
-              if (error === null) {
-                form.setFieldValue(
-                  'geometry',
-                  JSON.stringify(cleanToMultiLineString(JSON.parse(event.target.value)))
-                );
-              } else {
-                form.setFieldError('geometry', error);
-              }
-            }}
-          />
+                  close();
+                }}
+                initialGeojson={featureCollection([feature(JSON.parse(form.values.geometry))])}
+              />
+            </Group>
+          </Box>
+
           <MultiSelect
             searchable
             label="Trails"
