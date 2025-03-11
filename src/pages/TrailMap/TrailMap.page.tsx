@@ -71,6 +71,9 @@ function MapAside({
             if (layerId === 'segments_symbology_dashed') {
               // @ts-ignore
               map.setFilter(layerId, ['all', ['==', ['get', 'style'], 'dashed'], stateFilter]);
+            } else if (layerId.startsWith('segments_symbology_highlight')) {
+              // @ts-ignore
+              map.setFilter(layerId, ['all', ['==', ['get', 'highlight'], true], stateFilter]);
             } else {
               // @ts-ignore
               map.setFilter(layerId, stateFilter);

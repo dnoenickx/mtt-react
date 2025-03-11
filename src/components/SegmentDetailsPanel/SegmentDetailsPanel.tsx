@@ -39,7 +39,7 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
   ));
 
   return (
-    <Accordion classNames={classes} defaultValue={trails.length ? trails[0].name : undefined}>
+    <Accordion classNames={classes} defaultValue={trails[0]?.name} key={trails[0]?.name}>
       {items}
     </Accordion>
   );
