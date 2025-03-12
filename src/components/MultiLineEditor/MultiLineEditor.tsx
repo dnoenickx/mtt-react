@@ -111,20 +111,28 @@ function MultiLineEditor({
             onMouseUp={currentMode.handleMouseUp}
             onContextMenu={currentMode.handleContextMenu}
             style={{ width: '100%', height: '100%' }}
-            initialViewState={{
-              bounds: [
-                [minLng, minLat],
-                [maxLng, maxLat],
-              ],
-              fitBoundsOptions: {
-                padding: {
-                  top: 20,
-                  bottom: 20,
-                  right: 94,
-                  left: 20,
-                },
-              },
-            }}
+            initialViewState={
+              lineFeatures.features.length > 0
+                ? {
+                    bounds: [
+                      [minLng, minLat],
+                      [maxLng, maxLat],
+                    ],
+                    fitBoundsOptions: {
+                      padding: {
+                        top: 20,
+                        bottom: 20,
+                        right: 94,
+                        left: 20,
+                      },
+                    },
+                  }
+                : {
+                    longitude: -71.68,
+                    latitude: 42.35,
+                    zoom: 8.78,
+                  }
+            }
           >
             {/* Base rendering of all lines */}
             <Source id="lines-source" type="geojson" data={lineFeatures}>
