@@ -67,3 +67,7 @@
 .corner-text a:hover {
   text-decoration: underline;
 }
+
+:global(.maplibregl-popup-content) {
+  padding: 0 !important;
+}

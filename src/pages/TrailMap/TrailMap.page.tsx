@@ -1,13 +1,14 @@
-import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useRef, useCallback, useEffect, ReactElement } from 'react';
 import Map, {
   GeolocateControl,
   MapGeoJSONFeature,
   MapLayerMouseEvent,
   MapRef,
   NavigationControl,
+  Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl/maplibre';
-import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
+import { Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
 import { useMediaQuery, useSessionStorage } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
 import { bbox, feature, featureCollection } from '@turf/turf';
@@ -31,6 +32,13 @@ import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
 
 import TOWN_BOUNDING_BOXES from '../../town_bbox.json';
+import { IconBrandApple, IconBrandGoogleMaps, IconBrandStrava } from '@tabler/icons-react';
+
+interface Popup {
+  lng: number;
+  lat: number;
+  content: ReactElement;
+}
 
 function MapAside({
   activeTab,
@@ -148,8 +156,49 @@ function TrailMap({
 }) {
   const { currentData } = useData();
   const [searchParams] = useSearchParams();
+  const [popup, setPopup] = useState<Popup | undefined>(undefined);
 
   const hoveredSegmentId = useRef<string | null>(null);
+
+  const onContextMenuHandler = (e: MapLayerMouseEvent) => {
+    const [lng, lat] = e.lngLat.toArray();
+
+    setPopup({
+      lng,
+      lat,
+      content: (
+        <Button.Group orientation="vertical">
+          <Button
+            leftSection={<IconBrandGoogleMaps size={14} />}
+            variant="subtle"
+            component="a"
+            target="_blank"
+            href={`https://maps.google.com/?q=${lat},${lng}`}
+          >
+            Open in Google Maps
+          </Button>
+          <Button
+            leftSection={<IconBrandApple size={14} />}
+            variant="subtle"
+            component="a"
+            target="_blank"
+            href={`https://maps.apple.com/?ll=${lat},${lng}&q=Dropped%20Pin`}
+          >
+            Open in Apple Maps
+          </Button>
+          <Button
+            leftSection={<IconBrandStrava size={14} />}
+            variant="subtle"
+            component="a"
+            target="_blank"
+            href={`https://www.strava.com/maps/global-heatmap?sport=Ride&style=dark&terrain=false&labels=true&poi=false&cPhotos=false&gColor=hot&gOpacity=100#${e.target.getZoom()}/${lat}/${lng}`}
+          >
+            Open in Strava Heatmap
+          </Button>
+        </Button.Group>
+      ),
+    });
+  };
 
   const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
     const map = mapRef.current?.getMap();
@@ -295,6 +344,7 @@ function TrailMap({
       interactiveLayerIds={[SEGMENTS_HOVER_LAYER_ID]}
       onMouseMove={onMouseMoveHandler}
       onClick={onClick}
+      onContextMenu={onContextMenuHandler}
       {...viewState}
       onMove={(evt) => setViewState(evt.viewState)}
     >
@@ -305,6 +355,19 @@ function TrailMap({
       <SegmentsLayer />
       <Subway />
       <CommuterRailLayer />
+
+      {popup && (
+        <MapPopup
+          anchor="top-left"
+          longitude={Number(popup.lng)}
+          latitude={Number(popup.lat)}
+          onClose={() => setPopup(undefined)}
+          closeButton={false}
+          closeOnMove
+        >
+          {popup.content}
+        </MapPopup>
+      )}
     </Map>
   );
 }
