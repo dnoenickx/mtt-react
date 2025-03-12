@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
+import { FeatureCollection, MultiLineString } from '@turf/turf';
 import { Layer, Source } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
+import { useSearchParams } from 'react-router-dom';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { useData } from '@/components/DataProvider/DataProvider';
-import { FeatureCollection, MultiLineString } from '@turf/turf';
-import { useSearchParams } from 'react-router-dom';
 import { createSlug } from '@/utils';
 
 export const SEGMENTS_SOURCE_ID = 'segments_source';
@@ -53,7 +53,8 @@ export default function SegmentsLayer() {
         const weights = { heavy: HEAVY, medium: MEDIUM, light: LIGHT };
         const baseWidth = multiplier(weights[SEGMENT_STATES[state]?.weight] || LIGHT);
         const isDashed = SEGMENT_STATES[state]?.style === 'dashed';
-        const isHighlighted = segmentIds.includes(id) || trails.some((id) => trailIds.includes(id));
+        const isHighlighted =
+          segmentIds.includes(id) || trails.some((trailId) => trailIds.includes(trailId));
 
         const properties = {
           state,
@@ -76,7 +77,7 @@ export default function SegmentsLayer() {
         return {
           id,
           type: 'Feature',
-          geometry: geometry,
+          geometry,
           properties,
         };
       }),

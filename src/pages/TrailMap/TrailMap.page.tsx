@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useRef, useCallback, useEffect } from 'react';
-import * as turf from '@turf/turf';
 import Map, {
   GeolocateControl,
   MapGeoJSONFeature,
@@ -11,6 +10,8 @@ import Map, {
 import { Button, Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery, useSessionStorage } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
+import { bbox, feature, featureCollection } from '@turf/turf';
+import { BBox2d } from '@turf/helpers/dist/js/lib/geojson';
 import styles from './TrailMap.module.css';
 import { SegmentDetailsPanel } from '@/components/SegmentDetailsPanel/SegmentDetailsPanel';
 import WelcomePanel, { LayerOption } from '@/components/WelcomePanel/WelcomePanel';
@@ -28,7 +29,8 @@ import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.l
 import { mapStyle } from './MapStyle';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
-import { bbox, feature, featureCollection } from '@turf/turf';
+
+import TOWN_BOUNDING_BOXES from '../../town_bbox.json';
 
 function MapAside({
   activeTab,
@@ -161,8 +163,8 @@ function TrailMap({
     }
 
     if (features.length > 0) {
-      const feature = features[0];
-      const featureId = feature.id?.toString();
+      const hoveredFeature = features[0];
+      const featureId = hoveredFeature.id?.toString();
 
       if (hoveredSegmentId.current !== featureId) {
         map.getCanvas().style.cursor = 'pointer';
@@ -206,6 +208,38 @@ function TrailMap({
   const zoomToSegments = () => {
     if (!mapRef.current) return;
 
+    const fitBounds = (bounds: BBox2d) =>
+      mapRef.current!.fitBounds(
+        [
+          [bounds[0], bounds[1]],
+          [bounds[2], bounds[3]],
+        ],
+        { padding: 50 }
+      );
+
+    // Check town first
+    const townNames = (searchParams.get('town') || '').split(',');
+    if (townNames.length) {
+      const mergedBounds: BBox2d = townNames
+        .filter((name): name is keyof typeof TOWN_BOUNDING_BOXES => name in TOWN_BOUNDING_BOXES)
+        .reduce(
+          (bounds, name) => {
+            const townBbox = TOWN_BOUNDING_BOXES[name];
+            return [
+              Math.min(bounds[0], townBbox[0]),
+              Math.min(bounds[1], townBbox[1]),
+              Math.max(bounds[2], townBbox[2]),
+              Math.max(bounds[3], townBbox[3]),
+            ];
+          },
+          [Infinity, Infinity, -Infinity, -Infinity]
+        );
+
+      if (mergedBounds[0] !== Infinity) {
+        fitBounds(mergedBounds);
+      }
+    }
+
     // Parse trail and segment parameters
     const trailNames = (searchParams.get('trail') || '').split(',');
     const trailIds = trailNames.length
@@ -232,15 +266,7 @@ function TrailMap({
 
     // Calculate and set the map bounds
     const features = segments.map((segment) => feature(segment.geometry));
-    const [minX, minY, maxX, maxY] = bbox(featureCollection(features));
-
-    mapRef.current.fitBounds(
-      [
-        [minX, minY],
-        [maxX, maxY],
-      ],
-      { padding: 50 }
-    );
+    fitBounds(bbox(featureCollection(features)) as BBox2d);
   };
 
   useEffect(() => {
