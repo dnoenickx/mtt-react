@@ -8,7 +8,7 @@ import Map, {
   Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl/maplibre';
-import { Button, Drawer, ScrollArea, Stack, Tabs } from '@mantine/core';
+import { Button, Drawer, ScrollArea, Stack, Tabs, Text } from '@mantine/core';
 import { useMediaQuery, useSessionStorage } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
 import { bbox, feature, featureCollection } from '@turf/turf';
@@ -80,7 +80,7 @@ function MapAside({
           SEGMENTS_SYMBOLOGY_LAYER_IDS.forEach((layerId) => {
             if (layerId === 'segments_symbology_dashed') {
               // @ts-ignore
-              map.setFilter(layerId, ['all', ['==', ['get', 'style'], 'dashed'], stateFilter]);
+              map.setFilter(layerId, ['all', ['has', 'dashedWidth'], stateFilter]);
             } else if (layerId.startsWith('segments_symbology_highlight')) {
               // @ts-ignore
               map.setFilter(layerId, ['all', ['==', ['get', 'highlight'], true], stateFilter]);
@@ -167,35 +167,43 @@ function TrailMap({
       lng,
       lat,
       content: (
-        <Button.Group orientation="vertical">
-          <Button
-            leftSection={<IconBrandGoogleMaps size={14} />}
-            variant="subtle"
-            component="a"
-            target="_blank"
-            href={`https://maps.google.com/?q=${lat},${lng}`}
-          >
-            Open in Google Maps
-          </Button>
-          <Button
-            leftSection={<IconBrandApple size={14} />}
-            variant="subtle"
-            component="a"
-            target="_blank"
-            href={`https://maps.apple.com/?ll=${lat},${lng}&q=Dropped%20Pin`}
-          >
-            Open in Apple Maps
-          </Button>
-          <Button
-            leftSection={<IconBrandStrava size={14} />}
-            variant="subtle"
-            component="a"
-            target="_blank"
-            href={`https://www.strava.com/maps/global-heatmap?sport=Ride&style=dark&terrain=false&labels=true&poi=false&cPhotos=false&gColor=hot&gOpacity=100#${e.target.getZoom()}/${lat}/${lng}`}
-          >
-            Open in Strava Heatmap
-          </Button>
-        </Button.Group>
+        <Stack gap={0}>
+          <Text size="xs" ta="center" c="dimmed">
+            Open in
+          </Text>
+          <Button.Group orientation="vertical">
+            <Button
+              leftSection={<IconBrandGoogleMaps size={14} />}
+              variant="subtle"
+              component="a"
+              target="_blank"
+              justify="left"
+              href={`https://maps.google.com/?q=${lat},${lng}`}
+            >
+              Google Maps
+            </Button>
+            <Button
+              leftSection={<IconBrandApple size={14} />}
+              variant="subtle"
+              component="a"
+              target="_blank"
+              justify="left"
+              href={`https://maps.apple.com/?ll=${lat},${lng}&q=Dropped%20Pin`}
+            >
+              Apple Maps
+            </Button>
+            <Button
+              leftSection={<IconBrandStrava size={14} />}
+              variant="subtle"
+              component="a"
+              target="_blank"
+              justify="left"
+              href={`https://www.strava.com/maps/global-heatmap?sport=Ride&style=dark&terrain=false&labels=true&poi=false&cPhotos=false&gColor=hot&gOpacity=100#${e.target.getZoom()}/${lat}/${lng}`}
+            >
+              Strava Heatmap
+            </Button>
+          </Button.Group>
+        </Stack>
       ),
     });
   };
