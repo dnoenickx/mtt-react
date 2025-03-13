@@ -1,6 +1,7 @@
-import React, { useMemo, useState, useRef, useCallback, useEffect, ReactElement } from 'react';
+import React, { useMemo, useState, useRef, useCallback, ReactElement } from 'react';
 import Map, {
   GeolocateControl,
+  LngLatBoundsLike,
   MapGeoJSONFeature,
   MapLayerMouseEvent,
   MapRef,
@@ -253,26 +254,18 @@ function TrailMap({
     }
   };
 
-  const [viewState, setViewState] = useSessionStorage({
-    key: 'viewState',
-    defaultValue: {
-      longitude: -71.68,
-      latitude: 42.35,
-      zoom: 8.78,
-    },
-  });
-
-  const zoomToSegments = () => {
-    if (!mapRef.current) return;
-
-    const fitBounds = (bounds: BBox2d) =>
-      mapRef.current!.fitBounds(
-        [
+  const getInitialBounds = () => {
+    const formatInitialState = (bounds: BBox2d) => {
+      return {
+        bounds: [
           [bounds[0], bounds[1]],
           [bounds[2], bounds[3]],
-        ],
-        { padding: 50 }
-      );
+        ] as LngLatBoundsLike,
+        fitBoundsOptions: {
+          padding: 50,
+        },
+      };
+    };
 
     // Check town first
     const townNames = (searchParams.get('town') || '').split(',');
@@ -293,7 +286,7 @@ function TrailMap({
         );
 
       if (mergedBounds[0] !== Infinity) {
-        fitBounds(mergedBounds);
+        return formatInitialState(mergedBounds);
       }
     }
 
@@ -323,19 +316,8 @@ function TrailMap({
 
     // Calculate and set the map bounds
     const features = segments.map((segment) => feature(segment.geometry));
-    fitBounds(bbox(featureCollection(features)) as BBox2d);
+    return formatInitialState(bbox(featureCollection(features)) as BBox2d);
   };
-
-  useEffect(() => {
-    const checkMapRef = setInterval(() => {
-      if (mapRef.current) {
-        clearInterval(checkMapRef);
-        zoomToSegments();
-      }
-    }, 100);
-
-    return () => clearInterval(checkMapRef);
-  }, []);
 
   return (
     <Map
@@ -353,8 +335,13 @@ function TrailMap({
       onMouseMove={onMouseMoveHandler}
       onClick={onClick}
       onContextMenu={onContextMenuHandler}
-      {...viewState}
-      onMove={(evt) => setViewState(evt.viewState)}
+      initialViewState={
+        getInitialBounds() ?? {
+          longitude: -71.68,
+          latitude: 42.35,
+          zoom: 8.78,
+        }
+      }
     >
       <GeolocateControl />
       <NavigationControl />
