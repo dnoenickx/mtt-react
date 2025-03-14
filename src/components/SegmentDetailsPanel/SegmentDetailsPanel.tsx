@@ -9,7 +9,6 @@ import {
   Divider,
   Flex,
   Group,
-  Menu,
   Text,
   Title,
   Tooltip,
@@ -26,7 +25,7 @@ import { useData } from '../DataProvider/DataProvider';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
-  const items = trails.map(({ name, description, links }) => (
+  const items = trails.map(({ id, name, description, links }) => (
     <Accordion.Item key={name} value={name}>
       <Accordion.Control>
         <Text>{name}</Text>
@@ -34,6 +33,36 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
       <Accordion.Panel>
         <MultiLineText text={description} size="sm" />
         <LinkGroup links={links} />
+        <Group justify="flex-end">
+          {/* <Button
+            variant="subtle"
+            leftSection={<IconSearch style={{ width: '65%', height: '65%' }} />}
+            c="dimmed"
+            size="compact-xs"
+            styles={{
+              section: {
+                marginRight: -2,
+              },
+            }}
+          >
+            zoom
+          </Button> */}
+          <Button
+            variant="subtle"
+            leftSection={<IconPencil style={{ width: '65%', height: '65%' }} />}
+            c="dimmed"
+            size="compact-xs"
+            styles={{
+              section: {
+                marginRight: -2,
+              },
+            }}
+            component={Link}
+            to={`/admin/trails/${id}`}
+          >
+            edit
+          </Button>
+        </Group>
       </Accordion.Panel>
     </Accordion.Item>
   ));
@@ -49,7 +78,7 @@ export function SegmentDetailsPanel() {
   const [searchParams] = useSearchParams();
   const segmentId = Number(searchParams.get('segment')?.split(',')[0]);
 
-  const { getSegment, editingEnabled } = useData();
+  const { getSegment } = useData();
   const segment: Segment | null = useMemo(() => getSegment(segmentId), [segmentId]);
 
   const title =
@@ -78,49 +107,11 @@ export function SegmentDetailsPanel() {
 
   return (
     <>
-      <Group align="baseline" justify="space-between">
-        <Title order={4} mb="md" mt="sm" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
-          Segment
-        </Title>
-        {editingEnabled && (
-          <Menu
-            trigger="click-hover"
-            loop={false}
-            withinPortal={false}
-            trapFocus={false}
-            menuItemTabIndex={0}
-            shadow="md"
-            width={200}
-          >
-            <Menu.Target>
-              <Button
-                variant="outline"
-                leftSection={<IconPencil style={{ width: '70%', height: '70%' }} />}
-                size="compact-sm"
-                styles={{
-                  section: {
-                    margin: 0,
-                  },
-                }}
-              >
-                edit
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Label>Segments</Menu.Label>
-              <Menu.Item component={Link} to={`/admin/segments/${segment.id}`} key={segment.id}>
-                {segment.name || `Segment ${segment.id}`}
-              </Menu.Item>
-              <Menu.Label>Trails</Menu.Label>
-              {segment.trails.map(({ id, name }) => (
-                <Menu.Item component={Link} to={`/admin/trails/${id}`} key={id}>
-                  {name}
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
-        )}
-      </Group>
+      {/* <Group align="baseline" justify="space-between"> */}
+      <Title order={4} mb="md" mt="sm" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+        Segment
+      </Title>
+      {/* </Group> */}
       <Flex justify="space-between" wrap="wrap" rowGap="xs" mb="sm">
         {segment.name && <Title order={5}>{segment.name}</Title>}
         <Tooltip
@@ -137,8 +128,25 @@ export function SegmentDetailsPanel() {
       </Flex>
       <MultiLineText m={0} text={segment.description} />
       <LinkGroup links={segment.links} />
+      <Group justify="flex-end">
+        <Button
+          variant="subtle"
+          leftSection={<IconPencil style={{ width: '65%', height: '65%' }} />}
+          size="compact-xs"
+          styles={{
+            section: {
+              marginRight: -2,
+            },
+          }}
+          component={Link}
+          to={`/admin/segments/${segment.id}`}
+          c="dimmed"
+        >
+          edit
+        </Button>
+      </Group>
 
-      <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
+      <Divider size="xs" style={{ marginTop: 20, marginBottom: 7 }} />
       <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
         Trails
       </Title>

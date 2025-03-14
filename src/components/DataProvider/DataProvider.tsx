@@ -13,7 +13,6 @@ import {
   RawTrail,
   RawTrailEvent,
 } from '@/types';
-import { importChanges } from './importUtil';
 
 const fetchRawData = (): [MappedOriginal, Date] => {
   const data = RAW_DATA_IMPORT as RawOriginal;
@@ -46,13 +45,9 @@ type DataContextType = {
   getNextId: (type: MappedKeys, otherIds?: number[]) => number;
   getSegment: (id: number) => Segment | null;
   deleteItem: (type: MappedKeys, id: number) => void;
-  editingEnabled: boolean;
-  setEditingEnabled: (value: boolean) => void;
   clearChanges: () => void;
-  importChanges: (data: string) => boolean;
   changes: MappedChanges;
   getCurrentJSON: () => string;
-  getChangesJSON: () => string;
   getMinimalChangesJSON: () => [string, string];
   lastModified: Date | undefined;
   lastUpdated: Date;
@@ -63,10 +58,6 @@ type DataContextType = {
 const DataContext = createContext<DataContextType | null>(null);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [editingEnabled, setEditingEnabled] = useLocalStorage<boolean>({
-    key: 'editing-enabled',
-    defaultValue: false,
-  });
   const [changes, setChanges] = useLocalStorage<MappedChanges>({
     key: 'changes',
     defaultValue: emptyChanges,
@@ -103,10 +94,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const currentData = useMemo(() => {
-    if (!editingEnabled) {
-      return original;
-    }
-
     const result: MappedOriginal = {
       trails: { ...original.trails },
       segments: { ...original.segments },
@@ -127,7 +114,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     return result;
-  }, [original, changes, editingEnabled]);
+  }, [original, changes]);
 
   const getNextId = (type: MappedKeys, otherIds: number[] = []) => {
     const originalIds = Object.keys(original[type]).map(Number);
@@ -234,18 +221,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       trails: sortById(currentData.trails),
     });
 
-  const getChangesJSON = (): string =>
-    JSON.stringify({
-      meta: {
-        ...contact,
-        editId,
-        lastModified: (lastModified ?? new Date()).toISOString(),
-      },
-      segments: sortById(changes.segments),
-      trailEvents: sortById(changes.trailEvents),
-      trails: sortById(changes.trails),
-    });
-
   const getMinimalChangesJSON = (): [string, string] => {
     const minimalChanges: MappedChanges = emptyChanges;
 
@@ -300,21 +275,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         getNextId,
         getSegment,
         deleteItem,
-        editingEnabled,
-        setEditingEnabled,
         clearChanges,
         changes,
-        importChanges: (data) => {
-          // TODO: this doesn't work with the changes I've made to export
-          const newImport = importChanges(data);
-          if (!newImport) return false;
-          const { lastModified: importLastModified, ...newChanges } = newImport;
-          setChanges(newChanges);
-          setLastModified(importLastModified);
-          return true;
-        },
         getCurrentJSON,
-        getChangesJSON,
         getMinimalChangesJSON,
         lastModified,
         lastUpdated,

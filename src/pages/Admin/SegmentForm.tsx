@@ -224,7 +224,7 @@ const SegmentForm = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
-  const { currentData, getSegment, getNextId, saveChanges, deleteItem, editingEnabled } = useData();
+  const { currentData, getSegment, getNextId, saveChanges, deleteItem } = useData();
   useDocumentTitle(isCreating ? 'New Segment' : `Segment ${id} | Edit`);
 
   const [opened, { open, close }] = useDisclosure(false);
@@ -479,7 +479,7 @@ const SegmentForm = () => {
               confirmButtonText="Delete"
               cancelButtonText="Cancel"
             >
-              <Button color="red" variant="outline" disabled={!editingEnabled || isCreating}>
+              <Button color="red" variant="outline" disabled={isCreating}>
                 Delete Segment
               </Button>
             </ConfirmationButton>
@@ -488,7 +488,7 @@ const SegmentForm = () => {
               <Button variant="outline" onClick={() => navigate(-1)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={!editingEnabled} px="xl">
+              <Button type="submit" px="xl">
                 Save
               </Button>
             </Group>

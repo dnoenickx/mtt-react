@@ -11,8 +11,6 @@ import {
   rem,
   Button,
   Alert,
-  Menu,
-  Switch,
   Badge,
   ScrollArea,
   Box,
@@ -21,18 +19,12 @@ import {
 import {
   IconEdit,
   IconEraser,
-  IconEye,
   IconTrash,
-  IconPencilOff,
   IconCheck,
-  IconMenu2,
-  IconPencilUp,
-  IconPencilDown,
   IconMapDown,
   IconCirclePlus,
-  IconX,
 } from '@tabler/icons-react';
-import { useDocumentTitle } from '@mantine/hooks';
+import { useDocumentTitle, useSessionStorage } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
 import { Link } from '@/types';
 import { handleDownload, toCapitalCase } from '@/utils';
@@ -42,7 +34,7 @@ import { EmailButton } from '@/components/Atomic/Atomic';
 import { SEGMENT_STATES } from '../TrailMap/TrailMap.config';
 
 const linkCell = (item: Record<string, any>): JSX.Element | string => (
-  <List size="sm">
+  <List size="xs">
     {item.links.map(
       (link: Link) =>
         link && (
@@ -56,141 +48,20 @@ const linkCell = (item: Record<string, any>): JSX.Element | string => (
   </List>
 );
 
-function DataOptionsMenu() {
-  const {
-    clearChanges,
-    importChanges,
-    editingEnabled,
-    lastModified,
-    getChangesJSON,
-    getCurrentJSON,
-  } = useData();
-
-  const handleUploadChanges = (): void => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-
-    input.addEventListener('change', (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      const file = target?.files?.[0] ?? null;
-
-      if (file) {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          try {
-            if (importChanges(reader.result as string)) {
-              showNotification({
-                withBorder: true,
-                withCloseButton: false,
-                title: 'Upload Successful',
-                message: 'Loaded edits from file',
-                position: 'bottom-left',
-                icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
-                m: 'lg',
-              });
-            } else {
-              showNotification({
-                withBorder: true,
-                withCloseButton: false,
-                title: 'Failed to Upload',
-                message: 'Something was wrong with that file',
-                position: 'bottom-left',
-                icon: <IconX style={{ width: rem(20), height: rem(20) }} />,
-                color: 'red',
-                m: 'lg',
-              });
-            }
-          } catch (error) {
-            // eslint-disable-next-line no-console
-            console.error('Failed to parse uploaded edits:', error);
-          }
-        };
-
-        reader.readAsText(file);
-      }
-    });
-
-    input.click();
-  };
-
-  return (
-    <Menu trigger="click-hover" shadow="md" keepMounted>
-      <Menu.Target>
-        <Button variant="light" leftSection={<IconMenu2 size={18} />}>
-          Admin Actions
-        </Button>
-      </Menu.Target>
-
-      <Menu.Dropdown>
-        <Menu.Item
-          disabled={!editingEnabled || lastModified === undefined}
-          leftSection={<IconPencilDown style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => handleDownload('edits', getChangesJSON())}
-        >
-          Download Edits
-        </Menu.Item>
-
-        <Menu.Item
-          disabled={!editingEnabled}
-          leftSection={<IconPencilUp style={{ width: rem(14), height: rem(14) }} />}
-          onClick={handleUploadChanges}
-        >
-          Upload Edits
-        </Menu.Item>
-
-        <Menu.Divider />
-
-        <Menu.Item
-          leftSection={<IconMapDown style={{ width: rem(14), height: rem(14) }} />}
-          onClick={() => handleDownload('updated_data', getCurrentJSON())}
-        >
-          Download All Data
-        </Menu.Item>
-
-        <Menu.Divider />
-
-        {/* Danger Zone */}
-        <ConfirmationButton
-          confirmationText="All edits will be cleared from your browser. Submitted changes will still be available for me to review, but any unsubmitted changes will be permanently lost."
-          onConfirm={() => {
-            clearChanges();
-            showNotification({
-              withBorder: true,
-              withCloseButton: false,
-              title: 'Edits Cleared',
-              message: 'Now viewing current published data',
-              position: 'top-center',
-              icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
-              m: 'lg',
-            });
-          }}
-          confirmButtonText="Clear"
-          cancelButtonText="Cancel"
-          modalProps={{
-            title: 'Clear edits?',
-          }}
-        >
-          <Menu.Item
-            disabled={!editingEnabled}
-            leftSection={<IconEraser style={{ width: rem(14), height: rem(14) }} />}
-            color="red"
-          >
-            Clear Edits
-          </Menu.Item>
-        </ConfirmationButton>
-      </Menu.Dropdown>
-    </Menu>
-  );
-}
-
 export default function Admin() {
   const navigate = useNavigate();
   const { tabValue } = useParams<{ tabValue?: string }>();
-  const { currentData, deleteItem, editingEnabled, setEditingEnabled } = useData();
+  const { currentData, deleteItem, clearChanges, getCurrentJSON } = useData();
 
-  useDocumentTitle(`${toCapitalCase(tabValue)} | Admin`);
+  const [spoilerOpen, setSpoilerOpen] = useSessionStorage({
+    key: 'admin-spoiler',
+    defaultValue: true,
+    getInitialValueInEffect: false,
+  });
+
+  const downloadButton = Boolean(import.meta.env.VITE_DEV);
+
+  useDocumentTitle(`${toCapitalCase(tabValue)} | Edit`);
 
   const TABLE_FIELDS: Record<
     string,
@@ -286,19 +157,15 @@ export default function Admin() {
   return (
     <>
       <Container size="lg" py="xl">
-        <Group justify="space-between">
-          <Switch
-            checked={editingEnabled}
-            onChange={(event) => setEditingEnabled(event.currentTarget.checked)}
-            label="Enable Editing + View Edits"
-            onLabel={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-            offLabel={<IconPencilOff style={{ width: rem(14), height: rem(14) }} />}
-          />
-          <DataOptionsMenu />
-        </Group>
-
-        <Alert variant="outline" title="Welcome" my="xl">
-          <Spoiler initialState maxHeight={0} showLabel="Show more" hideLabel="Show less">
+        <Alert variant="outline" title="Welcome" mb="xl">
+          <Spoiler
+            expanded={spoilerOpen}
+            onExpandedChange={setSpoilerOpen}
+            maxHeight={0}
+            showLabel="Show more"
+            hideLabel="show less"
+            styles={{ control: { fontSize: '14px' } }}
+          >
             <ul>
               <li>This page allows you to suggest edits to the map data!</li>
               <li>
@@ -351,12 +218,54 @@ export default function Admin() {
           </Spoiler>
         </Alert>
 
+        <Group justify="flex-end">
+          {downloadButton && (
+            <Button
+              leftSection={<IconMapDown style={{ width: rem(14), height: rem(14) }} />}
+              onClick={() => handleDownload('updated_data.json', getCurrentJSON())}
+              variant="outline"
+              size="xs"
+            >
+              Download All Data
+            </Button>
+          )}
+          <ConfirmationButton
+            confirmationText="All edits will be cleared from your browser. Submitted changes will still be available for me to review, but any unsubmitted changes will be permanently lost."
+            onConfirm={() => {
+              clearChanges();
+              showNotification({
+                withBorder: true,
+                withCloseButton: false,
+                title: 'Edits Cleared',
+                message: 'Now viewing current published data',
+                position: 'top-center',
+                icon: <IconCheck style={{ width: rem(20), height: rem(20) }} />,
+                m: 'lg',
+              });
+            }}
+            confirmButtonText="Clear"
+            cancelButtonText="Cancel"
+            modalProps={{
+              title: 'Clear edits?',
+            }}
+          >
+            <Button
+              leftSection={<IconEraser style={{ width: rem(14), height: rem(14) }} />}
+              color="red"
+              variant="outline"
+              size="xs"
+            >
+              Clear Edits
+            </Button>
+          </ConfirmationButton>
+        </Group>
+
         <Tabs variant="outline" value={tabValue} onChange={(value) => navigate(`/admin/${value}`)}>
           <Tabs.List>
             <Tabs.Tab value="segments" component={Box}>
               <Group>
                 Segments
-                {tabValue === 'segments' && editingEnabled && (
+                {tabValue === 'segments' && (
                   <Button
                     variant="light"
                     onClick={(event: any) => {
@@ -375,7 +284,7 @@ export default function Admin() {
             <Tabs.Tab value="trails" component={Box}>
               <Group>
                 Trails
-                {tabValue === 'trails' && editingEnabled && (
+                {tabValue === 'trails' && (
                   <Button
                     variant="light"
                     onClick={(event: any) => {
@@ -410,11 +319,7 @@ export default function Admin() {
                           component={RouterLink}
                           to={`/admin/${type}/${item.id}`}
                         >
-                          {editingEnabled ? (
-                            <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                          ) : (
-                            <IconEye style={{ width: '70%', height: '70%' }} stroke={1.5} />
-                          )}
+                          <IconEdit style={{ width: '70%', height: '70%' }} stroke={1.5} />
                         </ActionIcon>
                         <ConfirmationButton
                           confirmationText="Are you sure you want to delete this?"
@@ -422,12 +327,7 @@ export default function Admin() {
                           confirmButtonText="Delete"
                           cancelButtonText="Cancel"
                         >
-                          <ActionIcon
-                            color="red"
-                            variant="outline"
-                            aria-label="Delete"
-                            disabled={!editingEnabled}
-                          >
+                          <ActionIcon color="red" variant="outline" aria-label="Delete">
                             <IconTrash style={{ width: '70%', height: '70%' }} stroke={1.5} />
                           </ActionIcon>
                         </ConfirmationButton>

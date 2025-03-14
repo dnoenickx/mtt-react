@@ -88,18 +88,12 @@ export function simpleDiff(oldVal: any, newVal: any) {
   return diff;
 }
 
-export const handleDownload = (
-  fileName: string,
-  data: string,
-  appendDate: boolean = true
-): void => {
+export const handleDownload = (fileName: string, data: string): void => {
   try {
     const blob = new Blob([data], { type: 'application/json' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = appendDate
-      ? `${fileName}_${new Date().toISOString().split('T')[0].replace(/-/g, '')}.json`
-      : `${fileName}.json`;
+    link.download = fileName;
     link.click();
   } catch (error) {
     // eslint-disable-next-line no-console

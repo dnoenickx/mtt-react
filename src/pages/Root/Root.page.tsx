@@ -3,18 +3,15 @@ import { useDisclosure } from '@mantine/hooks';
 import { AppShell, Burger, Group, Text } from '@mantine/core';
 import Logo from '../../components/Logo/Logo';
 import classes from './Root.module.css';
-import { useData } from '@/components/DataProvider/DataProvider';
 import SubmitEditsBanner from '@/components/SubmitEditsBanner/SubmitEditsBanner';
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
 
-  const { editingEnabled } = useData();
-
   const navLinks = [
     { link: '/', label: 'Map' },
     { link: '/about', label: 'About' },
-    ...(editingEnabled ? [{ link: '/admin', label: 'Admin' }] : []),
+    { link: '/admin', label: 'Contribute' },
   ];
 
   const navButtons = navLinks.map(({ link, label }) => (
@@ -35,8 +32,8 @@ export function Root() {
             <Link to="/">
               <Logo h={{ base: 30, sm: 36 }} />
             </Link>
-            <Group ml={50} gap={5}>
-              {navButtons}
+            <Group ml={50} gap={15}>
+              {[...navButtons].reverse()}{' '}
             </Group>
           </Group>
           <Group justify="space-around" style={{ flex: 1 }} hiddenFrom="sm" pr={44}>

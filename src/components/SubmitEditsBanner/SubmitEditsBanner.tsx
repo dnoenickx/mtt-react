@@ -1,39 +1,13 @@
 import { Button, Alert, Group, Text, Transition, rem } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
-import { IconCheck, IconEraser, IconFileDiff, IconPencilShare, IconX } from '@tabler/icons-react';
-import { useMutation } from '@tanstack/react-query';
+import { IconCheck, IconEraser, IconFileDiff, IconPencilShare } from '@tabler/icons-react';
 import ConfirmationButton from '../ConfirmationButton';
 import { useData } from '../DataProvider/DataProvider';
+import { useSubmitEdits } from './useSubmitEdits';
 
 function SubmitEditsBanner() {
-  const { isSubmitted, setIsSubmitted, clearChanges, getMinimalChangesJSON } = useData();
-
-  const mutation = useMutation({
-    mutationFn: () => {
-      const [data, editId] = getMinimalChangesJSON();
-      const url = `${import.meta.env.VITE_API_ENDPOINT}/edits/${editId}`;
-      return fetch(url, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: data,
-      });
-    },
-    onSuccess: () => {
-      setIsSubmitted(true);
-    },
-    onError: () => {
-      showNotification({
-        withBorder: true,
-        withCloseButton: false,
-        title: 'Failed to Submit',
-        message: 'Try again later',
-        position: 'top-center',
-        icon: <IconX style={{ width: rem(20), height: rem(20) }} />,
-        m: 'lg',
-        color: 'red',
-      });
-    },
-  });
+  const { isSubmitted, clearChanges } = useData();
+  const { mutate: submit, isPending } = useSubmitEdits();
 
   return (
     <Transition
@@ -104,9 +78,9 @@ function SubmitEditsBanner() {
                     <IconPencilShare style={{ width: rem(20), height: rem(20) }} />
                   )
                 }
-                onClick={() => mutation.mutate()}
-                loading={mutation.isPending}
-                disabled={mutation.isPending}
+                onClick={() => submit()}
+                loading={isPending}
+                disabled={isPending}
               >
                 {isSubmitted ? 'Submitted!' : 'Submit Edits'}
               </Button>

@@ -4,10 +4,11 @@ import { Button, Group, TextInput, Modal, Text, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { differenceInMinutes } from 'date-fns';
 import { useData } from './DataProvider/DataProvider';
-import { handleDownload } from '@/utils';
+import { useSubmitEdits } from './SubmitEditsBanner/useSubmitEdits';
 
 export function ClearChangesModal() {
-  const { lastUpdated, lastModified, getChangesJSON, clearChanges } = useData();
+  const { lastUpdated, lastModified, clearChanges, isSubmitted } = useData();
+  const { mutate: submit, isPending } = useSubmitEdits();
 
   const hasUpdated = lastModified !== undefined && lastUpdated > lastModified;
 
@@ -23,18 +24,33 @@ export function ClearChangesModal() {
         backgroundOpacity: 0.55,
       }}
     >
-      <p>
-        I have updated the map data since you last visited. You must clear your local edits to
-        prevent conflicts.
-      </p>
-      <Group justify="flex-end">
-        <Button variant="outline" onClick={() => handleDownload('changes', getChangesJSON())}>
-          Download Your Edits
-        </Button>
-        <Button color="red" onClick={clearChanges}>
-          Clear Edits
-        </Button>
-      </Group>
+      I have updated the map data since you last visited. You must clear your local edits to prevent
+      conflicts.
+      {!isSubmitted ? (
+        <Group justify="flex-end" mt="md">
+          <Button variant="outline" color="red" onClick={clearChanges}>
+            Discard Unsubmitted Edits
+          </Button>
+          <Button
+            onClick={() => {
+              submit();
+              clearChanges();
+            }}
+            disabled={isPending}
+          >
+            Submit and Clear
+          </Button>
+        </Group>
+      ) : (
+        <Group justify="flex-end" mt="md">
+          <Text size="sm" color="dimmed">
+            Your changes have been submitted.
+          </Text>
+          <Button color="red" onClick={clearChanges}>
+            Clear
+          </Button>
+        </Group>
+      )}
     </Modal>
   );
 }

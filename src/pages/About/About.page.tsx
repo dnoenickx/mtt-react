@@ -49,7 +49,7 @@ export default function About() {
       })),
     };
 
-    handleDownload('mtt_export.geojson', JSON.stringify(data), false);
+    handleDownload('trail_data.geojson', JSON.stringify(data));
   };
 
   return (
@@ -61,8 +61,11 @@ export default function About() {
         <Title order={3} pt="xl" pb="xs">
           Mission
         </Title>
-        To highlight regional connectivity, the history of completed trails, and the timeline for
-        future trails. To connect people to local trail advocacy groups. To help you find trails.
+        To provide a user-friendly resource for discovering trails throughout Massachusetts. This
+        platform emphasizes detailed timelines and descriptions of trails, filling the gap on when
+        and how the trail network is expanding. By offering direct links to trail groups, news
+        articles, and project websites, it aims to connect users and trail advocates while bringing
+        clarity to the evolving trail network.
         <a id="other-maps">
           <Title order={3} pt="xl" pb="xs">
             Additional Map Resources
@@ -100,28 +103,58 @@ export default function About() {
         <Title order={3} pt="xl" pb="xs">
           So why make another map?
         </Title>
-        The maps above show existing and planned infrastructure in great detail. However,
-        &ldquo;planned&ldquo; can mean a lot of things: a project nearing the end of contruction;
-        something that&lsquo;s been funded and designed; or simply an idea some residents are
-        advocating for.
-        <br />
-        <br />
-        I went down a rabbit hole Googling some of these planned trails, but the information is
-        spread across websites from countless local newspapers, towns, and trail groups. So I wanted
-        to create a legible user-friendly map that highlights the regional network of linear paths
-        (e.g. rail trails), while also delving into how the gaps in that network were being filled.
-        <br />
-        <br />
+        <Text mt="sm">
+          The maps above show existing and planned trails in great detail and are updated by{' '}
+          <span>actual state agencies</span>!
+        </Text>
+        <Text mt="sm">
+          I came up with the idea for this website after researching the history of various trails
+          and the timelines for planned extensions. This information was scattered across countless
+          local newspapers, town websites, and friends group pages, making it hard to keep track of.
+        </Text>
+        <Text mt="sm">
+          When you see &ldquo;planned&ldquo; on other maps, it can mean a lot of things: a project
+          nearing completion; something that&lsquo;s been funded and designed; or simply an idea
+          some residents are advocating for. I wanted to make a map of linear paths while providing
+          clear context about the status of these projects, complete with timelines and links to
+          sources.
+        </Text>
         <Title order={3} pt="xl" pb="xs">
           A hub for local trail groups
         </Title>
         <Text>
-          Massachusetts has 351 cities and towns, and when we build a trail we tend to gradually
-          contruct it town by town. The result is countless &ldquo;friends of the ___ trail&ldquo;
-          organizations, each with their own website detailing their trail&lsquo;s history and
-          conditions. I want to collect this information in a single location so it&#39;s easy to
-          find, allowing anyone to submit suggestions so the data is always timely and accurate. I
-          want to enable these groups to share information about the trails they care about.
+          Massachusetts&lsquo; trail-building approach usually occurs town by town, resulting in a
+          patchwork of local &ldquo;friends of the trail&rdquo; organizations, each maintaining
+          separate websites with valuable but isolated information. This map serves as a centralized
+          platform where these dedicated groups can showcase their work and connect with users.
+        </Text>
+        <Text mt="sm">
+          I&lsquo;ve built features so anyone can submit trail updates to ensure information remains
+          current and accurate. Trail advocates can benefit from direct links to specific trails,
+          and soon will be able to embed customized versions of this map on their own websites. By
+          partnering with groups like the Mass Central Rail Trail Coalition and providing tools that
+          work across municipal boundaries, this resource strengthens the statewide trail advocacy
+          community while making information more accessible to everyone.
+        </Text>
+        <Title order={3} pt="xl" pb="xs">
+          About me
+        </Title>
+        <Text>
+          My name is Danny. I&apos;m from Boston and mostly get around by bike, occasionally
+          enjoying longer rides around Eastern Mass. I&apos;m software engineer and enjoys making
+          maps, so this is a personal passion project of mine.
+        </Text>
+        <Text mt="sm">
+          I regularly use trails like the Southwest Corridor, sections of the Emerald Necklace,
+          Charles River paths, and Somerville Community Path. These trails aren&apos;t just pleasant
+          places to relax - they&apos;re practical transportation infrastructure that improves daily
+          life.
+        </Text>
+        <Text mt="sm" pb="xl">
+          What excites me most is how Massachusetts has reached a tipping point with trail
+          development, creating a network with good connections. These connections support exercise,
+          day trips, weekend getaways, and daily transportation while benefiting local economies,
+          climate goals, and public health.
         </Text>
         <Title order={3} pt="xl" pb="xs" ta="center">
           Frequently Asked Questions

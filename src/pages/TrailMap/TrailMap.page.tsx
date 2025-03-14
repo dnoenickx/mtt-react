@@ -10,8 +10,9 @@ import Map, {
   ScaleControl,
 } from 'react-map-gl/maplibre';
 import { Button, Drawer, ScrollArea, Stack, Tabs, Text } from '@mantine/core';
-import { useMediaQuery, useSessionStorage } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
+import { IconBrandApple, IconBrandGoogleMaps, IconBrandStrava } from '@tabler/icons-react';
 import { bbox, feature, featureCollection } from '@turf/turf';
 import { BBox2d } from '@turf/helpers/dist/js/lib/geojson';
 import styles from './TrailMap.module.css';
@@ -31,9 +32,7 @@ import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.l
 import { mapStyle } from './MapStyle';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
-
 import TOWN_BOUNDING_BOXES from '../../town_bbox.json';
-import { IconBrandApple, IconBrandGoogleMaps, IconBrandStrava } from '@tabler/icons-react';
 
 interface Popup {
   lng: number;
@@ -254,18 +253,23 @@ function TrailMap({
     }
   };
 
-  const getInitialBounds = () => {
-    const formatInitialState = (bounds: BBox2d) => {
-      return {
-        bounds: [
-          [bounds[0], bounds[1]],
-          [bounds[2], bounds[3]],
-        ] as LngLatBoundsLike,
+  function getInitialBounds():
+    | {
+        bounds: LngLatBoundsLike;
         fitBoundsOptions: {
-          padding: 50,
-        },
-      };
-    };
+          padding: number;
+        };
+      }
+    | undefined {
+    const formatInitialState = (bounds: BBox2d) => ({
+      bounds: [
+        [bounds[0], bounds[1]],
+        [bounds[2], bounds[3]],
+      ] as LngLatBoundsLike,
+      fitBoundsOptions: {
+        padding: 50,
+      },
+    });
 
     // Check town first
     const townNames = (searchParams.get('town') || '').split(',');
@@ -304,7 +308,7 @@ function TrailMap({
       .filter(Boolean) // Remove empty strings
       .map(Number);
 
-    if (!segmentIds.length && !trailIds.length) return;
+    if (!segmentIds.length && !trailIds.length) return undefined;
 
     // Find segments that match the criteria
     const segments = Object.values(currentData.segments).filter(
@@ -312,12 +316,12 @@ function TrailMap({
         segmentIds.includes(segment.id) || segment.trails.some((id) => trailIds.includes(id))
     );
 
-    if (!segments.length) return;
+    if (!segments.length) return undefined;
 
     // Calculate and set the map bounds
     const features = segments.map((segment) => feature(segment.geometry));
     return formatInitialState(bbox(featureCollection(features)) as BBox2d);
-  };
+  }
 
   return (
     <Map
