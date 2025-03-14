@@ -59,7 +59,7 @@ export default function Admin() {
     getInitialValueInEffect: false,
   });
 
-  const downloadButton = Boolean(import.meta.env.VITE_DEV);
+  const downloadButton = Boolean(Number(import.meta.env.VITE_DEV));
 
   useDocumentTitle(`${toCapitalCase(tabValue)} | Edit`);
 
