@@ -31,7 +31,11 @@ export default function SegmentsLayer() {
 
   const trailNames = (searchParams.get('trail') ?? '').split(',');
   const trailIds = Object.values(currentData.trails)
-    .filter(({ name }) => trailNames.includes(createSlug(name)))
+    .filter(
+      (trail) =>
+        trailNames.includes(createSlug(trail.name)) ||
+        (trail.slug && trailNames.includes(trail.slug))
+    )
     .map(({ id }) => id);
 
   // Constants for line widths

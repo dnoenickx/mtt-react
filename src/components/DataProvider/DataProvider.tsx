@@ -61,6 +61,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [changes, setChanges] = useLocalStorage<MappedChanges>({
     key: 'changes',
     defaultValue: emptyChanges,
+    getInitialValueInEffect: false,
   });
   const [lastModified, setLastModified] = useLocalStorage<Date | undefined>({
     key: 'last-modified',

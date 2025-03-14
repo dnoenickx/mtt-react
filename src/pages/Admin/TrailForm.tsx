@@ -15,11 +15,12 @@ import {
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { randomId, useDocumentTitle } from '@mantine/hooks';
 import { RawTrail } from '@/types';
-import { deepEqual } from '@/utils';
+import { createSlug, deepEqual } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import LinksField, { FormLink, toRawLinks } from './LinksField';
 
-type FormTrail = Omit<RawTrail, 'links'> & {
+type FormTrail = Omit<RawTrail, 'links' | 'slug'> & {
+  slug: string;
   links: FormLink[];
 };
 
@@ -40,6 +41,7 @@ const TrailForm = () => {
       return {
         id: getNextId('trails'),
         name: '',
+        slug: '',
         description: '',
         links: [],
       };
@@ -68,6 +70,7 @@ const TrailForm = () => {
 
   const form = useForm<FormTrail>({
     initialValues: {
+      slug: '',
       ...initialTrail,
       links: initialTrail.links.map((link) => ({
         ...link,
@@ -81,6 +84,10 @@ const TrailForm = () => {
       ...formTrail,
       links: toRawLinks(formTrail.links),
     };
+
+    if (trail.slug === undefined) {
+      delete trail.slug;
+    }
 
     if (!deepEqual(initialTrail, trail)) {
       saveChanges({ trails: [trail] });
@@ -109,6 +116,14 @@ const TrailForm = () => {
       </Title>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput label="Name" required {...form.getInputProps('name')} />
+        <TextInput
+          label="Slug"
+          {...form.getInputProps('slug')}
+          description={`Shorter alternative for linking to this trail in addition to name based default '${createSlug(
+            initialTrail.name
+          )}'`}
+          placeholder="e.g. 'mcrt' for mass-central-rail-trail"
+        />
         <Textarea autosize minRows={3} label="Description" {...form.getInputProps('description')} />
         <Divider my="xl" />
         <LinksField {...form.getInputProps('links')} />

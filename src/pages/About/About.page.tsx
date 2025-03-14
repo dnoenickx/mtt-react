@@ -142,7 +142,7 @@ export default function About() {
         <Text>
           My name is Danny. I&apos;m from Boston and mostly get around by bike, occasionally
           enjoying longer rides around Eastern Mass. I&apos;m software engineer and enjoys making
-          maps, so this is a personal passion project of mine.
+          maps (and biking), so this is a personal passion project of mine.
         </Text>
         <Text mt="sm">
           I regularly use trails like the Southwest Corridor, sections of the Emerald Necklace,
@@ -151,10 +151,10 @@ export default function About() {
           life.
         </Text>
         <Text mt="sm" pb="xl">
-          What excites me most is how Massachusetts has reached a tipping point with trail
-          development, creating a network with good connections. These connections support exercise,
-          day trips, weekend getaways, and daily transportation while benefiting local economies,
-          climate goals, and public health.
+          What excites me most is how Massachusetts has reached point with trail development where
+          many of our trail are connecting and really forming a network with good connections. These
+          connections support exercise, day trips, weekend getaways, and daily transportation while
+          benefiting local economies, climate goals, and public health.
         </Text>
         <Title order={3} pt="xl" pb="xs" ta="center">
           Frequently Asked Questions

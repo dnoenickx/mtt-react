@@ -39,6 +39,7 @@ const isTrail = (value: any): value is Trail =>
   value !== null &&
   typeof value.id === 'number' &&
   typeof value.name === 'string' &&
+  (typeof value.slug === 'string' || value.slug === undefined) &&
   typeof value.description === 'string' &&
   Array.isArray(value.links) &&
   value.links.every(isLink) &&

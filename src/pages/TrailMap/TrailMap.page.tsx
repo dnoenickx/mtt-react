@@ -298,7 +298,11 @@ function TrailMap({
     const trailNames = (searchParams.get('trail') || '').split(',');
     const trailIds = trailNames.length
       ? Object.values(currentData.trails)
-          .filter((trail) => trailNames.includes(createSlug(trail.name)))
+          .filter(
+            (trail) =>
+              trailNames.includes(createSlug(trail.name)) ||
+              (trail.slug && trailNames.includes(trail.slug))
+          )
           .map((trail) => trail.id)
       : [];
 
