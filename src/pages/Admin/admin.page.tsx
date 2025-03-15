@@ -23,6 +23,7 @@ import {
   IconCheck,
   IconMapDown,
   IconCirclePlus,
+  IconBrandYoutubeFilled,
 } from '@tabler/icons-react';
 import { useDocumentTitle, useSessionStorage } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
@@ -214,6 +215,18 @@ export default function Admin() {
             <Group>
               <span>Reach out if you have any questions:</span>
               <EmailButton />
+            </Group>
+            <Group mt="lg">
+              <span>Watch this video for more information</span>
+              <Button
+                leftSection={<IconBrandYoutubeFilled />}
+                component={RouterLink}
+                to="https://youtu.be/uIw3X7h3BeM"
+                color="red"
+                variant="light"
+              >
+                Suggest edits to Mass Trail Tracker
+              </Button>
             </Group>
           </Spoiler>
         </Alert>
