@@ -43,11 +43,9 @@ function main() {
 
   // Read diff JSONs (could be multiple)
   const diffsPath = path.join(__dirname, '/diffs');
-  
+
   // Get JSON files from directory
-  const diffFiles = fs.readdirSync(diffsPath)
-    .filter(file => path.extname(file).toLowerCase() === '.json')
-    .map(file => path.join(diffsPath, file));
+  const diffFiles = fs.readdirSync(diffsPath).map((file) => path.join(diffsPath, file));
 
   // Read and parse diff files
   const diffs = diffFiles.map((file) => JSON.parse(fs.readFileSync(file, 'utf8')));
