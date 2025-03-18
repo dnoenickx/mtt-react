@@ -80,12 +80,21 @@ function logUnlinkedIDs(data) {
 
 // Function to sort events within a segment in reverse chronological order (newest first)
 function sortSegmentEvents(segment, trailEvents) {
+  // Create a Set to track seen event IDs for deduplication
+  const seenEventIDs = new Set();
+
   segment.events = segment.events
     .map((eventID) => {
+      // Skip if we've already processed this ID (deduplication)
+      if (seenEventIDs.has(eventID)) return null;
+
+      // Mark as seen
+      seenEventIDs.add(eventID);
+
       const event = trailEvents.find((e) => e.id === eventID);
       return event ? event : null;
     })
-    .filter((event) => event) // Remove any nulls (if any events were not found)
+    .filter((event) => event) // Remove any nulls (duplicates or events not found)
     .sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort in reverse order (newest first)
 
   // Update event IDs after sorting
