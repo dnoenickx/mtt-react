@@ -1,23 +1,13 @@
 import { useEffect, useMemo } from 'react';
 import { useForm } from '@mantine/form';
-import {
-  Container,
-  TextInput,
-  Textarea,
-  Button,
-  Title,
-  Text,
-  Group,
-  Divider,
-  Breadcrumbs,
-  Anchor,
-} from '@mantine/core';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { randomId, useDocumentTitle } from '@mantine/hooks';
+import { Container, TextInput, Textarea, Button, Title, Text, Group } from '@mantine/core';
+import { useNavigate, useParams } from 'react-router-dom';
+import { randomId } from '@mantine/hooks';
 import { RawTrail } from '@/types';
 import { createSlug, deepEqual } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
-import LinksField, { FormLink, toRawLinks } from './LinksField';
+import LinksField, { FormLink, toRawLinks } from '../common/LinksField';
+import { AdminForm } from '../AdminForm';
 
 type FormTrail = Omit<RawTrail, 'links' | 'slug'> & {
   slug: string;
@@ -29,7 +19,6 @@ const TrailForm = () => {
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
   const { currentData, saveChanges, getNextId } = useData();
-  useDocumentTitle(isCreating ? 'New Trail' : `Trail ${id} | Edit`);
 
   // Reset scroll on page load
   useEffect(() => window.scrollTo(0, 0), [navigate]);
@@ -77,6 +66,10 @@ const TrailForm = () => {
         id: randomId(),
       })),
     },
+    validate: {
+      slug: (value) =>
+        createSlug(value) !== value ? 'Slug can only contain dashes and lower-case letters' : null,
+    },
   });
 
   const handleSubmit = (formTrail: FormTrail) => {
@@ -95,47 +88,25 @@ const TrailForm = () => {
     navigate(-1);
   };
 
-  const breadcrumbs = [
-    { title: 'Admin', href: '/admin' },
-    { title: 'Trails', href: '/admin/trails' },
-    {
-      title: isCreating ? 'New Trail ' : `Trail ${initialTrail.id}`,
-      href: isCreating ? '/admin/trails/create' : `/admin/trails/${initialTrail.id}`,
-    },
-  ].map((item, index) => (
-    <Anchor key={index} component={Link} to={item.href}>
-      {item.title}
-    </Anchor>
-  ));
-
   return (
-    <Container size="md" py="xl">
-      <Breadcrumbs>{breadcrumbs}</Breadcrumbs>
-      <Title size="lg" my="md">
-        {isCreating ? 'New Trail ' : `Trail ${initialTrail.id}`}
-      </Title>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput label="Name" required {...form.getInputProps('name')} />
-        <TextInput
-          label="Slug"
-          {...form.getInputProps('slug')}
-          description={`Shorter alternative for linking to this trail in addition to name based default '${createSlug(
-            initialTrail.name
-          )}'`}
-          placeholder="e.g. 'mcrt' for mass-central-rail-trail"
-        />
-        <Textarea autosize minRows={3} label="Description" {...form.getInputProps('description')} />
-        <Divider my="xl" />
-        <LinksField {...form.getInputProps('links')} />
-        <Divider my="xl" />
-        <Group justify="flex-end" mb="xl">
-          <Button variant="outline" onClick={() => navigate(-1)}>
-            Cancel
-          </Button>
-          <Button type="submit">Submit</Button>
-        </Group>
-      </form>
-    </Container>
+    <AdminForm
+      itemId={initialTrail.id}
+      isCreating={isCreating}
+      onSubmit={form.onSubmit(handleSubmit)}
+      objectType="trails"
+    >
+      <TextInput label="Name" required {...form.getInputProps('name')} />
+      <TextInput
+        label="Slug"
+        {...form.getInputProps('slug')}
+        description={`Shorter alternative for linking to this trail in addition to name based default '${createSlug(
+          initialTrail.name
+        )}'`}
+        placeholder="e.g. 'mcrt' for mass-central-rail-trail"
+      />
+      <Textarea autosize minRows={3} label="Description" {...form.getInputProps('description')} />
+      <LinksField {...form.getInputProps('links')} />
+    </AdminForm>
   );
 };
 

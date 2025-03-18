@@ -64,8 +64,8 @@ export default function About() {
         To provide a user-friendly resource for discovering trails throughout Massachusetts. This
         platform emphasizes detailed timelines and descriptions of trails, filling the gap on when
         and how the trail network is expanding. By offering direct links to trail groups, news
-        articles, and project websites, it aims to connect users and trail advocates while bringing
-        clarity to the evolving trail network.
+        articles, and project websites, this site aims to connect users and trail advocates while
+        bringing clarity to the evolving trail network.
         <a id="other-maps">
           <Title order={3} pt="xl" pb="xs">
             Additional Map Resources
@@ -108,9 +108,10 @@ export default function About() {
           <span>actual state agencies</span>!
         </Text>
         <Text mt="sm">
-          I came up with the idea for this website after researching the history of various trails
-          and the timelines for planned extensions. This information was scattered across countless
-          local newspapers, town websites, and friends group pages, making it hard to keep track of.
+          Nonetheless, I came up with the idea for this website after researching the history of
+          various trails and the timelines for planned extensions. This information was scattered
+          across countless local newspapers, town websites, and local friends group pages, making it
+          hard to keep track of.
         </Text>
         <Text mt="sm">
           When you see &ldquo;planned&ldquo; on other maps, it can mean a lot of things: a project

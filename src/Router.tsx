@@ -4,8 +4,9 @@ import { TrailMapPage } from './pages/TrailMap/TrailMap.page';
 import { NothingFoundBackground } from './pages/Error/Error';
 import About from './pages/About/About.page';
 import Admin from './pages/Admin/admin.page';
-import SegmentForm from './pages/Admin/SegmentForm';
-import TrailForm from './pages/Admin/TrailForm';
+import TrailForm from './pages/Admin/forms/TrailForm';
+import SegmentForm from './pages/Admin/forms/SegmentForm';
+import { TrailEventForm } from './pages/Admin/forms/TrailEventForm';
 
 const router = createBrowserRouter([
   {
@@ -41,10 +42,10 @@ const router = createBrowserRouter([
         path: '/admin/trails/:id',
         element: <TrailForm />,
       },
-      // {
-      //   path: '/admin/trailEvents/:id',
-      //   element: <TrailEventEdit />,
-      // },
+      {
+        path: '/admin/events/:id',
+        element: <TrailEventForm />,
+      },
     ],
   },
 ]);

@@ -18,9 +18,9 @@
   flex-grow: 1;
   z-index: 2;
   max-width: 390px;
-  min-width: 390px;
+  min-width: 410px;
   height: 100%;
-  padding: 15px;
+  padding: 17px;
   padding-bottom: 0;
   box-shadow:
     rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,

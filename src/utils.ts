@@ -119,3 +119,7 @@ export const createSlug = (name: string) =>
     .replace(/--+/g, '-') // Replace multiple hyphens with a single one
     .replace(/^-+/, '') // Remove leading hyphens
     .replace(/-+$/, ''); // Remove trailing hyphens
+
+export function capitalizeFirstLetter(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

@@ -43,7 +43,7 @@ export const SkeletonParagraph: React.FC<SkeletonParagraphProps> = ({ lines, ...
 };
 
 export const LinkGroup = ({ links }: { links: Link[] }) => (
-  <Flex gap={5} justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
+  <Flex mt="xs" gap="xs" justify="flex-start" align="center" direction="row" wrap="wrap" py={4}>
     {links.map(({ text, url }) => (
       <a href={url} target="_blank" rel="nofollow noreferrer" key={url}>
         <Button
