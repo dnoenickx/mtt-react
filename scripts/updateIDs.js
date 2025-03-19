@@ -159,6 +159,15 @@ function updateData(data) {
   // Round coordinates to 7 decimal places
   updatedData.segments = updatedData.segments.map((segment) => roundCoordinates(segment));
 
+  // Remove empty slug fields from trails
+  updatedData.trails = updatedData.trails.map((trail) => {
+    if (trail.slug === '') {
+      const { slug, ...trailWithoutSlug } = trail;
+      return trailWithoutSlug;
+    }
+    return trail;
+  });
+
   logUnlinkedIDs(updatedData);
 
   return {
