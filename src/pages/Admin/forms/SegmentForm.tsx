@@ -25,6 +25,7 @@ import { EventSearch, TimelineEditor, FormTrailEvent } from './EventEditorHelper
 import LinksField, { FormLink, toRawLinks } from '../common/LinksField';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { AdminForm } from '../AdminForm';
+import useNavigateBack from '@/hooks/useNavigateBack';
 
 type FormSegment = Omit<RawSegment, 'state' | 'trails' | 'geometry' | 'links' | 'events'> & {
   state: SegmentState | null;
@@ -36,6 +37,7 @@ type FormSegment = Omit<RawSegment, 'state' | 'trails' | 'geometry' | 'links' | 
 
 const SegmentForm = () => {
   const navigate = useNavigate();
+  const navigateBack = useNavigateBack();
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
   const { currentData, getSegment, getNextId, saveChanges } = useData();
@@ -93,7 +95,7 @@ const SegmentForm = () => {
           The segment you are looking for does not exist.
         </Text>
         <Group justify="center" grow>
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button variant="outline" onClick={() => navigateBack('/admin/segments')}>
             Go Back
           </Button>
         </Group>
@@ -143,7 +145,7 @@ const SegmentForm = () => {
       saveChanges({ segments: [rawSegment], trailEvents: rawEvents });
     }
 
-    navigate(-1);
+    navigateBack('/admin/segments');
   };
 
   const handleCreateNewTrailEvent = () => {

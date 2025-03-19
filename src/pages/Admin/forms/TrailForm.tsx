@@ -8,6 +8,7 @@ import { createSlug, deepEqual } from '@/utils';
 import { useData } from '@/components/DataProvider/DataProvider';
 import LinksField, { FormLink, toRawLinks } from '../common/LinksField';
 import { AdminForm } from '../AdminForm';
+import useNavigateBack from '@/hooks/useNavigateBack';
 
 type FormTrail = Omit<RawTrail, 'links' | 'slug'> & {
   slug: string;
@@ -16,6 +17,7 @@ type FormTrail = Omit<RawTrail, 'links' | 'slug'> & {
 
 const TrailForm = () => {
   const navigate = useNavigate();
+  const navigateBack = useNavigateBack();
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
   const { currentData, saveChanges, getNextId } = useData();
@@ -49,7 +51,7 @@ const TrailForm = () => {
           The trail you are looking for does not exist.
         </Text>
         <Group justify="center" grow>
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button variant="outline" onClick={() => navigateBack('/admin/trails')}>
             Go Back
           </Button>
         </Group>
@@ -78,14 +80,14 @@ const TrailForm = () => {
       links: toRawLinks(formTrail.links),
     };
 
-    if (trail.slug === undefined) {
+    if (trail.slug === undefined || trail.slug === '') {
       delete trail.slug;
     }
 
     if (!deepEqual(initialTrail, trail)) {
       saveChanges({ trails: [trail] });
     }
-    navigate(-1);
+    navigateBack('/admin/trails');
   };
 
   return (

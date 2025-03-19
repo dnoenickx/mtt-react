@@ -16,17 +16,21 @@ export function generateUniqueId(): number {
 
 export const getMousePoint = (e: MapLayerMouseEvent): Position => [e.lngLat.lng, e.lngLat.lat];
 
+export function removeZCoordinates(coordinates: Position[]): Position[] {
+  return coordinates.map((position) => [position[0], position[1]]);
+}
+
 export function convertToLines(geojson: FeatureCollection): Feature<LineString>[] {
-  const lineStrings = geojson.features.filter(
-    (feature): feature is Feature<LineString> => feature.geometry?.type === 'LineString'
-  );
+  const lineStrings = geojson.features
+    .filter((feature): feature is Feature<LineString> => feature.geometry?.type === 'LineString')
+    .map((feature) => lineString(removeZCoordinates(feature.geometry.coordinates)));
 
   const multiLineStrings = geojson.features
     .filter(
       (feature): feature is Feature<MultiLineString> => feature.geometry?.type === 'MultiLineString'
     )
     .flatMap((multiFeature) =>
-      multiFeature.geometry.coordinates.map((coords) => lineString(coords))
+      multiFeature.geometry.coordinates.map((coords) => lineString(removeZCoordinates(coords)))
     );
 
   const geometryCollections = geojson.features
@@ -42,8 +46,8 @@ export function convertToLines(geojson: FeatureCollection): Feature<LineString>[
         )
         .flatMap((geom) =>
           geom.type === 'LineString'
-            ? lineString(geom.coordinates)
-            : geom.coordinates.map((coords) => lineString(coords))
+            ? lineString(removeZCoordinates(geom.coordinates))
+            : geom.coordinates.map((coords) => lineString(removeZCoordinates(coords)))
         )
     );
 

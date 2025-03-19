@@ -9,9 +9,11 @@ import { toRawLinks } from '../common/LinksField';
 import { deepEqual, formatDateString } from '@/utils';
 import { AdminForm } from '../AdminForm';
 import { EventFormFields, FormTrailEvent } from './EventEditorHelpers';
+import useNavigateBack from '@/hooks/useNavigateBack';
 
 export const TrailEventForm = () => {
   const navigate = useNavigate();
+  const navigateBack = useNavigateBack();
   const { id } = useParams<{ id: string }>();
   const isCreating = id === 'create';
   const { currentData, saveChanges, getNextId } = useData();
@@ -55,7 +57,7 @@ export const TrailEventForm = () => {
           The event you are looking for does not exist.
         </Text>
         <Group justify="center" grow>
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button variant="outline" onClick={() => navigateBack('/admin/events')}>
             Go Back
           </Button>
         </Group>
@@ -83,7 +85,7 @@ export const TrailEventForm = () => {
     if (!deepEqual(initialEvent, event)) {
       saveChanges({ trailEvents: [event] });
     }
-    navigate(-1);
+    navigateBack('/admin/events');
   };
 
   return (

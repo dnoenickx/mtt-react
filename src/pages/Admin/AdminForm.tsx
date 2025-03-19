@@ -7,6 +7,7 @@ import { useData } from '@/components/DataProvider/DataProvider';
 import { MappedChanges } from '@/types';
 import { StickyBox } from '@/components/Atomic/Atomic';
 import { capitalizeFirstLetter } from '@/utils';
+import useNavigateBack from '@/hooks/useNavigateBack';
 
 type AdminFormProps = {
   itemId: number;
@@ -29,7 +30,7 @@ export function AdminForm({
   plural: providedPlural,
   pathParam: providedPathParam,
 }: AdminFormProps) {
-  const navigate = useNavigate();
+  const naviagteBack = useNavigateBack();
   const { deleteItem } = useData();
 
   const pathParam = providedPathParam ?? objectType;
@@ -74,7 +75,7 @@ export function AdminForm({
               cancelButtonText="Cancel"
               onConfirm={() => {
                 deleteItem(objectType, itemId);
-                navigate(-1);
+                naviagteBack(`/admin/${pathParam}`);
               }}
             >
               <Button color="red" variant="outline" disabled={isCreating}>
@@ -83,7 +84,7 @@ export function AdminForm({
             </ConfirmationButton>
 
             <Group>
-              <Button variant="outline" onClick={() => navigate(-1)}>
+              <Button variant="outline" onClick={() => naviagteBack(`/admin/${pathParam}`)}>
                 Cancel
               </Button>
               <Button type="submit" px="xl">
