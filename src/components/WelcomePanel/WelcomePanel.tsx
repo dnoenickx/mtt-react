@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import {
   ActionIcon,
+  Alert,
   Box,
   Checkbox,
   darken,
@@ -15,7 +16,7 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconQuestionMark } from '@tabler/icons-react';
+import { IconBulb, IconQuestionMark } from '@tabler/icons-react';
 import { formatDistance } from 'date-fns';
 import { SegmentStates, SEGMENT_STATES } from '../../pages/TrailMap/TrailMap.config';
 import classes from './WelcomePanel.module.css';
@@ -153,6 +154,10 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
           </Grid.Col>
         ))}
       </Grid>
+      <Space h="xl" />
+      <Alert variant="light" title="Tip" icon={<IconBulb />}>
+        Right-click a location on the map to open it in Google Maps, Apple Maps, or Strava Heatmap
+      </Alert>
       <Space h="xl" />
       <Text c="dimmed" size="xs" ta="center">
         Last Updated: {formatDistance(lastUpdated, new Date(), { addSuffix: true })}

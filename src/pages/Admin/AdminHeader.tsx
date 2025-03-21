@@ -72,7 +72,7 @@ export default function AdminHeader({ showDownloadButton }: AdminHeaderProps): J
             </li>
             <li>
               <Anchor size="sm" component={RouterLink} to="/map?segment=331" target="_blank">
-                New Hampshire Seacost Greenway
+                New Hampshire Seacoast Greenway
               </Anchor>
             </li>
           </ul>
