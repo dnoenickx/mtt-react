@@ -9,7 +9,15 @@ import Map, {
   Popup as MapPopup,
   ScaleControl,
 } from 'react-map-gl/maplibre';
-import { Button, Drawer, ScrollArea, Stack, Tabs, Text } from '@mantine/core';
+import {
+  Button,
+  Drawer,
+  ScrollArea,
+  Stack,
+  Tabs,
+  Text,
+  useMantineColorScheme,
+} from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
 import { IconBrandApple, IconBrandGoogleMaps, IconBrandStrava } from '@tabler/icons-react';
@@ -29,7 +37,7 @@ import CommuterRailLayer, {
   COMMUTER_RAIL_LAYER_IDS,
 } from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import Subway, { SUBWAY_LAYER_IDS } from '@/components/MapLayers/Subway/Subway.layer';
-import { mapStyle } from './MapStyle';
+import { darkStyle, lightStyle } from './MapStyle';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
 import TOWN_BOUNDING_BOXES from '../../town_bbox.json';
@@ -157,6 +165,7 @@ function TrailMap({
   const { currentData } = useData();
   const [searchParams] = useSearchParams();
   const [popup, setPopup] = useState<Popup | undefined>(undefined);
+  const { colorScheme } = useMantineColorScheme();
 
   const hoveredSegmentId = useRef<string | null>(null);
 
@@ -326,6 +335,8 @@ function TrailMap({
     const features = segments.map((segment) => feature(segment.geometry));
     return formatInitialState(bbox(featureCollection(features)) as BBox2d);
   }
+
+  const mapStyle = colorScheme === 'dark' ? darkStyle : lightStyle;
 
   return (
     <Map

@@ -1,4 +1,4 @@
-import { Anchor, createTheme } from '@mantine/core';
+import { Anchor, createTheme, CSSVariablesResolver } from '@mantine/core';
 
 export const theme = createTheme({
   /** Put your mantine theme override here */
@@ -39,8 +39,18 @@ export const theme = createTheme({
   components: {
     Anchor: Anchor.extend({
       styles: {
-        root: { color: 'var(--mantine-primary-color-9)', textDecoration: 'underline' },
+        root: { color: 'var(--mantine-color-trail-green-text)', textDecoration: 'underline' },
       },
     }),
+  },
+});
+
+export const resolver: CSSVariablesResolver = (theme) => ({
+  variables: {},
+  light: {
+    '--mantine-color-trail-green-text': theme.colors['trail-green'][9],
+  },
+  dark: {
+    '--mantine-color-trail-green-text': theme.colors['trail-green'][6],
   },
 });

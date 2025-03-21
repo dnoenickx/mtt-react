@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
+import { useMantineColorScheme } from '@mantine/core';
 
 export const SEGMENTS_SOURCE_ID = 'segments_source';
 export const SEGMENTS_HOVER_LAYER_ID = 'segments_hover_layer';
@@ -23,6 +24,8 @@ const BEFORE_ID = 'pois';
 export default function SegmentsLayer() {
   const isMobile = useMediaQuery('(min-width: 415px)');
   const { currentData } = useData();
+  const { colorScheme } = useMantineColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   const [searchParams] = useSearchParams();
 
@@ -45,7 +48,7 @@ export default function SegmentsLayer() {
   const MEDIUM = 2.5;
   const LIGHT = 2.25;
 
-  const outline = (val: number) => val + 2;
+  const outline = (val: number) => (isDarkMode ? val + 0.5 : val + 2);
   const multiplier = (val: number) => (isMobile ? val : val * 1.5);
   const dashed = (val: number) => val / 1.25;
 
@@ -86,7 +89,7 @@ export default function SegmentsLayer() {
         };
       }),
     }),
-    [isMobile, currentData.segments]
+    [isMobile, currentData.segments, isDarkMode]
   );
 
   return (
@@ -103,12 +106,12 @@ export default function SegmentsLayer() {
         filter={['==', ['get', 'highlight'], true]}
         paint={{
           'line-width': 12,
-          'line-color': 'rgba(255, 255, 0, 0.4)',
+          'line-color': isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 0, 0.4)',
           'line-opacity': 0.4,
         }}
         layout={{
           'line-join': 'bevel',
-          'line-cap': 'butt',
+          'line-cap': 'round',
         }}
       />
       <Layer
@@ -118,12 +121,12 @@ export default function SegmentsLayer() {
         filter={['==', ['get', 'highlight'], true]}
         paint={{
           'line-width': 8,
-          'line-color': 'rgba(255, 255, 0, 0.4)',
+          'line-color': isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 0, 0.3)',
           'line-opacity': 0.4,
         }}
         layout={{
           'line-join': 'bevel',
-          'line-cap': 'butt',
+          'line-cap': 'round',
         }}
       />
 

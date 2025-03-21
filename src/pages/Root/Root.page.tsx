@@ -1,12 +1,15 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Burger, Group, Text } from '@mantine/core';
+import { ActionIcon, AppShell, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
 import Logo from '../../components/Logo/Logo';
 import classes from './Root.module.css';
 import SubmitEditsBanner from '@/components/SubmitEditsBanner/SubmitEditsBanner';
+import { IconMoon, IconSun } from '@tabler/icons-react';
+import cx from 'clsx';
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();
+  const { toggleColorScheme } = useMantineColorScheme();
 
   const navLinks = [
     { link: '/', label: 'Map' },
@@ -19,6 +22,18 @@ export function Root() {
       <Text>{label}</Text>
     </Link>
   ));
+
+  const colorToggle = (
+    <ActionIcon
+      onClick={toggleColorScheme}
+      variant="transparent"
+      size="xl"
+      aria-label="Toggle color scheme"
+    >
+      <IconSun className={cx(classes.icon, classes.light)} stroke={1.5} />
+      <IconMoon className={cx(classes.icon, classes.dark)} stroke={1.5} />
+    </ActionIcon>
+  );
 
   return (
     <AppShell
@@ -33,7 +48,8 @@ export function Root() {
               <Logo h={{ base: 30, sm: 36 }} />
             </Link>
             <Group ml={50} gap={15}>
-              {[...navButtons].reverse()}{' '}
+              {colorToggle}
+              {[...navButtons].reverse()}
             </Group>
           </Group>
           <Group justify="space-around" style={{ flex: 1 }} hiddenFrom="sm" pr={44}>
@@ -46,6 +62,7 @@ export function Root() {
 
       <AppShell.Navbar py="md" px={4}>
         {navButtons}
+        {colorToggle}
       </AppShell.Navbar>
 
       <AppShell.Main>

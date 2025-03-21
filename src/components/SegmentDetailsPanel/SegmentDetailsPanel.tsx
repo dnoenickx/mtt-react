@@ -108,7 +108,7 @@ export function SegmentDetailsPanel() {
   return (
     <>
       {/* <Group align="baseline" justify="space-between"> */}
-      <Title order={4} mb="md" mt="sm" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+      <Title order={4} mb="md" mt="sm" c="var(--mantine-color-trail-green-text)">
         Segment
       </Title>
       {/* </Group> */}
@@ -147,13 +147,13 @@ export function SegmentDetailsPanel() {
       </Group>
 
       <Divider size="xs" style={{ marginTop: 20, marginBottom: 7 }} />
-      <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+      <Title order={4} my="md" c="var(--mantine-color-trail-green-text)">
         Trails
       </Title>
       <TrailAccordion trails={segment.trails} />
 
       <Divider size="xs" style={{ marginTop: 30, marginBottom: 7 }} />
-      <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+      <Title order={4} my="md" c="var(--mantine-color-trail-green-text)">
         Timeline
       </Title>
       <Timeline events={segment.events} />

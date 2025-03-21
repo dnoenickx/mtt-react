@@ -5,9 +5,6 @@ interface LogoProps extends BoxProps {
 }
 
 const Logo: React.FC<LogoProps> = ({ color, ...rest }) => {
-  const theme = useMantineTheme();
-  const defaultColor = theme.colors[theme.primaryColor][9];
-
   return (
     <Box {...rest} title="Mass Trail Tracker">
       <svg
@@ -20,7 +17,7 @@ const Logo: React.FC<LogoProps> = ({ color, ...rest }) => {
         viewBox="0 0 742 132"
         width="100%"
         height="100%"
-        fill={color || defaultColor}
+        fill={color || 'var(--mantine-color-trail-green-text)'}
       >
         <path d="M1.417 92.938c18.051 6.823 88.012 31.863 108.108 38.146 3.97 1.241 8.403.427 12.469-.448 22.664-4.882 111.782-43.125 112.299-62.124.464-17.017-45.949-35.294-61.429-39.936-16.513-4.952-49.405-10.331-49.474-15.071C123.318 8.615 179.111.83 179.111.83S137.236-.407 119.413.139c-16.569.508-48.08 6.957-47.365 15.153.504 5.773 11.555 13.336 26.146 19.074 26.946 10.598 52.715 14.184 52.275 21.589-.628 10.563-124.074 29.576-149.25 34.189-2.392.438-.675 2.464.198 2.794z" />
         <path

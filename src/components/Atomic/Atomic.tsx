@@ -134,7 +134,7 @@ export const StickyBox: React.FC<StickyBoxProps> = ({ children, shadowMaxOpacity
       <Box
         ref={boxRef}
         py="md"
-        bg="white"
+        bg="var(--mantine-color-body)"
         pos="sticky"
         bottom={0}
         style={{

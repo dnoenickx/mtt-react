@@ -3,6 +3,7 @@ import {
   ActionIcon,
   Box,
   Checkbox,
+  darken,
   Divider,
   Flex,
   Grid,
@@ -11,6 +12,7 @@ import {
   Space,
   Text,
   Title,
+  useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconQuestionMark } from '@tabler/icons-react';
@@ -52,6 +54,8 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const { lastUpdated } = useData();
+  const { colorScheme } = useMantineColorScheme();
+  const isDarkMode = colorScheme === 'dark';
 
   const trailExplanation = useMemo(
     () => (
@@ -85,7 +89,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         Welcome! Configure the map settings below and select a trail on the map to learn more.
       </Text>
       <Group gap="sm">
-        <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+        <Title order={4} my="md" c="var(--mantine-color-trail-green-text)">
           Trails
         </Title>
         <ActionIcon
@@ -120,7 +124,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
             id={value}
             key={value}
             classNames={classes}
-            color={color}
+            color={isDarkMode ? darken(color, 0.2) : color}
             label={label}
             checked={visible}
             onChange={() => toggleTrailState(value)}
@@ -130,7 +134,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         ))}
       </Flex>
       <Divider size="xs" mt="xl" mb="md" />
-      <Title order={4} my="md" style={{ color: 'var(--mantine-color-trail-green-8)' }}>
+      <Title order={4} my="md" c="var(--mantine-color-trail-green-text)">
         Layers
       </Title>
       <Grid>

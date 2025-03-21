@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
 import { useHotkeys } from '@mantine/hooks';
-import { Box, Button, Flex, Group, Modal } from '@mantine/core';
+import { Box, Button, Flex, Group, Modal, useMantineColorScheme } from '@mantine/core';
 import Map, { MapRef, Source, Layer } from 'react-map-gl/maplibre';
 import { bbox, FeatureCollection, featureCollection, LineString } from '@turf/turf';
 
-import { mapStyle } from '@/pages/TrailMap/MapStyle';
+import { darkStyle, lightStyle } from '@/pages/TrailMap/MapStyle';
 import { convertToLines } from './utils/utils';
 import { EditorMode, GeometryEditorState } from './types';
 import { useSelectMode } from './Modes/SelectMode';
@@ -25,6 +25,8 @@ function MultiLineEditor({
   initialGeojson = featureCollection([]),
 }: MultiLineEditorProps) {
   const mapRef = useRef<MapRef>(null);
+  const { colorScheme } = useMantineColorScheme();
+  const mapStyle = colorScheme === 'dark' ? darkStyle : lightStyle;
 
   // Shared state
   const [mode, setMode] = useState<EditorMode>('select');
