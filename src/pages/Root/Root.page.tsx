@@ -66,8 +66,10 @@ export function Root() {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <SubmitEditsBanner />
-        <Outlet />
+        <div className={classes['outlet-container']}>
+          <SubmitEditsBanner />
+          <Outlet />
+        </div>
       </AppShell.Main>
     </AppShell>
   );

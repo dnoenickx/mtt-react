@@ -28,6 +28,7 @@ function SubmitEditsBanner() {
             ...styles,
             position: 'sticky',
             zIndex: 99,
+            overflow: 'visible',
           }}
         >
           <Group justify="space-between">

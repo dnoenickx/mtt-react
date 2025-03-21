@@ -26,3 +26,10 @@
 .light {
   display: light-dark(none, block);
 }
+
+.outlet-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--app-shell-header-height));
+  height: calc(100dvh - var(--app-shell-header-height));
+}
