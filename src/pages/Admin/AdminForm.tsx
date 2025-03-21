@@ -1,6 +1,6 @@
 import { FormEvent } from 'react';
-import { Container, Button, Title, Group, Breadcrumbs, Anchor, Stack } from '@mantine/core';
-import { useDocumentTitle } from '@mantine/hooks';
+import { Container, Button, Title, Group, Breadcrumbs, Anchor, Stack, Flex } from '@mantine/core';
+import { useDocumentTitle, useMediaQuery } from '@mantine/hooks';
 import { Link, useNavigate } from 'react-router-dom';
 import ConfirmationButton from '@/components/ConfirmationButton';
 import { useData } from '@/components/DataProvider/DataProvider';
@@ -30,8 +30,9 @@ export function AdminForm({
   plural: providedPlural,
   pathParam: providedPathParam,
 }: AdminFormProps) {
-  const naviagteBack = useNavigateBack();
+  const navigateBack = useNavigateBack();
   const { deleteItem } = useData();
+  const isMobile = useMediaQuery('(min-width: var(--mantine-breakpoint-xs	))');
 
   const pathParam = providedPathParam ?? objectType;
   const plural = providedPlural ?? capitalizeFirstLetter(pathParam);
@@ -68,30 +69,38 @@ export function AdminForm({
       </Container>
       <StickyBox>
         <Container size="md">
-          <Group justify="space-between">
+          <Flex
+            gap="sm"
+            direction={{ base: 'column', xs: 'row' }}
+            justify={{ base: 'center', xs: 'space-between' }}
+          >
             <ConfirmationButton
               confirmationText="Are you sure you want to delete this?"
               confirmButtonText="Delete"
               cancelButtonText="Cancel"
               onConfirm={() => {
                 deleteItem(objectType, itemId);
-                naviagteBack(`/admin/${pathParam}`);
+                navigateBack(`/admin/${pathParam}`);
               }}
             >
-              <Button color="red" variant="outline" disabled={isCreating}>
+              <Button color="red" variant="outline" disabled={isCreating} fullWidth={isMobile}>
                 Delete Segment
               </Button>
             </ConfirmationButton>
 
-            <Group>
-              <Button variant="outline" onClick={() => naviagteBack(`/admin/${pathParam}`)}>
+            <Flex direction={{ base: 'column', xs: 'row' }} gap="sm">
+              <Button
+                variant="outline"
+                onClick={() => navigateBack(`/admin/${pathParam}`)}
+                fullWidth={isMobile}
+              >
                 Cancel
               </Button>
-              <Button type="submit" px="xl">
+              <Button type="submit" px="xl" fullWidth={isMobile}>
                 Save
               </Button>
-            </Group>
-          </Group>
+            </Flex>
+          </Flex>
         </Container>
       </StickyBox>
     </form>

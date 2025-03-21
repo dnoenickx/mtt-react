@@ -9,7 +9,7 @@ import linkCell from '../common/linkCell';
 export default function SegmentsTable(): JSX.Element {
   const { currentData } = useData();
 
-  const headers = ['ID', 'Name', 'Description', 'Trails', 'State', 'Links', 'Actions'];
+  const headers = ['ID', 'Name', 'Description', 'Trails', 'Status', 'Links', 'Actions'];
 
   const renderTrailsList = (trails: number[]) => (
     <List size="xs">

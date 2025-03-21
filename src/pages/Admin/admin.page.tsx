@@ -13,10 +13,12 @@ export default function Admin(): JSX.Element {
   const showDownloadButton = Boolean(Number(import.meta.env.VITE_DEV));
 
   return (
-    <Container size="lg" py="xl">
-      <AdminHeader showDownloadButton={showDownloadButton} />
+    <Container py="xl" maw="100vw">
+      <Container size="lg">
+        <AdminHeader showDownloadButton={showDownloadButton} />
 
-      <AdminTabs tabValue={tabValue} />
+        <AdminTabs tabValue={tabValue} />
+      </Container>
     </Container>
   );
 }

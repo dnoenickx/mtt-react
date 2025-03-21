@@ -38,14 +38,13 @@ export default function AdminHeader({ showDownloadButton }: AdminHeaderProps): J
               visible to anyone else until I approve them.
             </li>
           </ul>
-          How the data is organized:
+          How things are organized:
           <ul>
-            <li>A trail is a collection of segments. Segments can belong to multiple trails.</li>
+            <li>Trails are collections of smaller parts called segments.</li>
+            <li>Segments can belong to multiple trails.</li>
+            <li>Both trails and segments can have names, descriptions, and links.</li>
             <li>
-              Both trails and segments can have names, descriptions, and links attached to them.
-            </li>
-            <li>
-              Segments have timelines comprised of events. Events can be shared across segments.
+              Segments can have timeline events, which can be shared across multiple segments.
             </li>
           </ul>
           Examples of segments with detailed information:
@@ -83,11 +82,12 @@ export default function AdminHeader({ showDownloadButton }: AdminHeaderProps): J
           <Group mt="lg">
             <span>Watch this video for more information</span>
             <Button
-              leftSection={<IconBrandYoutubeFilled />}
+              leftSection={<IconBrandYoutubeFilled style={{ width: '75%', height: '75%' }} />}
               component={RouterLink}
               to="https://youtu.be/uIw3X7h3BeM"
               color="red"
-              variant="light"
+              variant="outline"
+              size="xs"
             >
               About + How to Suggest Edits
             </Button>
@@ -95,7 +95,7 @@ export default function AdminHeader({ showDownloadButton }: AdminHeaderProps): J
         </Spoiler>
       </Alert>
 
-      <Group justify="flex-end">
+      <Group justify="flex-end" pb={{ base: 'sm', sm: 0 }}>
         {showDownloadButton && (
           <Button
             leftSection={<IconMapDown style={{ width: rem(14), height: rem(14) }} />}

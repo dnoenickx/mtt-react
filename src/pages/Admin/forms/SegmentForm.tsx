@@ -177,12 +177,12 @@ const SegmentForm = () => {
       />
 
       <Select
-        label="State"
+        label="Status"
         data={Object.entries(SEGMENT_STATES).map(([value, { label }]) => ({
           value,
           label,
         }))}
-        description="If necessary, describe state further within description"
+        description="If necessary, describe status further within description"
         required
         {...form.getInputProps('state')}
       />

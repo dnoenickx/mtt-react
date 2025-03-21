@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useHotkeys } from '@mantine/hooks';
-import { ActionIcon, Stack, Tooltip, Divider } from '@mantine/core';
+import { ActionIcon, Stack, Tooltip, Divider, alpha } from '@mantine/core';
 import {
   IconArrowMerge,
   IconClipboardData,
@@ -68,7 +68,7 @@ export const EditorSidebar = (props: GeometryEditorState & { reset: () => void }
       {/* Modes Panel */}
       <Stack
         gap="xs"
-        bg="rgba(255, 255, 255, 0.8)"
+        bg={alpha('var(--mantine-color-body)', 0.8)}
         p="xs"
         style={{
           borderRadius: '4px',
@@ -100,7 +100,7 @@ export const EditorSidebar = (props: GeometryEditorState & { reset: () => void }
       {/* Actions Panel */}
       <Stack
         gap="xs"
-        bg="rgba(255, 255, 255, 0.8)"
+        bg={alpha('var(--mantine-color-body)', 0.8)}
         p="xs"
         style={{
           borderRadius: '4px',

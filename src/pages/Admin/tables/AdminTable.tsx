@@ -8,17 +8,15 @@ interface AdminTableProps {
 
 export default function AdminTable({ headers, rows }: AdminTableProps): JSX.Element {
   return (
-    <ScrollArea>
-      <Table highlightOnHover>
-        <Table.Thead>
-          <Table.Tr>
-            {headers.map((header, index) => (
-              <Table.Th key={index}>{header}</Table.Th>
-            ))}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
-    </ScrollArea>
+    <Table highlightOnHover striped>
+      <Table.Thead>
+        <Table.Tr>
+          {headers.map((header, index) => (
+            <Table.Th key={index}>{header}</Table.Th>
+          ))}
+        </Table.Tr>
+      </Table.Thead>
+      <Table.Tbody>{rows}</Table.Tbody>
+    </Table>
   );
 }
