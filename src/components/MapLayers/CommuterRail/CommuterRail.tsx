@@ -2595,5 +2595,3 @@ export const stations = {
     },
   ],
 };
-
-console.log(JSON.stringify(lines));

@@ -12,17 +12,20 @@ import { useSplitMode } from './Modes/SplitMode';
 import { useDrawMode } from './Modes/DrawMode';
 import { EditorSidebar } from './EditorSidebar';
 import { ifHovered } from '@/mapUtils';
+import SegmentsLayer from '../MapLayers/Segments/Segments.layer';
 
 interface MultiLineEditorProps {
   opened: boolean;
   onClose: (value: FeatureCollection<LineString> | undefined) => void;
   initialGeojson: FeatureCollection;
+  id: number;
 }
 
 function MultiLineEditor({
   opened,
   onClose,
   initialGeojson = featureCollection([]),
+  id,
 }: MultiLineEditorProps) {
   const mapRef = useRef<MapRef>(null);
   const { colorScheme } = useMantineColorScheme();
@@ -163,6 +166,8 @@ function MultiLineEditor({
             {currentMode.render()}
 
             {/* {Object.values(modes).map((m) => m.render())} */}
+
+            <SegmentsLayer opacity={0.6} excludeId={id} />
 
             <EditorSidebar
               {...geometryEditorState}

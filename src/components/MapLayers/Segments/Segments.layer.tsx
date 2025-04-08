@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { FeatureCollection, MultiLineString } from '@turf/turf';
+import { feature, featureCollection } from '@turf/turf';
 import { Layer, Source } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -21,25 +21,17 @@ export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAY
 
 const BEFORE_ID = 'pois';
 
-export default function SegmentsLayer() {
+type SegmentsLayerProps = {
+  opacity?: number;
+  excludeId?: number;
+};
+
+export default function SegmentsLayer({ opacity = 1, excludeId }: SegmentsLayerProps) {
   const isMobile = useMediaQuery('(min-width: 415px)');
+  const [searchParams] = useSearchParams();
   const { currentData } = useData();
   const { colorScheme } = useMantineColorScheme();
   const isDarkMode = colorScheme === 'dark';
-
-  const [searchParams] = useSearchParams();
-
-  const segmentParam = searchParams.get('segment');
-  const segmentIds = segmentParam ? segmentParam.split(',').map((id) => Number(id)) : [];
-
-  const trailNames = (searchParams.get('trail') ?? '').split(',');
-  const trailIds = Object.values(currentData.trails)
-    .filter(
-      (trail) =>
-        trailNames.includes(createSlug(trail.name)) ||
-        (trail.slug && trailNames.includes(trail.slug))
-    )
-    .map(({ id }) => id);
 
   // Constants for line widths
   const HOVER_TARGET = 22;
@@ -52,10 +44,22 @@ export default function SegmentsLayer() {
   const multiplier = (val: number) => (isMobile ? val : val * 1.5);
   const dashed = (val: number) => val / 1.25;
 
-  const styledSegments: FeatureCollection<MultiLineString> = useMemo(
-    () => ({
-      type: 'FeatureCollection',
-      features: Object.values(currentData.segments).map(({ id, geometry, state, trails }) => {
+  const styledSegments = useMemo(() => {
+    const segmentParam = searchParams.get('segment');
+    const segmentIds = segmentParam ? segmentParam.split(',').map((id) => Number(id)) : [];
+
+    const trailNames = (searchParams.get('trail') ?? '').split(',');
+    const trailIds = Object.values(currentData.trails)
+      .filter(
+        (trail) =>
+          trailNames.includes(createSlug(trail.name)) ||
+          (trail.slug && trailNames.includes(trail.slug))
+      )
+      .map(({ id }) => id);
+
+    const features = Object.values(currentData.segments)
+      .filter((segment) => excludeId === undefined || segment.id !== excludeId)
+      .map(({ id, geometry, state, trails }) => {
         // Determine the base width value
         const weights = { heavy: HEAVY, medium: MEDIUM, light: LIGHT };
         const baseWidth = multiplier(weights[SEGMENT_STATES[state]?.weight] || LIGHT);
@@ -81,16 +85,11 @@ export default function SegmentsLayer() {
           ...(isHighlighted ? { highlight: true } : {}),
         };
 
-        return {
-          id,
-          type: 'Feature',
-          geometry,
-          properties,
-        };
-      }),
-    }),
-    [isMobile, currentData.segments, isDarkMode]
-  );
+        return feature(geometry, properties, { id });
+      });
+
+    return featureCollection(features);
+  }, [isMobile, currentData.segments, isDarkMode, excludeId]);
 
   return (
     <Source id={SEGMENTS_SOURCE_ID} type="geojson" data={styledSegments}>
@@ -107,7 +106,7 @@ export default function SegmentsLayer() {
         paint={{
           'line-width': 12,
           'line-color': isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 0, 0.4)',
-          'line-opacity': 0.4,
+          'line-opacity': 0.4 * opacity,
         }}
         layout={{
           'line-join': 'bevel',
@@ -122,7 +121,7 @@ export default function SegmentsLayer() {
         paint={{
           'line-width': 8,
           'line-color': isDarkMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 0, 0.3)',
-          'line-opacity': 0.4,
+          'line-opacity': 0.4 * opacity,
         }}
         layout={{
           'line-join': 'bevel',
@@ -142,6 +141,7 @@ export default function SegmentsLayer() {
             ['get', 'outlineWidth'],
           ],
           'line-color': '#ffffff',
+          'line-opacity': opacity,
         }}
         layout={{
           'line-join': 'round',
@@ -160,6 +160,7 @@ export default function SegmentsLayer() {
             ['get', 'baseWidth'],
           ],
           'line-color': ['get', 'color'],
+          'line-opacity': opacity,
         }}
         layout={{
           'line-join': 'round',
@@ -180,6 +181,7 @@ export default function SegmentsLayer() {
           ],
           'line-color': '#ffffff',
           'line-dasharray': ['literal', [1, 2.5]],
+          'line-opacity': opacity,
         }}
         filter={['has', 'dashedWidth']}
         layout={{

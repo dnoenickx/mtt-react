@@ -184,6 +184,7 @@ const SegmentForm = () => {
         }))}
         description="If necessary, describe status further within description"
         required
+        searchable
         {...form.getInputProps('state')}
       />
 
@@ -222,6 +223,7 @@ const SegmentForm = () => {
               close();
             }}
             initialGeojson={featureCollection([feature(JSON.parse(form.values.geometry))])}
+            id={form.values.id}
           />
         </Group>
       </Box>
