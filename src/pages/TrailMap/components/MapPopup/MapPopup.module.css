@@ -1,0 +1,9 @@
+/* Global styles for MapLibre popup */
+:global(.maplibregl-popup-content) {
+  padding: 0 !important;
+  background: var(--mantine-color-body);
+}
+
+:global(.maplibregl-popup-anchor-top-left .maplibregl-popup-tip) {
+  border-bottom-color: var(--mantine-color-body);
+}

@@ -1,11 +1,11 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useDisclosure } from '@mantine/hooks';
 import { ActionIcon, AppShell, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
+import { IconMoon, IconSun } from '@tabler/icons-react';
+import cx from 'clsx';
 import Logo from '../../components/Logo/Logo';
 import classes from './Root.module.css';
 import SubmitEditsBanner from '@/components/SubmitEditsBanner/SubmitEditsBanner';
-import { IconMoon, IconSun } from '@tabler/icons-react';
-import cx from 'clsx';
 
 export function Root() {
   const [opened, { toggle }] = useDisclosure();

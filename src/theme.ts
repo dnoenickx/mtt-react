@@ -45,12 +45,12 @@ export const theme = createTheme({
   },
 });
 
-export const resolver: CSSVariablesResolver = (theme) => ({
+export const resolver: CSSVariablesResolver = (myTheme) => ({
   variables: {},
   light: {
-    '--mantine-color-trail-green-text': theme.colors['trail-green'][9],
+    '--mantine-color-trail-green-text': myTheme.colors?.['trail-green'][9],
   },
   dark: {
-    '--mantine-color-trail-green-text': theme.colors['trail-green'][6],
+    '--mantine-color-trail-green-text': myTheme.colors?.['trail-green'][6],
   },
 });

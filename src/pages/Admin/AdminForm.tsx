@@ -1,11 +1,11 @@
 import { FormEvent } from 'react';
-import { Container, Button, Title, Group, Breadcrumbs, Anchor, Stack, Flex } from '@mantine/core';
+import { Container, Button, Title, Breadcrumbs, Anchor, Stack, Flex } from '@mantine/core';
 import { useDocumentTitle, useMediaQuery } from '@mantine/hooks';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import ConfirmationButton from '@/components/ConfirmationButton';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { MappedChanges } from '@/types';
-import { StickyBox } from '@/components/Atomic/Atomic';
+import { StickyBox } from './common/StickyBox';
 import { capitalizeFirstLetter } from '@/utils';
 import useNavigateBack from '@/hooks/useNavigateBack';
 
@@ -32,7 +32,7 @@ export function AdminForm({
 }: AdminFormProps) {
   const navigateBack = useNavigateBack();
   const { deleteItem } = useData();
-  const isMobile = useMediaQuery('(min-width: var(--mantine-breakpoint-xs	))');
+  const isMobile = useMediaQuery('(min-width: var(--mantine-breakpoint-xs))');
 
   const pathParam = providedPathParam ?? objectType;
   const plural = providedPlural ?? capitalizeFirstLetter(pathParam);

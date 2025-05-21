@@ -2,11 +2,11 @@ import React, { useMemo } from 'react';
 import { feature, featureCollection } from '@turf/turf';
 import { Layer, Source } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
+import { useMantineColorScheme } from '@mantine/core';
 import { useSearchParams } from 'react-router-dom';
-import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { createSlug } from '@/utils';
-import { useMantineColorScheme } from '@mantine/core';
+import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 
 export const SEGMENTS_SOURCE_ID = 'segments_source';
 export const SEGMENTS_HOVER_LAYER_ID = 'segments_hover_layer';

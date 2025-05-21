@@ -1,4 +1,4 @@
-import { Table, ScrollArea } from '@mantine/core';
+import { Table } from '@mantine/core';
 import { ReactNode } from 'react';
 
 interface AdminTableProps {
