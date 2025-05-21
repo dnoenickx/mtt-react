@@ -6,6 +6,7 @@ interface AdminTableProps {
   rows: ReactNode[];
 }
 
+// A shared component used by all admin tables
 export default function AdminTable({ headers, rows }: AdminTableProps): JSX.Element {
   return (
     <Table highlightOnHover striped>

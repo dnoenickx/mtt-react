@@ -4,13 +4,14 @@ import { useData } from '@/components/DataProvider/DataProvider';
 import AdminTable from './AdminTable';
 import ActionButtons from '../common/ActionButtons';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
-import linkCell from '../common/linkCell';
+import LinkCell from '../common/LinkCell';
 
 export default function SegmentsTable(): JSX.Element {
   const { currentData } = useData();
 
   const headers = ['ID', 'Name', 'Description', 'Trails', 'Status', 'Links', 'Actions'];
 
+  // Generates row's "Trails" column -- a bulleted list of trails
   const renderTrailsList = (trails: number[]) => (
     <List size="xs">
       {trails.map((trailId) => {
@@ -29,29 +30,37 @@ export default function SegmentsTable(): JSX.Element {
 
   const rows = Object.values(currentData.segments).map((item) => (
     <Table.Tr key={item.id}>
+      {/* ID */}
       <Table.Td>{item.id}</Table.Td>
+
+      {/* Name */}
       <Table.Td>
         <Text size="sm" lineClamp={4} w="150px">
           {item.name}
         </Text>
       </Table.Td>
+
+      {/* Description */}
       <Table.Td>
         <Text size="xs" lineClamp={4} w="300px">
           {item.description}
         </Text>
       </Table.Td>
+
+      {/* Trails */}
       <Table.Td>{renderTrailsList(item.trails)}</Table.Td>
+
+      {/* Status */}
       <Table.Td>
-        <Badge
-          color={SEGMENT_STATES[item.state].color}
-          styles={{
-            label: { overflow: 'visible' },
-          }}
-        >
+        <Badge color={SEGMENT_STATES[item.state].color} styles={{ label: { overflow: 'visible' } }}>
           {item.state}
         </Badge>
       </Table.Td>
-      <Table.Td>{linkCell(item)}</Table.Td>
+
+      {/* Links */}
+      <Table.Td>{LinkCell(item)}</Table.Td>
+
+      {/* Actions */}
       <Table.Td>
         <ActionButtons itemType="segments" itemId={item.id} />
       </Table.Td>

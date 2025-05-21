@@ -20,8 +20,8 @@ import { Segment, Trail } from '@/types';
 import { Timeline } from '../Timeline/Timeline';
 
 import classes from './SegmentDetailsPanel.module.css';
-import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
-import { useData } from '../DataProvider/DataProvider';
+import { LinkGroup, MultiLineText } from '../../../../components/Atomic/Atomic';
+import { useData } from '../../../../components/DataProvider/DataProvider';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {

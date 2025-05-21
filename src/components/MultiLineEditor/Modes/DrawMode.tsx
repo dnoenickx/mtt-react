@@ -40,6 +40,7 @@ export function useDrawMode({ mapRef, mode, setLines, setMode }: GeometryEditorS
     mapRef.current.getCanvas().style.cursor = 'crosshair';
   }, [mapRef.current]);
 
+  // TODO: parent modal is preventing escape key from reaching this useHotkeys
   useHotkeys([
     ['esc', () => setMode('select')],
     ['mod+z', () => setCoordinates((prev) => (prev.length > 0 ? prev.slice(0, -1) : []))],
@@ -137,5 +138,3 @@ export function useDrawMode({ mapRef, mode, setLines, setMode }: GeometryEditorS
     ),
   };
 }
-
-// TODO: parent modal is preventing escape key from reaching this useHotkeys

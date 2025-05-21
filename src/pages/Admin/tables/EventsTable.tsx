@@ -10,15 +10,17 @@ export default function EventsTable(): JSX.Element {
 
   const headers = ['ID', 'Headline', 'Date', 'Trails', 'Segments', 'Links', 'Actions'];
 
-  const eventCounts: Record<number, number> = {};
+  // Count of segments per event
+  const segmentCountPerEvent: Record<number, number> = {};
+  // TrailIds per event
   const eventToTrailsMap: Record<number, Set<number>> = {};
+
   Object.values(currentData.segments).forEach(({ trails, events }) => {
-    // Update eventCounts
     events.forEach((eventId) => {
-      eventCounts[eventId] = (eventCounts[eventId] || 0) + 1;
-    });
-    // Update eventToTrailsMap
-    events.forEach((eventId) => {
+      // Increment event's segment count
+      segmentCountPerEvent[eventId] = (segmentCountPerEvent[eventId] || 0) + 1;
+
+      // Add trails to event's set
       if (!eventToTrailsMap[eventId]) {
         eventToTrailsMap[eventId] = new Set();
       }
@@ -26,9 +28,9 @@ export default function EventsTable(): JSX.Element {
     });
   });
 
+  // Generates row's "Trails" column -- a bulleted list of trails
   const renderTrailsList = (eventId: number) => {
     const trailIds = Array.from(eventToTrailsMap[eventId] || []);
-
     return (
       <List size="xs">
         {trailIds.map((trailId) => {
@@ -48,16 +50,29 @@ export default function EventsTable(): JSX.Element {
 
   const rows = Object.values(currentData.trailEvents).map((item) => (
     <Table.Tr key={item.id}>
+      {/* ID */}
       <Table.Td>{item.id}</Table.Td>
+
+      {/* Headline */}
       <Table.Td>{item.headline}</Table.Td>
+
+      {/* Date */}
       <Table.Td>
         <Text size="sm" style={{ textWrap: 'nowrap' }}>
           {formatDateWithPrecision(item.date, item.date_precision)}
         </Text>
       </Table.Td>
+
+      {/* Trails */}
       <Table.Td>{renderTrailsList(item.id)}</Table.Td>
-      <Table.Td align="center">{eventCounts[item.id] || 0}</Table.Td>
+
+      {/* Segments */}
+      <Table.Td align="center">{segmentCountPerEvent[item.id] || 0}</Table.Td>
+
+      {/* Links */}
       <Table.Td align="center">{item.links.length}</Table.Td>
+
+      {/* Actions */}
       <Table.Td>
         <ActionButtons itemType="trailEvents" itemId={item.id} pathOverride="events" />
       </Table.Td>

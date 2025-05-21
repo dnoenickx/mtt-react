@@ -21,8 +21,8 @@ import {} from // IconExternalLink,
 '@tabler/icons-react';
 import { formatDateWithPrecision } from '@/utils';
 
-import { TrailEvent } from '../../types';
-import { LinkGroup, MultiLineText } from '../Atomic/Atomic';
+import { TrailEvent } from '../../../../types';
+import { LinkGroup, MultiLineText } from '../../../../components/Atomic/Atomic';
 
 // function getIcon(iconName: string) {
 //   const size = 14;

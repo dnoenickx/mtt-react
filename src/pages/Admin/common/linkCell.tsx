@@ -5,7 +5,7 @@ interface LinkCellItem {
   links: Link[];
 }
 
-export default function linkCell(item: LinkCellItem): JSX.Element {
+export default function LinkCell(item: LinkCellItem): JSX.Element {
   return (
     <List size="xs">
       {item.links.map(

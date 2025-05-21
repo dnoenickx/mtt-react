@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import { IconCircleCheck, IconCircleX, IconDownload, IconExternalLink } from '@tabler/icons-react';
 import { useDocumentTitle } from '@mantine/hooks';
-import { Footer } from '@/components/Footer/Footer';
+import { Footer } from '@/pages/About/components/Footer/Footer';
 import { EmailButton } from '@/components/Atomic/Atomic';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { handleDownload } from '@/utils';

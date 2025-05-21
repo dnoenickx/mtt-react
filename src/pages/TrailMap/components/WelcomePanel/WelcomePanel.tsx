@@ -18,9 +18,9 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconBulb, IconQuestionMark } from '@tabler/icons-react';
 import { formatDistance } from 'date-fns';
-import { SegmentStates, SEGMENT_STATES } from '../../pages/TrailMap/TrailMap.config';
+import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
 import classes from './WelcomePanel.module.css';
-import { useData } from '../DataProvider/DataProvider';
+import { useData } from '../../../../components/DataProvider/DataProvider';
 
 export interface LayerOption {
   label: string;
