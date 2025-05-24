@@ -1,5 +1,8 @@
-import { Layer, Source } from 'react-map-gl/maplibre';
+import React, { RefObject, useRef } from 'react';
+import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { lines, stations } from './Subway';
+import { updateHover } from '@/mapUtils';
+import { LayerHook } from '@/pages/TrailMap/context/MapContext';
 
 const colorMatch = [
   'match',
@@ -12,27 +15,61 @@ const colorMatch = [
   '#F79517',
   'BLUE',
   '#2A68CA',
-  /* other */ '#ccc',
+  // other
+  '#ccc',
 ];
 
+// Layer IDs for Subway
 const SUBWAY_LINES_SOURCE = 'subway_lines_source';
 const SUBWAY_STATIONS_SOURCE = 'subway_stations_source';
-export const SUBWAY_SOURCE_IDS = [SUBWAY_LINES_SOURCE, SUBWAY_STATIONS_SOURCE];
-
 const SUBWAY_LINES_LAYER = 'subway_lines_layer';
 const SUBWAY_STATIONS_LAYER = 'subway_stations_layer';
-export const SUBWAY_LAYER_IDS = [SUBWAY_LINES_LAYER, SUBWAY_STATIONS_LAYER];
+const SUBWAY_STATIONS_HOVER_LAYER = 'subway_stations_hover_layer';
 
-export default function Subway() {
-  return (
+interface SubwayLayerProps {
+  mapRef: RefObject<MapRef>;
+  visible?: boolean;
+}
+
+export function useSubwayLayer({
+  mapRef,
+  visible = true,
+}: SubwayLayerProps): LayerHook {
+  const hoveredStationId = useRef<number | undefined>(undefined);
+  const visibility = visible ? 'visible' : 'none';
+
+  const handleClick = (e: MapLayerMouseEvent): void => {
+    const features = e.features;
+    if (!features) return;
+
+    const [matchingFeature] = features.filter(
+      (feature) => feature.layer.id === SUBWAY_STATIONS_HOVER_LAYER
+    );
+
+    if (matchingFeature) {
+      console.log(matchingFeature.properties?.STATION);
+    }
+  };
+
+  const handleMouseMove = (e: MapLayerMouseEvent) => {
+    updateHover({
+      mapRef,
+      e,
+      source: SUBWAY_STATIONS_SOURCE,
+      layers: [SUBWAY_STATIONS_HOVER_LAYER],
+      hoveredId: hoveredStationId,
+      defaultCursor: '',
+      hoverCursor: 'pointer',
+    });
+  };
+
+  const render = () => (
     <>
-      {/*
-      // @ts-ignore */}
       <Source id={SUBWAY_LINES_SOURCE} type="geojson" data={lines}>
         <Layer
           id={SUBWAY_LINES_LAYER}
           type="line"
-          layout={{ visibility: 'none' }}
+          layout={{ visibility }}
           paint={{
             'line-width': 1.5,
             // @ts-ignore
@@ -40,13 +77,12 @@ export default function Subway() {
           }}
         />
       </Source>
-      {/*
-      // @ts-ignore */}
+
       <Source id={SUBWAY_STATIONS_SOURCE} type="geojson" data={stations}>
         <Layer
           id={SUBWAY_STATIONS_LAYER}
           type="circle"
-          layout={{ visibility: 'none' }}
+          layout={{ visibility }}
           paint={{
             'circle-radius': 2.75,
             // @ts-ignore
@@ -55,7 +91,20 @@ export default function Subway() {
             'circle-stroke-width': 0.5,
           }}
         />
+        <Layer
+          id={SUBWAY_STATIONS_HOVER_LAYER}
+          type="circle"
+          layout={{ visibility }}
+          paint={{ 'circle-radius': 5, 'circle-opacity': 0 }}
+        />
       </Source>
     </>
   );
+
+  return {
+    handleClick,
+    handleMouseMove,
+    interactiveLayerIds: [SUBWAY_STATIONS_HOVER_LAYER],
+    render,
+  };
 }

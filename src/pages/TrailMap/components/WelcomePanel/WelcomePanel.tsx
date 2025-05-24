@@ -21,17 +21,11 @@ import { formatDistance } from 'date-fns';
 import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
 import classes from './WelcomePanel.module.css';
 import { useData } from '../../../../components/DataProvider/DataProvider';
-
-export interface LayerOption {
-  label: string;
-  visible: boolean;
-  toggle: () => void;
-}
+import { useMap } from '../../context/MapContext';
 
 interface WelcomePanelProps {
   segmentStates: SegmentStates;
   toggleSegmentStateVisibility: (value: string) => void;
-  layers: LayerOption[];
 }
 
 function checkboxOutlineStyle(checked: boolean, style: string) {
@@ -51,12 +45,12 @@ function checkboxOutlineStyle(checked: boolean, style: string) {
 const WelcomePanel: React.FC<WelcomePanelProps> = ({
   segmentStates: trailStates,
   toggleSegmentStateVisibility: toggleTrailState,
-  layers,
 }) => {
   const [opened, { open, close }] = useDisclosure(false);
   const { lastUpdated } = useData();
   const { colorScheme } = useMantineColorScheme();
   const isDarkMode = colorScheme === 'dark';
+  const { layers, toggleLayer } = useMap();
 
   const trailExplanation = useMemo(
     () => (
@@ -139,20 +133,22 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         Layers
       </Title>
       <Grid>
-        {layers.map(({ label, visible, toggle }) => (
-          <Grid.Col span={6} key={label}>
-            <Checkbox
-              id={label}
-              key={label}
-              classNames={classes}
-              color="slate"
-              label={label}
-              checked={visible || false}
-              onChange={toggle}
-              wrapperProps={{ onClick: toggle }}
-            />
-          </Grid.Col>
-        ))}
+        {layers
+          .filter((layer) => layer.canToggle)
+          .map((layer) => (
+            <Grid.Col span={6} key={layer.id}>
+              <Checkbox
+                id={layer.id}
+                key={layer.id}
+                classNames={classes}
+                color="slate"
+                label={layer.label}
+                checked={layer.visible}
+                onChange={() => toggleLayer(layer.id)}
+                wrapperProps={{ onClick: () => toggleLayer(layer.id) }}
+              />
+            </Grid.Col>
+          ))}
       </Grid>
       <Space h="xl" />
       <Alert variant="light" title="Tip" icon={<IconBulb />}>

@@ -1,12 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { RefObject, useMemo, useRef } from 'react';
+import { updateHover } from '../../../mapUtils';
 import { feature, featureCollection } from '@turf/turf';
-import { Layer, Source } from 'react-map-gl/maplibre';
+import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
 import { useMantineColorScheme } from '@mantine/core';
 import { useSearchParams } from 'react-router-dom';
 import { useData } from '@/components/DataProvider/DataProvider';
-import { createSlug } from '@/utils';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
+import {
+  getSegmentIds,
+  getTrailIds,
+} from '@/pages/TrailMap/components/TrailMapComponent/utils/initialBounds';
+import { LayerHook } from '@/pages/TrailMap/context/MapContext';
 
 export const SEGMENTS_SOURCE_ID = 'segments_source';
 export const SEGMENTS_HOVER_LAYER_ID = 'segments_hover_layer';
@@ -22,11 +27,19 @@ export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAY
 const BEFORE_ID = 'pois';
 
 type SegmentsLayerProps = {
+  mapRef: RefObject<MapRef>;
+  onClick?: (id: string | number) => void;
   opacity?: number;
   excludeId?: number;
 };
 
-export default function SegmentsLayer({ opacity = 1, excludeId }: SegmentsLayerProps) {
+export function useSegmentsLayer({
+  mapRef,
+  onClick,
+  opacity = 1,
+  excludeId,
+}: SegmentsLayerProps): LayerHook {
+  const hoveredSegmentId = useRef<number | undefined>(undefined);
   const isMobile = useMediaQuery('(min-width: 415px)');
   const [searchParams] = useSearchParams();
   const { currentData } = useData();
@@ -40,22 +53,13 @@ export default function SegmentsLayer({ opacity = 1, excludeId }: SegmentsLayerP
   const MEDIUM = 2.5;
   const LIGHT = 2.25;
 
-  const outline = (val: number) => (isDarkMode ? val + 0.5 : val + 2);
-  const multiplier = (val: number) => (isMobile ? val : val * 1.5);
-  const dashed = (val: number) => val / 1.25;
-
   const styledSegments = useMemo(() => {
-    const segmentParam = searchParams.get('segment');
-    const segmentIds = segmentParam ? segmentParam.split(',').map((id) => Number(id)) : [];
+    const outline = (val: number) => (isDarkMode ? val + 0.5 : val + 2);
+    const multiplier = (val: number) => (isMobile ? val : val * 1.5);
+    const dashed = (val: number) => val / 1.25;
 
-    const trailNames = (searchParams.get('trail') ?? '').split(',');
-    const trailIds = Object.values(currentData.trails)
-      .filter(
-        (trail) =>
-          trailNames.includes(createSlug(trail.name)) ||
-          (trail.slug && trailNames.includes(trail.slug))
-      )
-      .map(({ id }) => id);
+    const segmentIds = getSegmentIds(searchParams);
+    const trailIds = getTrailIds(searchParams, currentData);
 
     const features = Object.values(currentData.segments)
       .filter((segment) => excludeId === undefined || segment.id !== excludeId)
@@ -91,7 +95,32 @@ export default function SegmentsLayer({ opacity = 1, excludeId }: SegmentsLayerP
     return featureCollection(features);
   }, [isMobile, currentData.segments, isDarkMode, excludeId]);
 
-  return (
+  const handleClick = (e: MapLayerMouseEvent): void => {
+    const features = e.features;
+    if (!features || !onClick) return;
+
+    const [matchingFeature] = features.filter(
+      (feature) => feature.layer.id === SEGMENTS_HOVER_LAYER_ID
+    );
+
+    if (matchingFeature?.id) {
+      onClick(matchingFeature.id);
+    }
+  };
+
+  const handleMouseMove = (e: MapLayerMouseEvent) => {
+    updateHover({
+      mapRef,
+      e,
+      source: SEGMENTS_SOURCE_ID,
+      layers: [SEGMENTS_HOVER_LAYER_ID],
+      hoveredId: hoveredSegmentId,
+      defaultCursor: '',
+      hoverCursor: 'pointer',
+    });
+  };
+
+  const render = () => (
     <Source id={SEGMENTS_SOURCE_ID} type="geojson" data={styledSegments}>
       <Layer
         id={SEGMENTS_HOVER_LAYER_ID}
@@ -190,4 +219,11 @@ export default function SegmentsLayer({ opacity = 1, excludeId }: SegmentsLayerP
       />
     </Source>
   );
+
+  return {
+    handleClick,
+    interactiveLayerIds: [SEGMENTS_HOVER_LAYER_ID],
+    handleMouseMove,
+    render,
+  };
 }
