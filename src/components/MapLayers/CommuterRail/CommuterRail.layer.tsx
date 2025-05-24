@@ -1,8 +1,9 @@
 import React, { RefObject, useRef } from 'react';
 import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import type { Feature, Point } from 'geojson';
 import { lines, stations } from './CommuterRail';
 import { updateHover } from '@/mapUtils';
-import { LayerHook } from '@/pages/TrailMap/context/MapContext';
+import { LayerHook, PopupData } from '@/pages/TrailMap/context/MapContext';
 
 export const COMMUTER_RAIL_LINES_SOURCE = 'commuter_rail_lines_source';
 export const COMMUTER_RAIL_STATIONS_SOURCE = 'commuter_rail_stations_source';
@@ -14,30 +15,19 @@ export const COMMUTER_RAIL_STATIONS_HOVER_LAYER = 'commuter_rail_stations_hover_
 interface CommuterRailLayerProps {
   mapRef: RefObject<MapRef>;
   visible?: boolean;
+  setPopup?: (popup: PopupData | undefined) => void;
 }
 
 export function useCommuterRailLayer({
   mapRef,
   visible = true,
+  setPopup,
 }: CommuterRailLayerProps): LayerHook {
   const hoveredStationId = useRef<number | undefined>(undefined);
   const visibility = visible ? 'visible' : 'none';
 
-  const handleClick = (e: MapLayerMouseEvent): void => {
-    const features = e.features;
-    if (!features) return;
-
-    const [matchingFeature] = features.filter(
-      (feature) => feature.layer.id === COMMUTER_RAIL_STATIONS_HOVER_LAYER
-    );
-
-    if (matchingFeature) {
-      console.log(matchingFeature.properties?.STATION);
-    }
-  };
-
   const handleMouseMove = (e: MapLayerMouseEvent) => {
-    updateHover({
+    const [feature] = updateHover({
       mapRef,
       e,
       source: COMMUTER_RAIL_STATIONS_SOURCE,
@@ -46,6 +36,25 @@ export function useCommuterRailLayer({
       defaultCursor: '',
       hoverCursor: 'pointer',
     });
+
+    // show popup showing station name
+    if (setPopup) {
+      if (feature && feature.geometry.type === 'Point') {
+        const stationName = feature.properties?.STATION;
+        if (stationName) {
+          const pointFeature = feature as Feature<Point>;
+          setPopup({
+            lng: pointFeature.geometry.coordinates[0],
+            lat: pointFeature.geometry.coordinates[1],
+            content: <div>{stationName}</div>,
+            anchor: 'bottom',
+          });
+        }
+      } else {
+        // Clear popup when not hovering over a station
+        setPopup(undefined);
+      }
+    }
   };
 
   const render = () => (
@@ -85,7 +94,6 @@ export function useCommuterRailLayer({
   );
 
   return {
-    handleClick,
     handleMouseMove,
     interactiveLayerIds: [COMMUTER_RAIL_STATIONS_HOVER_LAYER],
     render,

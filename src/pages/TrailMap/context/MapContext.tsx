@@ -1,5 +1,13 @@
-import React, { createContext, useContext, useState, useRef, RefObject } from 'react';
+import { PositionAnchor } from 'maplibre-gl';
+import React, { createContext, useContext, useState, RefObject, ReactElement } from 'react';
 import { MapRef, MapLayerMouseEvent } from 'react-map-gl/maplibre';
+
+export interface PopupData {
+  lng: number;
+  lat: number;
+  content?: ReactElement;
+  anchor?: PositionAnchor;
+}
 
 export interface LayerHook {
   handleClick?: (e: MapLayerMouseEvent) => void;
@@ -10,7 +18,11 @@ export interface LayerHook {
 }
 
 type LayerHookFn<T = {}> = (
-  props: { mapRef: RefObject<MapRef>; visible?: boolean } & T
+  props: {
+    mapRef: RefObject<MapRef>;
+    visible?: boolean;
+    setPopup?: (popup: PopupData | undefined) => void;
+  } & T
 ) => LayerHook;
 
 export interface LayerConfig<T = {}> {
@@ -30,6 +42,8 @@ interface MapContextType {
   layerHooks: LayerHook[];
   interactiveLayerIds: string[];
   visibleLayers: LayerHook[];
+  popup: PopupData | undefined;
+  setPopup: (popup: PopupData | undefined) => void;
 }
 
 const MapContext = createContext<MapContextType | null>(null);
@@ -42,6 +56,7 @@ interface MapProviderProps {
 
 export function MapProvider({ children, initialLayers, mapRef }: MapProviderProps) {
   const [layers, setLayers] = useState<LayerConfig[]>(initialLayers);
+  const [popup, setPopup] = useState<PopupData | undefined>(undefined);
 
   const toggleLayer = (id: string) => {
     setLayers((currentLayers) =>
@@ -59,6 +74,7 @@ export function MapProvider({ children, initialLayers, mapRef }: MapProviderProp
     layer.hook({
       mapRef,
       visible: layer.visible,
+      setPopup,
       ...layer.params,
     })
   );
@@ -79,7 +95,9 @@ export function MapProvider({ children, initialLayers, mapRef }: MapProviderProp
         layerHooks,
         interactiveLayerIds,
         visibleLayers,
-      }}
+        popup,
+        setPopup,
+        }}
     >
       {children}
     </MapContext.Provider>

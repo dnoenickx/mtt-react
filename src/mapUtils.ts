@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import { MapLayerMouseEvent, MapRef, MapGeoJSONFeature } from 'react-map-gl/maplibre';
 import { DataDrivenPropertyValueSpecification } from '@maplibre/maplibre-gl-style-spec';
 
 interface updateHoverParams {
@@ -20,9 +20,9 @@ export function updateHover({
   hoveredId,
   defaultCursor = 'grab',
   hoverCursor = 'pointer',
-}: updateHoverParams) {
+}: updateHoverParams): MapGeoJSONFeature[] {
   const map = mapRef.current;
-  if (!map) return;
+  if (!map) return [];
 
   const features = map.queryRenderedFeatures(e.point, { layers });
 
@@ -46,6 +46,8 @@ export function updateHover({
     hoveredId.current = current;
     map.getCanvas().style.cursor = hoverCursor;
   }
+
+  return features;
 }
 
 export const ifHovered = <T>(

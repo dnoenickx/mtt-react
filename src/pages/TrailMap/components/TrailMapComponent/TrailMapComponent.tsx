@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import Map, {
   GeolocateControl,
   MapLayerMouseEvent,
   NavigationControl,
   ScaleControl,
+  Popup as MapLibrePopup,
 } from 'react-map-gl/maplibre';
 import { useMantineColorScheme } from '@mantine/core';
 import { useSearchParams } from 'react-router-dom';
 import { getInitialBounds } from './utils/initialBounds';
-import { MapPopup, PopupData } from '../MapPopup';
 import { darkStyle, lightStyle } from '../../MapStyle';
 import { useData } from '@/components/DataProvider/DataProvider';
 import './TrailMapComponent.module.css';
 import { DEFAULT_VIEW_STATE } from '@/constants';
 import { useMap, LayerHook } from '../../context/MapContext';
+import { OpenExternalMapPopup } from '../OpenExternalMapPopup/OpenExternalMapPopup';
 
 export function TrailMapComponent() {
   const { currentData } = useData();
   const [searchParams] = useSearchParams();
-  const [popup, setPopup] = useState<PopupData | undefined>(undefined);
   const { colorScheme } = useMantineColorScheme();
-  const { mapRef, interactiveLayerIds, visibleLayers } = useMap();
+  const { mapRef, interactiveLayerIds, visibleLayers, popup, setPopup } = useMap();
 
   const onClickHandler = (e: MapLayerMouseEvent) => {
     visibleLayers.forEach((layer: LayerHook) => layer.handleClick?.(e));
@@ -28,7 +28,7 @@ export function TrailMapComponent() {
 
   const onContextMenuHandler = (e: MapLayerMouseEvent) => {
     const [lng, lat] = e.lngLat.toArray();
-    setPopup({ lng, lat });
+    setPopup({ lng, lat, content: <OpenExternalMapPopup lng={lng} lat={lat} /> });
   };
 
   const onMouseMoveHandler = (e: MapLayerMouseEvent) => {
@@ -63,7 +63,18 @@ export function TrailMapComponent() {
         <React.Fragment key={index}>{layer.render()}</React.Fragment>
       ))}
 
-      <MapPopup popup={popup} onClose={() => setPopup(undefined)} />
+      {popup && (
+        <MapLibrePopup
+          anchor={popup.anchor || 'top-left'}
+          longitude={Number(popup.lng)}
+          latitude={Number(popup.lat)}
+          onClose={() => setPopup(undefined)}
+          closeButton={false}
+          closeOnMove
+        >
+          {popup.content}
+        </MapLibrePopup>
+      )}
     </Map>
   );
 }

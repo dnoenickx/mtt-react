@@ -31,25 +31,9 @@ interface SubwayLayerProps {
   visible?: boolean;
 }
 
-export function useSubwayLayer({
-  mapRef,
-  visible = true,
-}: SubwayLayerProps): LayerHook {
+export function useSubwayLayer({ mapRef, visible = true }: SubwayLayerProps): LayerHook {
   const hoveredStationId = useRef<number | undefined>(undefined);
   const visibility = visible ? 'visible' : 'none';
-
-  const handleClick = (e: MapLayerMouseEvent): void => {
-    const features = e.features;
-    if (!features) return;
-
-    const [matchingFeature] = features.filter(
-      (feature) => feature.layer.id === SUBWAY_STATIONS_HOVER_LAYER
-    );
-
-    if (matchingFeature) {
-      console.log(matchingFeature.properties?.STATION);
-    }
-  };
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     updateHover({
@@ -102,7 +86,6 @@ export function useSubwayLayer({
   );
 
   return {
-    handleClick,
     handleMouseMove,
     interactiveLayerIds: [SUBWAY_STATIONS_HOVER_LAYER],
     render,
