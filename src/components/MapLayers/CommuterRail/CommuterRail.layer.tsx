@@ -1,9 +1,10 @@
 import React, { RefObject, useRef } from 'react';
 import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import type { Feature, Point } from 'geojson';
-import { lines, stations } from './CommuterRail';
 import { updateHover } from '@/mapUtils';
 import { LayerHook, PopupData } from '@/pages/TrailMap/context/MapContext';
+import { useCommuterRailData } from './useCommuterRailData';
+import { featureCollection } from '@turf/turf';
 
 export const COMMUTER_RAIL_LINES_SOURCE = 'commuter_rail_lines_source';
 export const COMMUTER_RAIL_STATIONS_SOURCE = 'commuter_rail_stations_source';
@@ -25,6 +26,10 @@ export function useCommuterRailLayer({
 }: CommuterRailLayerProps): LayerHook {
   const hoveredStationId = useRef<number | undefined>(undefined);
   const visibility = visible ? 'visible' : 'none';
+
+  const { data } = useCommuterRailData(visible);
+  const stations = data?.stations ?? featureCollection([]);
+  const lines = data?.lines ?? featureCollection([]);
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     const [feature] = updateHover({

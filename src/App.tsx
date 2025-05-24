@@ -11,7 +11,15 @@ import { resolver, theme } from './theme';
 import { DataProvider } from './components/DataProvider/DataProvider';
 import { ClearChangesModal, GetContactInfoModal } from './components/Modals';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function App() {
   return (

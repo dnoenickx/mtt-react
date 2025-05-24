@@ -1,8 +1,9 @@
 import React, { RefObject, useRef } from 'react';
 import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
-import { lines, stations } from './Subway';
 import { updateHover } from '@/mapUtils';
 import { LayerHook } from '@/pages/TrailMap/context/MapContext';
+import { featureCollection } from '@turf/turf';
+import { useSubwayData } from './useSubwayData';
 
 const colorMatch = [
   'match',
@@ -34,6 +35,10 @@ interface SubwayLayerProps {
 export function useSubwayLayer({ mapRef, visible = true }: SubwayLayerProps): LayerHook {
   const hoveredStationId = useRef<number | undefined>(undefined);
   const visibility = visible ? 'visible' : 'none';
+
+  const { data } = useSubwayData(visible);
+  const stations = data?.stations ?? featureCollection([]);
+  const lines = data?.lines ?? featureCollection([]);
 
   const handleMouseMove = (e: MapLayerMouseEvent) => {
     updateHover({
