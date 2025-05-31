@@ -21,7 +21,7 @@ import { formatDistance } from 'date-fns';
 import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
 import classes from './WelcomePanel.module.css';
 import { useData } from '../../../../components/DataProvider/DataProvider';
-import { useMap } from '../../context/MapContext';
+import { useLayerVisibility } from '../../context/LayerVisibilityContext';
 
 interface WelcomePanelProps {
   segmentStates: SegmentStates;
@@ -49,8 +49,8 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   const [opened, { open, close }] = useDisclosure(false);
   const { lastUpdated } = useData();
   const { colorScheme } = useMantineColorScheme();
+  const { layers, toggleLayer } = useLayerVisibility();
   const isDarkMode = colorScheme === 'dark';
-  const { layers, toggleLayer } = useMap();
 
   const trailExplanation = useMemo(
     () => (
@@ -133,22 +133,20 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         Layers
       </Title>
       <Grid>
-        {layers
-          .filter((layer) => layer.canToggle)
-          .map((layer) => (
-            <Grid.Col span={6} key={layer.id}>
-              <Checkbox
-                id={layer.id}
-                key={layer.id}
-                classNames={classes}
-                color="slate"
-                label={layer.label}
-                checked={layer.visible}
-                onChange={() => toggleLayer(layer.id)}
-                wrapperProps={{ onClick: () => toggleLayer(layer.id) }}
-              />
-            </Grid.Col>
-          ))}
+        {Object.values(layers).map((layer) => (
+          <Grid.Col span={6} key={layer.id}>
+            <Checkbox
+              id={layer.id}
+              key={layer.id}
+              classNames={classes}
+              color="slate"
+              label={layer.label}
+              checked={layer.visible}
+              onChange={() => toggleLayer(layer.id)}
+              wrapperProps={{ onClick: () => toggleLayer(layer.id) }}
+            />
+          </Grid.Col>
+        ))}
       </Grid>
       <Space h="xl" />
       <Alert variant="light" title="Tip" icon={<IconBulb />}>

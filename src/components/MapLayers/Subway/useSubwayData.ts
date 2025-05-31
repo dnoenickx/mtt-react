@@ -6,8 +6,8 @@ interface SubwayData {
   lines: FeatureCollection<LineString>;
 }
 
-export const useSubwayData = (enabled: boolean) => {
-  return useQuery<SubwayData>({
+export const useSubwayData = (enabled: boolean) =>
+  useQuery<SubwayData>({
     queryKey: ['subwayData'],
     queryFn: async () => {
       const response = await fetch('/subway.json');
@@ -18,4 +18,3 @@ export const useSubwayData = (enabled: boolean) => {
     },
     enabled,
   });
-};

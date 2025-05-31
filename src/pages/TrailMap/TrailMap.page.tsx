@@ -1,64 +1,23 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@mantine/core';
 import { useSearchParams } from 'react-router-dom';
+import { MapRef } from 'react-map-gl/maplibre';
 import styles from './TrailMapPage.module.css';
 import { DisclaimerModal } from './components/DisclaimerModal/DisclaimerModal';
 import { MapAside } from './components/MapAside';
 import { TrailMapComponent } from './components/TrailMapComponent';
-import { MapProvider } from './context/MapContext';
-import { useRef } from 'react';
-import { MapRef } from 'react-map-gl/maplibre';
-import { useSegmentsLayer } from '@/components/MapLayers/Segments/Segments.layer';
-import { useCommuterRailLayer } from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
-import { useSubwayLayer } from '@/components/MapLayers/Subway/Subway.layer';
+import { LayerVisibilityProvider } from './context/LayerVisibilityContext';
 
 export function TrailMapPage() {
-  const mapRef = useRef<MapRef>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<string | null>(
-    searchParams.get('segment') ? 'segmentDetailsPanel' : 'welcome'
-  );
+  const mapRef = useRef<MapRef>(null);
 
-  const handleSegmentClick = useCallback(
-    (id: string | number) => {
-      searchParams.set('segment', `${id}`);
-      setSearchParams(searchParams);
-      setActiveTab('segmentDetailsPanel');
-      setDrawerOpen(true);
-    },
-    [searchParams, setSearchParams]
-  );
-
-  const layers = [
-    {
-      id: 'segments',
-      label: 'Trail Segments',
-      visible: true,
-      canToggle: false,
-      hook: useSegmentsLayer,
-      params: {
-        onClick: handleSegmentClick,
-      },
-    },
-    {
-      id: 'commuterRail',
-      label: 'Commuter Rail',
-      visible: false,
-      canToggle: true,
-      hook: useCommuterRailLayer,
-    },
-    {
-      id: 'subway',
-      label: 'Subway',
-      visible: false,
-      canToggle: true,
-      hook: useSubwayLayer,
-    },
-  ];
+  const initialTab = searchParams.get('segment') ? 'segmentDetailsPanel' : 'welcome';
+  const [activeTab, setActiveTab] = useState<string | null>(initialTab);
 
   return (
-    <MapProvider initialLayers={layers} mapRef={mapRef}>
+    <LayerVisibilityProvider>
       <div className={styles.container}>
         <DisclaimerModal />
 
@@ -82,9 +41,15 @@ export function TrailMapPage() {
             Open Map Settings
           </Button>
 
-          <TrailMapComponent />
+          <TrailMapComponent
+            navigateToTab={(tab: string) => {
+              setActiveTab(tab);
+              setDrawerOpen(true);
+            }}
+            mapRef={mapRef}
+          />
         </div>
       </div>
-    </MapProvider>
+    </LayerVisibilityProvider>
   );
 }

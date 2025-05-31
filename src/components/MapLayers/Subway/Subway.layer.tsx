@@ -1,9 +1,25 @@
-import React, { RefObject, useRef } from 'react';
-import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
-import { updateHover } from '@/mapUtils';
-import { LayerHook } from '@/pages/TrailMap/context/MapContext';
+import React from 'react';
+import { Layer, Source, MapRef } from 'react-map-gl/maplibre';
 import { featureCollection } from '@turf/turf';
 import { useSubwayData } from './useSubwayData';
+import { useLayerVisibility } from '@/pages/TrailMap/context/LayerVisibilityContext';
+
+export const SUBWAY_IDS = {
+  sources: {
+    lines: 'subway_lines_source',
+    stations: 'subway_stations_source',
+  },
+  layers: {
+    lines: 'subway_lines_layer',
+    stations: 'subway_stations_layer',
+    hover: 'subway_stations_interactive_layer',
+  },
+};
+
+
+export const SUBWAY_LAYER_TO_SOURCE = {
+  [SUBWAY_IDS.layers.hover]: SUBWAY_IDS.sources.stations,
+};
 
 const colorMatch = [
   'match',
@@ -20,43 +36,24 @@ const colorMatch = [
   '#ccc',
 ];
 
-// Layer IDs for Subway
-const SUBWAY_LINES_SOURCE = 'subway_lines_source';
-const SUBWAY_STATIONS_SOURCE = 'subway_stations_source';
-const SUBWAY_LINES_LAYER = 'subway_lines_layer';
-const SUBWAY_STATIONS_LAYER = 'subway_stations_layer';
-const SUBWAY_STATIONS_HOVER_LAYER = 'subway_stations_hover_layer';
-
 interface SubwayLayerProps {
-  mapRef: RefObject<MapRef>;
-  visible?: boolean;
+  mapRef: React.RefObject<MapRef>;
 }
 
-export function useSubwayLayer({ mapRef, visible = true }: SubwayLayerProps): LayerHook {
-  const hoveredStationId = useRef<number | undefined>(undefined);
+export function SubwayLayer({ mapRef }: SubwayLayerProps) {
+  const { isLayerVisible } = useLayerVisibility();
+  const visible = isLayerVisible('subway');
   const visibility = visible ? 'visible' : 'none';
 
   const { data } = useSubwayData(visible);
   const stations = data?.stations ?? featureCollection([]);
   const lines = data?.lines ?? featureCollection([]);
 
-  const handleMouseMove = (e: MapLayerMouseEvent) => {
-    updateHover({
-      mapRef,
-      e,
-      source: SUBWAY_STATIONS_SOURCE,
-      layers: [SUBWAY_STATIONS_HOVER_LAYER],
-      hoveredId: hoveredStationId,
-      defaultCursor: '',
-      hoverCursor: 'pointer',
-    });
-  };
-
-  const render = () => (
+  return (
     <>
-      <Source id={SUBWAY_LINES_SOURCE} type="geojson" data={lines}>
+      <Source id={SUBWAY_IDS.sources.lines} type="geojson" data={lines}>
         <Layer
-          id={SUBWAY_LINES_LAYER}
+          id={SUBWAY_IDS.layers.lines}
           type="line"
           layout={{ visibility }}
           paint={{
@@ -67,9 +64,9 @@ export function useSubwayLayer({ mapRef, visible = true }: SubwayLayerProps): La
         />
       </Source>
 
-      <Source id={SUBWAY_STATIONS_SOURCE} type="geojson" data={stations}>
+      <Source id={SUBWAY_IDS.sources.stations} type="geojson" data={stations}>
         <Layer
-          id={SUBWAY_STATIONS_LAYER}
+          id={SUBWAY_IDS.layers.stations}
           type="circle"
           layout={{ visibility }}
           paint={{
@@ -81,7 +78,7 @@ export function useSubwayLayer({ mapRef, visible = true }: SubwayLayerProps): La
           }}
         />
         <Layer
-          id={SUBWAY_STATIONS_HOVER_LAYER}
+          id={SUBWAY_IDS.layers.hover}
           type="circle"
           layout={{ visibility }}
           paint={{ 'circle-radius': 5, 'circle-opacity': 0 }}
@@ -89,10 +86,4 @@ export function useSubwayLayer({ mapRef, visible = true }: SubwayLayerProps): La
       </Source>
     </>
   );
-
-  return {
-    handleMouseMove,
-    interactiveLayerIds: [SUBWAY_STATIONS_HOVER_LAYER],
-    render,
-  };
 }

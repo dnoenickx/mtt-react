@@ -13,7 +13,6 @@ import { useDrawMode } from './Modes/DrawMode';
 import { EditorSidebar } from './EditorSidebar';
 import { ifHovered } from '@/mapUtils';
 import { DEFAULT_VIEW_STATE } from '@/constants';
-import { useSegmentsLayer } from '../MapLayers/Segments/Segments.layer';
 
 interface MultiLineEditorProps {
   opened: boolean;
@@ -31,8 +30,6 @@ function MultiLineEditor({
   const mapRef = useRef<MapRef>(null);
   const { colorScheme } = useMantineColorScheme();
   const mapStyle = colorScheme === 'dark' ? darkStyle : lightStyle;
-
-  const segmentsLayer = useSegmentsLayer({ mapRef, opacity: 0.6, excludeId: id });
 
   // Shared state
   const [mode, setMode] = useState<EditorMode>('select');
@@ -166,7 +163,7 @@ function MultiLineEditor({
 
             {/* {Object.values(modes).map((m) => m.render())} */}
 
-            {segmentsLayer.render()}
+            {/* {segmentsLayer.render()} */}
 
             <EditorSidebar
               {...geometryEditorState}

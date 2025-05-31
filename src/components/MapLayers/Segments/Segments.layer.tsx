@@ -1,7 +1,6 @@
-import React, { RefObject, useMemo, useRef } from 'react';
-import { updateHover } from '../../../mapUtils';
+import React, { useMemo } from 'react';
 import { feature, featureCollection } from '@turf/turf';
-import { Layer, Source, MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
+import { Layer, Source, MapRef } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
 import { useMantineColorScheme } from '@mantine/core';
 import { useSearchParams } from 'react-router-dom';
@@ -11,10 +10,50 @@ import {
   getSegmentIds,
   getTrailIds,
 } from '@/pages/TrailMap/components/TrailMapComponent/utils/initialBounds';
-import { LayerHook } from '@/pages/TrailMap/context/MapContext';
 
-export const SEGMENTS_SOURCE_ID = 'segments_source';
-export const SEGMENTS_HOVER_LAYER_ID = 'segments_hover_layer';
+const SEGMENTS_SOURCE_ID = 'segments_source';
+
+export const SEGMENTS_INTERACTIVE_LAYER_ID = 'segments_interactive_layer';
+
+export const SEGMENTS_LAYER_TO_SOURCE = {
+  [SEGMENTS_INTERACTIVE_LAYER_ID]: SEGMENTS_SOURCE_ID,
+};
+
+/**
+ * Updates the filter for segment layers based on the visible states
+ * @param map The MapLibre map instance
+ * @param visibleStates Array of state names that should be visible
+ */
+export const updateSegmentFilters = (map: maplibregl.Map, visibleStates: string[]) => {
+  if (!map) return;
+
+  // Check if all required layers exist
+  if (!SEGMENTS_SYMBOLOGY_LAYER_IDS.every((layerId) => map.getLayer(layerId))) {
+    return;
+  }
+
+  // Create the state filter expression
+  const stateFilter: any = ['match', ['get', 'state'], visibleStates, true, false];
+
+  SEGMENTS_SYMBOLOGY_LAYER_IDS.forEach((layerId) => {
+    if (layerId === 'segments_symbology_dashed') {
+      // Filter for dashed segments that match the visible states
+      const dashedFilter: any = ['all', ['has', 'dashedWidth'], stateFilter];
+      map.setFilter(layerId, dashedFilter);
+    } else if (layerId.startsWith('segments_symbology_highlight')) {
+      // Filter for highlighted segments that match the visible states
+      const highlightFilter: any = ['all', ['==', ['get', 'highlight'], true], stateFilter];
+      map.setFilter(layerId, highlightFilter);
+    } else {
+      // Basic state filter for other layers
+      map.setFilter(layerId, stateFilter);
+    }
+  });
+
+  // Also update the interactive layer
+  map.setFilter(SEGMENTS_INTERACTIVE_LAYER_ID, stateFilter);
+};
+
 const SEGMENTS_SYMBOLOGY_LAYERS = {
   highlight2: 'segments_symbology_highlight_2',
   highlight1: 'segments_symbology_highlight_1',
@@ -26,20 +65,13 @@ export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAY
 
 const BEFORE_ID = 'pois';
 
-type SegmentsLayerProps = {
-  mapRef: RefObject<MapRef>;
-  onClick?: (id: string | number) => void;
+interface SegmentsLayerProps {
+  mapRef: React.RefObject<MapRef>;
   opacity?: number;
   excludeId?: number;
-};
+}
 
-export function useSegmentsLayer({
-  mapRef,
-  onClick,
-  opacity = 1,
-  excludeId,
-}: SegmentsLayerProps): LayerHook {
-  const hoveredSegmentId = useRef<number | undefined>(undefined);
+export function SegmentsLayer({ mapRef, opacity = 1, excludeId }: SegmentsLayerProps) {
   const isMobile = useMediaQuery('(min-width: 415px)');
   const [searchParams] = useSearchParams();
   const { currentData } = useData();
@@ -95,35 +127,10 @@ export function useSegmentsLayer({
     return featureCollection(features);
   }, [isMobile, currentData.segments, isDarkMode, excludeId]);
 
-  const handleClick = (e: MapLayerMouseEvent): void => {
-    const features = e.features;
-    if (!features || !onClick) return;
-
-    const [matchingFeature] = features.filter(
-      (feature) => feature.layer.id === SEGMENTS_HOVER_LAYER_ID
-    );
-
-    if (matchingFeature?.id) {
-      onClick(matchingFeature.id);
-    }
-  };
-
-  const handleMouseMove = (e: MapLayerMouseEvent) => {
-    updateHover({
-      mapRef,
-      e,
-      source: SEGMENTS_SOURCE_ID,
-      layers: [SEGMENTS_HOVER_LAYER_ID],
-      hoveredId: hoveredSegmentId,
-      defaultCursor: '',
-      hoverCursor: 'pointer',
-    });
-  };
-
-  const render = () => (
+  return (
     <Source id={SEGMENTS_SOURCE_ID} type="geojson" data={styledSegments}>
       <Layer
-        id={SEGMENTS_HOVER_LAYER_ID}
+        id={SEGMENTS_INTERACTIVE_LAYER_ID}
         type="line"
         paint={{ 'line-width': HOVER_TARGET, 'line-opacity': 0 }}
       />
@@ -219,11 +226,4 @@ export function useSegmentsLayer({
       />
     </Source>
   );
-
-  return {
-    handleClick,
-    interactiveLayerIds: [SEGMENTS_HOVER_LAYER_ID],
-    handleMouseMove,
-    render,
-  };
 }

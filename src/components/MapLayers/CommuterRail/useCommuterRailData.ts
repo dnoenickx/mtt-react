@@ -1,13 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import type { FeatureCollection, Point, LineString } from 'geojson';
+import { FeatureCollection, Point, LineString } from 'geojson';
 
 interface CommuterRailData {
   stations: FeatureCollection<Point>;
   lines: FeatureCollection<LineString>;
 }
 
-export const useCommuterRailData = (enabled: boolean) => {
-  return useQuery<CommuterRailData>({
+export const useCommuterRailData = (enabled: boolean) =>
+  useQuery<CommuterRailData>({
     queryKey: ['commuterRailData'],
     queryFn: async () => {
       const response = await fetch('/commuter-rail.json');
@@ -20,4 +20,3 @@ export const useCommuterRailData = (enabled: boolean) => {
     },
     enabled,
   });
-};

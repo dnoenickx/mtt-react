@@ -1,16 +1,15 @@
 import React from 'react';
 import { Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { MapRef } from 'react-map-gl/maplibre';
 import WelcomePanel from '../WelcomePanel/WelcomePanel';
 import { SegmentDetailsPanel } from '../SegmentDetailsPanel/SegmentDetailsPanel';
 import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
 import {
   SEGMENTS_SYMBOLOGY_LAYER_IDS,
-  SEGMENTS_HOVER_LAYER_ID,
+  updateSegmentFilters,
 } from '@/components/MapLayers/Segments/Segments.layer';
 import styles from './MapAside.module.css';
-
+import { MapRef } from 'react-map-gl/maplibre';
 interface MapAsideProps {
   activeTab: string | null;
   setActiveTab: React.Dispatch<React.SetStateAction<string | null>>;
@@ -30,42 +29,14 @@ export function MapAside({
   const [segmentStates, setSegmentStates] = React.useState<SegmentStates>(SEGMENT_STATES);
 
   const handleStateToggle = (value: string) => {
+    const map = mapRef.current?.getMap();
+    if (!map) return;
+
     setSegmentStates((prev) => {
-      const newStates = {
-        ...prev,
-        [value]: { ...prev[value], visible: !prev[value].visible },
-      };
-
-      const map = mapRef.current?.getMap();
-      if (map) {
-        if (
-          SEGMENTS_SYMBOLOGY_LAYER_IDS.every((layerId) => map.getLayer(layerId)) &&
-          map.getLayer(SEGMENTS_HOVER_LAYER_ID)
-        ) {
-          const visibleStates = Object.entries(newStates)
-            .filter(([, state]) => state.visible)
-            .map(([key]) => key);
-
-          const stateFilter = ['match', ['get', 'state'], visibleStates, true, false];
-
-          SEGMENTS_SYMBOLOGY_LAYER_IDS.forEach((layerId) => {
-            if (layerId === 'segments_symbology_dashed') {
-              // @ts-ignore
-              map.setFilter(layerId, ['all', ['has', 'dashedWidth'], stateFilter]);
-            } else if (layerId.startsWith('segments_symbology_highlight')) {
-              // @ts-ignore
-              map.setFilter(layerId, ['all', ['==', ['get', 'highlight'], true], stateFilter]);
-            } else {
-              // @ts-ignore
-              map.setFilter(layerId, stateFilter);
-            }
-          });
-          // @ts-ignore
-          map.setFilter(SEGMENTS_HOVER_LAYER_ID, stateFilter);
-          return newStates;
-        }
-      }
-      return prev;
+      const newStates = { ...prev, [value]: { ...prev[value], visible: !prev[value].visible } };
+      const visibleStates = Object.keys(newStates).filter((key) => newStates[key].visible);
+      updateSegmentFilters(map, visibleStates);
+      return newStates;
     });
   };
 
