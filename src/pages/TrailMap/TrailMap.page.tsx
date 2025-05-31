@@ -6,7 +6,7 @@ import styles from './TrailMapPage.module.css';
 import { DisclaimerModal } from './components/DisclaimerModal/DisclaimerModal';
 import { MapAside } from './components/MapAside';
 import { TrailMapComponent } from './components/TrailMapComponent';
-import { LayerVisibilityProvider } from './context/LayerVisibilityContext';
+import { LayerManagerProvider } from './context/LayerManagerContext';
 
 export function TrailMapPage() {
   const [searchParams] = useSearchParams();
@@ -17,7 +17,7 @@ export function TrailMapPage() {
   const [activeTab, setActiveTab] = useState<string | null>(initialTab);
 
   return (
-    <LayerVisibilityProvider mapRef={mapRef}>
+    <LayerManagerProvider mapRef={mapRef}>
       <div className={styles.container}>
         <DisclaimerModal />
 
@@ -50,6 +50,6 @@ export function TrailMapPage() {
           />
         </div>
       </div>
-    </LayerVisibilityProvider>
+    </LayerManagerProvider>
   );
 }

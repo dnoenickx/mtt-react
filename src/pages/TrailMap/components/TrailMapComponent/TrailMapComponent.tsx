@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React from 'react';
 import Map, {
   GeolocateControl,
   MapLayerMouseEvent,
@@ -7,7 +7,6 @@ import Map, {
   Popup as MapLibrePopup,
   MapRef,
 } from 'react-map-gl/maplibre';
-import { PositionAnchor } from 'maplibre-gl';
 import { useMantineColorScheme } from '@mantine/core';
 import { useSearchParams } from 'react-router-dom';
 import { getInitialBounds } from './utils/initialBounds';
@@ -20,29 +19,9 @@ import { OpenExternalMapPopup } from '../OpenExternalMapPopup/OpenExternalMapPop
 // Import map layer components
 import { CommuterRailLayer } from '@/components/MapLayers/CommuterRail/CommuterRail.layer';
 import { SegmentsLayer } from '@/components/MapLayers/Segments/Segments.layer';
-import { BikeSharePopup } from '@/components/MapLayers/BikeShare/BikeSharePopup';
-import { CommuterRailPopup } from '@/components/MapLayers/CommuterRail/CommuterRailPopup';
-import { useLayerVisibility } from '../../context/LayerVisibilityContext';
+import { useLayerManager } from '../../context/LayerManagerContext';
 import { BikeShareLayer } from '@/components/MapLayers/BikeShare/BikeShare.layer';
 import { SubwayLayer } from '@/components/MapLayers/Subway/Subway.layer';
-
-const featuresByLayer = (e: MapLayerMouseEvent): Record<string, GeoJSON.Feature[]> => {
-  if (!e.features) {
-    return {};
-  }
-
-  const groupedFeatures = e.features.reduce(
-    (acc, feature) => {
-      const layerId = feature.layer.id;
-      acc[layerId] = acc[layerId] || [];
-      acc[layerId].push(feature);
-      return acc;
-    },
-    {} as Record<string, GeoJSON.Feature[]>
-  );
-
-  return groupedFeatures;
-};
 
 interface TrailMapComponentProps {
   navigateToTab: (tab: string) => void;
@@ -53,8 +32,7 @@ export function TrailMapComponent({ navigateToTab, mapRef }: TrailMapComponentPr
   const [searchParams, setSearchParams] = useSearchParams();
   const { colorScheme } = useMantineColorScheme();
   const { currentData } = useData();
-  const { popup, setPopup, handleClick, handleMouseMove, interactiveLayerIds } =
-    useLayerVisibility();
+  const { popup, setPopup, handleClick, handleMouseMove, interactiveLayerIds } = useLayerManager();
 
   const contextMenuHandler = (e: MapLayerMouseEvent) => {
     const [lng, lat] = e.lngLat.toArray();
@@ -86,7 +64,7 @@ export function TrailMapComponent({ navigateToTab, mapRef }: TrailMapComponentPr
       <ScaleControl unit="imperial" />
 
       <CommuterRailLayer mapRef={mapRef} />
-      <SubwayLayer mapRef={mapRef} />
+      <SubwayLayer />
       <BikeShareLayer mapRef={mapRef} />
       <SegmentsLayer
         mapRef={mapRef}
@@ -101,10 +79,7 @@ export function TrailMapComponent({ navigateToTab, mapRef }: TrailMapComponentPr
           anchor={popup.anchor || 'top-left'}
           longitude={Number(popup.lng)}
           latitude={Number(popup.lat)}
-          onClose={() => {
-            console.log('closing popup');
-            setPopup(undefined);
-          }}
+          onClose={() => setPopup(undefined)}
           closeButton={popup.source === 'click'}
           closeOnMove={popup.source === 'hover'}
         >

@@ -17,7 +17,10 @@ export const useCommuterRailData = (enabled: boolean) =>
         );
       }
       const data = await response.json();
-      data.stations.features.forEach((feature: any, index: number) => (feature.id = index));
+      data.stations.features = data.stations.features.map((feature: any, index: number) => ({
+        ...feature,
+        id: index,
+      }));
       return data;
     },
     enabled,

@@ -21,7 +21,7 @@ import { formatDistance } from 'date-fns';
 import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
 import classes from './WelcomePanel.module.css';
 import { useData } from '../../../../components/DataProvider/DataProvider';
-import { useLayerVisibility } from '../../context/LayerVisibilityContext';
+import { useLayerManager } from '../../context/LayerManagerContext';
 
 interface WelcomePanelProps {
   segmentStates: SegmentStates;
@@ -49,7 +49,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   const [opened, { open, close }] = useDisclosure(false);
   const { lastUpdated } = useData();
   const { colorScheme } = useMantineColorScheme();
-  const { toggleLayer, layerToggles } = useLayerVisibility();
+  const { toggleLayer, layerToggles } = useLayerManager();
   const isDarkMode = colorScheme === 'dark';
 
   const trailExplanation = useMemo(

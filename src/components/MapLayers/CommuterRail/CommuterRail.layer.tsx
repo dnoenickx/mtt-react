@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { featureCollection } from '@turf/turf';
 import { Layer, Source, MapRef } from 'react-map-gl/maplibre';
 import { useCommuterRailData } from './useCommuterRailData';
-import { useLayerVisibility } from '@/pages/TrailMap/context/LayerVisibilityContext';
+import { useLayerManager } from '@/pages/TrailMap/context/LayerManagerContext';
 import { CommuterRailPopup } from './CommuterRailPopup';
 import { ifHovered } from '@/mapUtils';
 
@@ -11,7 +11,7 @@ interface CommuterRailLayerProps {
 }
 
 export function CommuterRailLayer({ mapRef }: CommuterRailLayerProps) {
-  const { isLayerVisible, registerToggle, registerHoverHandler, setPopup } = useLayerVisibility();
+  const { isLayerVisible, registerToggle, registerHoverHandler, setPopup } = useLayerManager();
   const visible = isLayerVisible('commuterRail');
   const visibility = visible ? 'visible' : 'none';
 
@@ -25,12 +25,8 @@ export function CommuterRailLayer({ mapRef }: CommuterRailLayerProps) {
       id: 'commuterRail',
       label: 'Commuter Rail',
       visible,
-      layerIds: [
-        'commuter_rail_lines_layer',
-        'commuter_rail_stations_layer',
-      ],
+      layerIds: ['commuter_rail_lines_layer', 'commuter_rail_stations_layer'],
     });
-
 
     // register hover handler with context
     registerHoverHandler('commuter_rail_stations_layer', (e, featureId, isEntering) => {
@@ -38,20 +34,31 @@ export function CommuterRailLayer({ mapRef }: CommuterRailLayerProps) {
         return;
       }
       const map = mapRef.current.getMap();
-      
+
       if (isEntering) {
         // Set popup
         const [lng, lat] = e.lngLat.toArray();
         const stationName = e.features?.[0].properties?.STATION;
-        setPopup({ lng, lat, content: <CommuterRailPopup stationName={stationName} /> , source: 'hover'});
+        setPopup({
+          lng,
+          lat,
+          content: <CommuterRailPopup stationName={stationName} />,
+          source: 'hover',
+        });
         // Set hover
-        map.setFeatureState({ source: 'commuter_rail_stations_source', id: featureId }, { hover: true });
+        map.setFeatureState(
+          { source: 'commuter_rail_stations_source', id: featureId },
+          { hover: true }
+        );
         map.getCanvas().style.cursor = 'pointer';
       } else {
         // Clear popup
         setPopup(undefined);
         // Clear hover
-        map.setFeatureState({ source: 'commuter_rail_stations_source', id: featureId }, { hover: false });
+        map.setFeatureState(
+          { source: 'commuter_rail_stations_source', id: featureId },
+          { hover: false }
+        );
         map.getCanvas().style.cursor = 'grab';
       }
     });

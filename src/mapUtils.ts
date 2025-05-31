@@ -60,21 +60,3 @@ export const ifHovered = <T>(
     hoverValue,
     defaultValue,
   ] as DataDrivenPropertyValueSpecification<T>;
-
-export const featuresByLayer = (e: MapLayerMouseEvent): Record<string, GeoJSON.Feature[]> => {
-  if (!e.features) {
-    return {};
-  }
-
-  const groupedFeatures = e.features.reduce(
-    (acc, feature) => {
-      const layerId = feature.layer.id;
-      acc[layerId] = acc[layerId] || [];
-      acc[layerId].push(feature);
-      return acc;
-    },
-    {} as Record<string, GeoJSON.Feature[]>
-  );
-
-  return groupedFeatures;
-};

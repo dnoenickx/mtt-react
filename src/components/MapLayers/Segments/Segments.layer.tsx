@@ -10,11 +10,21 @@ import {
   getSegmentIds,
   getTrailIds,
 } from '@/pages/TrailMap/components/TrailMapComponent/utils/initialBounds';
-import { useLayerVisibility } from '@/pages/TrailMap/context/LayerVisibilityContext';
+import { useLayerManager } from '@/pages/TrailMap/context/LayerManagerContext';
 
 const SEGMENTS_SOURCE_ID = 'segments_source';
 
 export const SEGMENTS_INTERACTIVE_LAYER_ID = 'segments_interactive_layer';
+
+const SEGMENTS_SYMBOLOGY_LAYERS = {
+  highlight2: 'segments_symbology_highlight_2',
+  highlight1: 'segments_symbology_highlight_1',
+  white: 'segments_symbology_white',
+  solid: 'segments_symbology_solid',
+  dashed: 'segments_symbology_dashed',
+} as const;
+
+export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAYERS);
 
 /**
  * Updates the filter for segment layers based on the visible states
@@ -51,15 +61,6 @@ export const updateSegmentFilters = (map: maplibregl.Map, visibleStates: string[
   map.setFilter(SEGMENTS_INTERACTIVE_LAYER_ID, stateFilter);
 };
 
-const SEGMENTS_SYMBOLOGY_LAYERS = {
-  highlight2: 'segments_symbology_highlight_2',
-  highlight1: 'segments_symbology_highlight_1',
-  white: 'segments_symbology_white',
-  solid: 'segments_symbology_solid',
-  dashed: 'segments_symbology_dashed',
-};
-export const SEGMENTS_SYMBOLOGY_LAYER_IDS = Object.values(SEGMENTS_SYMBOLOGY_LAYERS);
-
 const BEFORE_ID = 'pois';
 
 interface SegmentsLayerProps {
@@ -75,7 +76,7 @@ export function SegmentsLayer({
   excludeId,
   onSegmentClick,
 }: SegmentsLayerProps) {
-  const { registerHoverHandler, registerClickHandler } = useLayerVisibility();
+  const { registerHoverHandler, registerClickHandler } = useLayerManager();
   const isMobile = useMediaQuery('(min-width: 415px)');
   const [searchParams] = useSearchParams();
   const { currentData } = useData();

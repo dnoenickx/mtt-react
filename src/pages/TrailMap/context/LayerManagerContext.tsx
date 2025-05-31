@@ -31,10 +31,9 @@ interface LayerHandlers {
     string,
     (e: MapLayerMouseEvent, featureId: string | number, isEntering: boolean) => void
   >;
-  contextMenu: Record<string, (e: MapLayerMouseEvent) => void>;
 }
 
-interface LayerVisibilityContextType {
+interface LayerManagerContextType {
   mapRef: React.RefObject<MapRef>;
   layerToggles: Record<string, LayerToggleInfo>;
   toggleLayer: (id: string) => void;
@@ -45,29 +44,26 @@ interface LayerVisibilityContextType {
     layerId: string,
     handler: (e: MapLayerMouseEvent, featureId: string | number, isEntering: boolean) => void
   ) => void;
-  registerContextMenuHandler: (layerId: string, handler: (e: MapLayerMouseEvent) => void) => void;
   handleClick: (e: MapLayerMouseEvent) => void;
   handleMouseMove: (e: MapLayerMouseEvent) => void;
-  handleContextMenu: (e: MapLayerMouseEvent) => void;
   popup: PopupData | undefined;
   setPopup: (popup: PopupData | undefined) => void;
   interactiveLayerIds: string[];
 }
 
-const LayerVisibilityContext = createContext<LayerVisibilityContextType | undefined>(undefined);
+const LayerManagerContext = createContext<LayerManagerContextType | undefined>(undefined);
 
-interface LayerVisibilityProviderProps {
+interface LayerManagerProviderProps {
   mapRef: React.RefObject<MapRef>;
   children: ReactNode;
 }
 
-export function LayerVisibilityProvider({ mapRef, children }: LayerVisibilityProviderProps) {
+export function LayerManagerProvider({ mapRef, children }: LayerManagerProviderProps) {
   const [popup, setPopup] = useState<PopupData | undefined>(undefined);
   const [layerToggles, setLayerToggles] = useState<Record<string, LayerToggleInfo>>({});
   const [handlers, setHandlers] = useState<LayerHandlers>({
     click: {},
     hover: {},
-    contextMenu: {},
   });
 
   const [currentHover, setCurrentHover] = useState<{
@@ -76,14 +72,7 @@ export function LayerVisibilityProvider({ mapRef, children }: LayerVisibilityPro
   } | null>(null);
 
   const interactiveLayerIds = useMemo(
-    () =>
-      Array.from(
-        new Set([
-          ...Object.keys(handlers.click),
-          ...Object.keys(handlers.hover),
-          ...Object.keys(handlers.contextMenu),
-        ])
-      ),
+    () => Array.from(new Set([...Object.keys(handlers.click), ...Object.keys(handlers.hover)])),
     [handlers]
   );
 
@@ -130,25 +119,33 @@ export function LayerVisibilityProvider({ mapRef, children }: LayerVisibilityPro
     [registerHandler]
   );
 
-  const registerContextMenuHandler = useCallback(
-    (layerId: string, handler: (e: MapLayerMouseEvent) => void) =>
-      registerHandler('contextMenu', layerId, handler),
-    [registerHandler]
-  );
-
+  /**
+   * Calls handler for topmost feature with a click handler.
+   * Iterates through features from top to bottom until it finds one with a registered click handler.
+   */
   const handleClick = useCallback(
     (e: MapLayerMouseEvent) => {
-      const feature = e.features?.[0];
-      if (!feature || !handlers.click[feature.layer.id]) return;
+      if (!e.features?.length) return;
+
+      // Find the first feature that has a registered click handler
+      const feature = e.features.find((f) => handlers.click[f.layer.id]);
+      if (!feature) return;
+
+      // Call the handler for the matching layer
       handlers.click[feature.layer.id](e);
     },
     [handlers.click]
   );
 
+  /**
+   * Manages hover states for interactive layers.
+   * Tracks the currently hovered feature and updates hover states accordingly.
+   */
   const handleMouseMove = useCallback(
     (e: MapLayerMouseEvent) => {
       const feature = e.features?.[0];
 
+      // If no feature is hovered, clear existing hover state
       if (!feature) {
         if (currentHover) {
           const { layerId, featureId } = currentHover;
@@ -164,10 +161,14 @@ export function LayerVisibilityProvider({ mapRef, children }: LayerVisibilityPro
         currentHover.layerId !== feature.layer.id ||
         currentHover.featureId !== featureId;
 
+      // If hovered layer has a handler and it's different from the current hover
       if (handlers.hover[feature.layer.id] && isNewHover) {
+        // Remove previous hover, if it exists
         if (currentHover) {
           handlers.hover[currentHover.layerId]?.(e, currentHover.featureId, false);
         }
+
+        // Add new hover
         handlers.hover[feature.layer.id](e, featureId, true);
         setCurrentHover({ layerId: feature.layer.id, featureId });
       }
@@ -175,60 +176,30 @@ export function LayerVisibilityProvider({ mapRef, children }: LayerVisibilityPro
     [currentHover, handlers.hover]
   );
 
-  const handleContextMenu = useCallback(
-    (e: MapLayerMouseEvent) => {
-      const feature = e.features?.find((f) => handlers.contextMenu[f.layer.id]);
-      if (feature) {
-        handlers.contextMenu[feature.layer.id](e);
-      }
-    },
-    [handlers.contextMenu]
-  );
-
-  const contextValue = useMemo(
-    () => ({
-      mapRef,
-      layerToggles,
-      toggleLayer,
-      isLayerVisible,
-      registerToggle,
-      registerClickHandler,
-      registerHoverHandler,
-      registerContextMenuHandler,
-      handleClick,
-      handleMouseMove,
-      handleContextMenu,
-      popup,
-      setPopup,
-      interactiveLayerIds,
-    }),
-    [
-      mapRef,
-      layerToggles,
-      isLayerVisible,
-      registerToggle,
-      registerClickHandler,
-      registerHoverHandler,
-      registerContextMenuHandler,
-      handleClick,
-      handleMouseMove,
-      handleContextMenu,
-      popup,
-      interactiveLayerIds,
-    ]
-  );
+  const contextValue = {
+    mapRef,
+    layerToggles,
+    toggleLayer,
+    isLayerVisible,
+    registerToggle,
+    registerClickHandler,
+    registerHoverHandler,
+    handleClick,
+    handleMouseMove,
+    popup,
+    setPopup,
+    interactiveLayerIds,
+  };
 
   return (
-    <LayerVisibilityContext.Provider value={contextValue}>
-      {children}
-    </LayerVisibilityContext.Provider>
+    <LayerManagerContext.Provider value={contextValue}>{children}</LayerManagerContext.Provider>
   );
 }
 
-export const useLayerVisibility = () => {
-  const context = useContext(LayerVisibilityContext);
+export const useLayerManager = () => {
+  const context = useContext(LayerManagerContext);
   if (!context) {
-    throw new Error('useLayerVisibility must be used within a LayerVisibilityProvider');
+    throw new Error('useLayerManager must be used within a LayerVisibilityProvider');
   }
   return context;
 };

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Layer, Source, MapRef } from 'react-map-gl/maplibre';
-import { featureCollection } from '@turf/turf';
-import { useSubwayData } from './useSubwayData';
-import { useLayerVisibility } from '@/pages/TrailMap/context/LayerVisibilityContext';
+import { useEffect } from 'react';
+import { Layer, Source } from 'react-map-gl/maplibre';
 import { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+import { featureCollection } from '@turf/turf';
+import { useLayerManager } from '@/pages/TrailMap/context/LayerManagerContext';
+import { useSubwayData } from './useSubwayData';
 
 const colorMatch: DataDrivenPropertyValueSpecification<string> = [
   'match',
@@ -20,12 +20,8 @@ const colorMatch: DataDrivenPropertyValueSpecification<string> = [
   '#ccc',
 ];
 
-interface SubwayLayerProps {
-  mapRef: React.RefObject<MapRef>;
-}
-
-export function SubwayLayer({ mapRef }: SubwayLayerProps) {
-  const { isLayerVisible, registerToggle } = useLayerVisibility();
+export function SubwayLayer() {
+  const { isLayerVisible, registerToggle } = useLayerManager();
 
   const visible = isLayerVisible('subway');
   const visibility = visible ? 'visible' : 'none';

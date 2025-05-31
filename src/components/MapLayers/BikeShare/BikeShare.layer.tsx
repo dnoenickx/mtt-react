@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Layer, Source, MapRef } from 'react-map-gl/maplibre';
 import { featureCollection } from '@turf/turf';
 import { useBikeShareData } from './useBikeShareData';
-import { useLayerVisibility } from '@/pages/TrailMap/context/LayerVisibilityContext';
+import { useLayerManager } from '@/pages/TrailMap/context/LayerManagerContext';
 import { BikeSharePopup } from './BikeSharePopup';
 import { ifHovered } from '@/mapUtils';
 
@@ -12,7 +12,7 @@ interface BikeShareLayerProps {
 
 export function BikeShareLayer({ mapRef }: BikeShareLayerProps) {
   const { isLayerVisible, registerToggle, registerClickHandler, registerHoverHandler, setPopup } =
-    useLayerVisibility();
+    useLayerManager();
   const visible = isLayerVisible('bikeShare');
   const visibility = visible ? 'visible' : 'none';
 
@@ -37,7 +37,6 @@ export function BikeShareLayer({ mapRef }: BikeShareLayerProps) {
 
       const [lng, lat] = e.lngLat.toArray();
 
-      console.log('opening popup');
       setPopup({
         lng,
         lat,

@@ -1,12 +1,14 @@
 import React from 'react';
 import { Drawer, ScrollArea, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { MapRef } from 'react-map-gl/maplibre';
+
 import WelcomePanel from '../WelcomePanel/WelcomePanel';
 import { SegmentDetailsPanel } from '../SegmentDetailsPanel/SegmentDetailsPanel';
 import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
 import { updateSegmentFilters } from '@/components/MapLayers/Segments/Segments.layer';
 import styles from './MapAside.module.css';
-import { MapRef } from 'react-map-gl/maplibre';
+
 interface MapAsideProps {
   activeTab: string | null;
   setActiveTab: React.Dispatch<React.SetStateAction<string | null>>;
