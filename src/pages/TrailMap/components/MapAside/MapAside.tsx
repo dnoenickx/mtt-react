@@ -4,10 +4,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import WelcomePanel from '../WelcomePanel/WelcomePanel';
 import { SegmentDetailsPanel } from '../SegmentDetailsPanel/SegmentDetailsPanel';
 import { SegmentStates, SEGMENT_STATES } from '../../TrailMap.config';
-import {
-  SEGMENTS_SYMBOLOGY_LAYER_IDS,
-  updateSegmentFilters,
-} from '@/components/MapLayers/Segments/Segments.layer';
+import { updateSegmentFilters } from '@/components/MapLayers/Segments/Segments.layer';
 import styles from './MapAside.module.css';
 import { MapRef } from 'react-map-gl/maplibre';
 interface MapAsideProps {

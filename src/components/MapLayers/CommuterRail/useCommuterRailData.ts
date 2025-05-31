@@ -16,7 +16,9 @@ export const useCommuterRailData = (enabled: boolean) =>
           `Failed to fetch commuter rail data: ${response.status} ${response.statusText}`
         );
       }
-      return response.json();
+      const data = await response.json();
+      data.stations.features.forEach((feature: any, index: number) => (feature.id = index));
+      return data;
     },
     enabled,
   });

@@ -49,7 +49,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
   const [opened, { open, close }] = useDisclosure(false);
   const { lastUpdated } = useData();
   const { colorScheme } = useMantineColorScheme();
-  const { layers, toggleLayer } = useLayerVisibility();
+  const { toggleLayer, layerToggles } = useLayerVisibility();
   const isDarkMode = colorScheme === 'dark';
 
   const trailExplanation = useMemo(
@@ -133,7 +133,7 @@ const WelcomePanel: React.FC<WelcomePanelProps> = ({
         Layers
       </Title>
       <Grid>
-        {Object.values(layers).map((layer) => (
+        {Object.values(layerToggles).map((layer) => (
           <Grid.Col span={6} key={layer.id}>
             <Checkbox
               id={layer.id}

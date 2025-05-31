@@ -1,13 +1,11 @@
 import React from 'react';
 import { Stack, Group, Text } from '@mantine/core';
-import { formatDistanceStrict } from 'date-fns';
 
 interface BikeSharePopupProps {
   name: string;
   numBikesAvailable: number;
   numEBikesAvailable: number;
   numDocksAvailable: number;
-  updatedAt: Date;
 }
 
 export function BikeSharePopup({
@@ -15,7 +13,6 @@ export function BikeSharePopup({
   numBikesAvailable,
   numEBikesAvailable,
   numDocksAvailable,
-  updatedAt,
 }: BikeSharePopupProps) {
   return (
     <Stack gap="xs" align="center" m="sm">
@@ -46,9 +43,6 @@ export function BikeSharePopup({
           </Text>
         </Stack>
       </Group>
-      <Text size="xs" c="dimmed">
-        Updated {formatDistanceStrict(updatedAt, new Date(), { addSuffix: true })}
-      </Text>
     </Stack>
   );
 }

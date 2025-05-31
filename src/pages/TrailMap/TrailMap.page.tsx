@@ -17,7 +17,7 @@ export function TrailMapPage() {
   const [activeTab, setActiveTab] = useState<string | null>(initialTab);
 
   return (
-    <LayerVisibilityProvider>
+    <LayerVisibilityProvider mapRef={mapRef}>
       <div className={styles.container}>
         <DisclaimerModal />
 
@@ -42,11 +42,11 @@ export function TrailMapPage() {
           </Button>
 
           <TrailMapComponent
+            mapRef={mapRef}
             navigateToTab={(tab: string) => {
               setActiveTab(tab);
               setDrawerOpen(true);
             }}
-            mapRef={mapRef}
           />
         </div>
       </div>

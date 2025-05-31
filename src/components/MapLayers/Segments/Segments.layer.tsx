@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { feature, featureCollection } from '@turf/turf';
 import { Layer, Source, MapRef } from 'react-map-gl/maplibre';
 import { useMediaQuery } from '@mantine/hooks';
@@ -10,14 +10,11 @@ import {
   getSegmentIds,
   getTrailIds,
 } from '@/pages/TrailMap/components/TrailMapComponent/utils/initialBounds';
+import { useLayerVisibility } from '@/pages/TrailMap/context/LayerVisibilityContext';
 
 const SEGMENTS_SOURCE_ID = 'segments_source';
 
 export const SEGMENTS_INTERACTIVE_LAYER_ID = 'segments_interactive_layer';
-
-export const SEGMENTS_LAYER_TO_SOURCE = {
-  [SEGMENTS_INTERACTIVE_LAYER_ID]: SEGMENTS_SOURCE_ID,
-};
 
 /**
  * Updates the filter for segment layers based on the visible states
@@ -69,9 +66,16 @@ interface SegmentsLayerProps {
   mapRef: React.RefObject<MapRef>;
   opacity?: number;
   excludeId?: number;
+  onSegmentClick?: (id: string) => void;
 }
 
-export function SegmentsLayer({ mapRef, opacity = 1, excludeId }: SegmentsLayerProps) {
+export function SegmentsLayer({
+  mapRef,
+  opacity = 1,
+  excludeId,
+  onSegmentClick,
+}: SegmentsLayerProps) {
+  const { registerHoverHandler, registerClickHandler } = useLayerVisibility();
   const isMobile = useMediaQuery('(min-width: 415px)');
   const [searchParams] = useSearchParams();
   const { currentData } = useData();
@@ -126,6 +130,31 @@ export function SegmentsLayer({ mapRef, opacity = 1, excludeId }: SegmentsLayerP
 
     return featureCollection(features);
   }, [isMobile, currentData.segments, isDarkMode, excludeId]);
+
+  useEffect(() => {
+    // register hover handler with context
+    registerHoverHandler(SEGMENTS_INTERACTIVE_LAYER_ID, (e, featureId, isEntering) => {
+      if (!mapRef.current || !featureId) {
+        return;
+      }
+      const map = mapRef.current.getMap();
+
+      if (isEntering) {
+        // Set hover
+        map.setFeatureState({ source: SEGMENTS_SOURCE_ID, id: featureId }, { hover: true });
+        map.getCanvas().style.cursor = 'pointer';
+      } else {
+        // Clear hover
+        map.setFeatureState({ source: SEGMENTS_SOURCE_ID, id: featureId }, { hover: false });
+        map.getCanvas().style.cursor = 'grab';
+      }
+    });
+
+    registerClickHandler(SEGMENTS_INTERACTIVE_LAYER_ID, (e) => {
+      const featureId = e.features?.[0].id as number;
+      onSegmentClick?.(featureId.toString());
+    });
+  }, []);
 
   return (
     <Source id={SEGMENTS_SOURCE_ID} type="geojson" data={styledSegments}>
