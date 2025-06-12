@@ -5,7 +5,7 @@ export const DEFAULT_VIEW_STATE = {
 };
 
 export const DEFAULT_MOBILE_VIEW_STATE = {
-  longitude: -71.20,
+  longitude: -71.2,
   latitude: 42.35,
-  zoom: 8.70,
+  zoom: 8.7,
 };

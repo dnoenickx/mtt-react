@@ -13,6 +13,7 @@ import { useDrawMode } from './Modes/DrawMode';
 import { EditorSidebar } from './EditorSidebar';
 import { ifHovered } from '@/mapUtils';
 import { DEFAULT_VIEW_STATE } from '@/constants';
+import { SegmentsLayer } from '../MapLayers/Segments/Segments.layer';
 
 interface MultiLineEditorProps {
   opened: boolean;
@@ -158,12 +159,9 @@ function MultiLineEditor({
               />
             </Source>
 
-            {/* Mode-specific rendering */}
             {currentMode.render()}
 
-            {/* {Object.values(modes).map((m) => m.render())} */}
-
-            {/* {segmentsLayer.render()} */}
+            <SegmentsLayer mapRef={mapRef} opacity={0.55} excludeId={id} interactive={false} />
 
             <EditorSidebar
               {...geometryEditorState}

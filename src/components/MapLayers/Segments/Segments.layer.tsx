@@ -67,6 +67,7 @@ interface SegmentsLayerProps {
   mapRef: React.RefObject<MapRef>;
   opacity?: number;
   excludeId?: number;
+  interactive?: boolean;
   onSegmentClick?: (id: string) => void;
 }
 
@@ -74,9 +75,10 @@ export function SegmentsLayer({
   mapRef,
   opacity = 1,
   excludeId,
+  interactive = true,
   onSegmentClick,
 }: SegmentsLayerProps) {
-  const { registerHoverHandler, registerClickHandler } = useLayerManager();
+  const layerManager = interactive ? useLayerManager() : undefined;
   const isMobile = useMediaQuery('(min-width: 415px)');
   const [searchParams] = useSearchParams();
   const { currentData } = useData();
@@ -133,8 +135,9 @@ export function SegmentsLayer({
   }, [isMobile, currentData.segments, isDarkMode, excludeId]);
 
   useEffect(() => {
+    if (!interactive || !layerManager) return;
     // register hover handler with context
-    registerHoverHandler(SEGMENTS_INTERACTIVE_LAYER_ID, (e, featureId, isEntering) => {
+    layerManager.registerHoverHandler(SEGMENTS_INTERACTIVE_LAYER_ID, (e, featureId, isEntering) => {
       if (!mapRef.current || !featureId) {
         return;
       }
@@ -151,7 +154,7 @@ export function SegmentsLayer({
       }
     });
 
-    registerClickHandler(SEGMENTS_INTERACTIVE_LAYER_ID, (e) => {
+    layerManager.registerClickHandler(SEGMENTS_INTERACTIVE_LAYER_ID, (e) => {
       const featureId = e.features?.[0].id as number;
       onSegmentClick?.(featureId.toString());
     });
