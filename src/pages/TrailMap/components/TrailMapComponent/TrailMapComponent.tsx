@@ -13,7 +13,7 @@ import { getInitialBounds } from './utils/initialBounds';
 import { darkStyle, lightStyle } from '../../MapStyle';
 import { useData } from '@/components/DataProvider/DataProvider';
 import './TrailMapComponent.module.css';
-import { DEFAULT_VIEW_STATE } from '@/constants';
+import { DEFAULT_MOBILE_VIEW_STATE, DEFAULT_VIEW_STATE } from '@/constants';
 import { OpenExternalMapPopup } from '../OpenExternalMapPopup/OpenExternalMapPopup';
 
 // Import map layer components
@@ -57,7 +57,7 @@ export function TrailMapComponent({ navigateToTab, mapRef }: TrailMapComponentPr
       onMouseMove={handleMouseMove}
       onClick={handleClick}
       onContextMenu={contextMenuHandler}
-      initialViewState={getInitialBounds(searchParams, currentData) ?? DEFAULT_VIEW_STATE}
+      initialViewState={getInitialBounds(searchParams, currentData) ?? (window.innerWidth <= 768 ? DEFAULT_MOBILE_VIEW_STATE : DEFAULT_VIEW_STATE)}
     >
       <GeolocateControl />
       <NavigationControl />

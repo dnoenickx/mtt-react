@@ -119,6 +119,12 @@ function simplifyGeometries(segment) {
     const lines = segment.geometry.coordinates.map((coords) => {
       return turf.lineString(coords);
     });
+
+    if (lines.length === 0) {
+      console.log('WARNING: A segment has no coordinates\n');
+      return segment;
+    }
+
     const fc = turf.featureCollection(lines);
 
     // Get the centroid to calculate the tolerance in degrees
