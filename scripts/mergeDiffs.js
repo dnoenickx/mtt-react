@@ -95,18 +95,28 @@ function main() {
   // Read diff JSONs (could be multiple)
   const diffsPath = path.join(__dirname, '/diffs');
 
-  // Get JSON files from directory
-  const diffFilenames = fs.readdirSync(diffsPath);
-  const diffFiles = diffFilenames.map((file) => path.join(diffsPath, file));
-
-  // Read and parse diff files
-  const diffs = diffFiles.map((file) => JSON.parse(fs.readFileSync(file, 'utf8')));
+  // Get and process diff files
+  const diffs = [];
+  const validFilenames = [];
+  
+  fs.readdirSync(diffsPath, { withFileTypes: true })
+    .filter(dirent => dirent.isFile())
+    .forEach(dirent => {
+      const filePath = path.join(diffsPath, dirent.name);
+      try {
+        const content = fs.readFileSync(filePath, 'utf8');
+        diffs.push(JSON.parse(content));
+        validFilenames.push(filePath);
+      } catch (error) {
+        console.error(`Error reading or parsing ${filePath}:`, error.message);
+      }
+    });
 
   // Detect conflicts and merge diffs
-  const { mergedData, conflicts } = detectAndMergeDiffs(originalData, diffs, diffFilenames);
+  const { mergedData, conflicts } = detectAndMergeDiffs(originalData, diffs, validFilenames);
 
   // Write merged data to a new file
-  fs.writeFileSync(dataPath, JSON.stringify(mergedData, null, 2));
+  fs.writeFileSync(dataPath, JSON.stringify(mergedData, null, 4));
 
   // Print conflict information
   if (Object.keys(conflicts).length > 0) {

@@ -197,7 +197,7 @@ fs.readFile(filePath, 'utf8', (err, data) => {
   const updatedData = updateData(parsedData);
 
   // Set space parameter based on minify flag
-  const space = minified ? 0 : 2;
+  const space = minified ? 0 : 4;
 
   // Write the updated data back to the file
   fs.writeFile(filePath, JSON.stringify(updatedData, null, space), (err) => {
