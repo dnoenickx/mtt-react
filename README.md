@@ -47,3 +47,16 @@ A map application for viewing existing and planned trails across the Commonwealt
 - ~~`storybook` – starts storybook dev server~~
 - ~~`storybook:build` – build production storybook bundle to `storybook-static`~~
 - `prettier:write` – formats all files with Prettier
+
+## Helpful commands
+
+```
+
+aws s3 ls | grep mtt-backend-prod
+
+aws s3 cp --recursive s3://<bucket>/edits/ scripts/diffs/
+
+aws s3 rm --recursive s3://<bucket>/edits/
+
+
+```
