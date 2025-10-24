@@ -10,13 +10,10 @@ export default function Admin(): JSX.Element {
 
   useDocumentTitle(`${toCapitalCase(tabValue)} | Edit`);
 
-  const showDownloadButton = Boolean(Number(import.meta.env.VITE_DEV));
-
   return (
     <Container py="xl" maw="100vw">
       <Container size="lg">
-        <AdminHeader showDownloadButton={showDownloadButton} />
-
+        <AdminHeader />
         <AdminTabs tabValue={tabValue} />
       </Container>
     </Container>

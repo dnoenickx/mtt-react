@@ -4,7 +4,7 @@ interface LogoProps extends BoxProps {
   color?: string;
 }
 
-const Logo: React.FC<LogoProps> = ({ color, ...rest }) => (
+export const Logo: React.FC<LogoProps> = ({ color, ...rest }) => (
   <Box {...rest} title="Mass Trail Tracker">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -26,5 +26,3 @@ const Logo: React.FC<LogoProps> = ({ color, ...rest }) => (
     </svg>
   </Box>
 );
-
-export default Logo;

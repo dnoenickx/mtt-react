@@ -3,7 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { ActionIcon, AppShell, Burger, Group, Text, useMantineColorScheme } from '@mantine/core';
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import cx from 'clsx';
-import Logo from '../../components/Logo/Logo';
+import { Logo } from '../../components/Atomic';
 import classes from './Root.module.css';
 import SubmitEditsBanner from '@/components/SubmitEditsBanner/SubmitEditsBanner';
 

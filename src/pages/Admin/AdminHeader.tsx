@@ -1,19 +1,14 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Spoiler, Anchor, Group, Button, rem } from '@mantine/core';
-import { IconEraser, IconCheck, IconMapDown, IconBrandYoutubeFilled } from '@tabler/icons-react';
+import { IconEraser, IconCheck, IconBrandYoutubeFilled } from '@tabler/icons-react';
 import { useSessionStorage } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { handleDownload } from '@/utils';
-import { EmailButton } from '@/components/Atomic/Atomic';
+import { EmailButton } from '@/components/Atomic';
 import ConfirmationButton from '@/components/ConfirmationButton';
 import { useData } from '@/components/DataProvider/DataProvider';
 
-interface AdminHeaderProps {
-  showDownloadButton: boolean;
-}
-
-export default function AdminHeader({ showDownloadButton }: AdminHeaderProps): JSX.Element {
-  const { clearChanges, getCurrentJSON } = useData();
+export default function AdminHeader(): JSX.Element {
+  const { clearChanges } = useData();
   const [spoilerOpen, setSpoilerOpen] = useSessionStorage({
     key: 'admin-spoiler',
     defaultValue: true,
@@ -96,16 +91,6 @@ export default function AdminHeader({ showDownloadButton }: AdminHeaderProps): J
       </Alert>
 
       <Group justify="flex-end" pb={{ base: 'sm', sm: 0 }}>
-        {showDownloadButton && (
-          <Button
-            leftSection={<IconMapDown style={{ width: rem(14), height: rem(14) }} />}
-            onClick={() => handleDownload('updated_data.json', getCurrentJSON())}
-            variant="outline"
-            size="xs"
-          >
-            Download All Data
-          </Button>
-        )}
         <ConfirmationButton
           confirmationText="All edits will be cleared from your browser. Submitted changes will still be available for me to review, but any unsubmitted changes will be permanently lost."
           onConfirm={() => {

@@ -13,7 +13,7 @@ import {
 import { IconCircleCheck, IconCircleX, IconDownload, IconExternalLink } from '@tabler/icons-react';
 import { useDocumentTitle } from '@mantine/hooks';
 import { Footer } from '@/pages/About/components/Footer/Footer';
-import { EmailButton } from '@/components/Atomic/Atomic';
+import { EmailButton } from '@/components/Atomic';
 import { useData } from '@/components/DataProvider/DataProvider';
 import { handleDownload } from '@/utils';
 

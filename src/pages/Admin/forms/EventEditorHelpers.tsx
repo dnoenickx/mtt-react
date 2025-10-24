@@ -98,7 +98,7 @@ export function EventSearch<T>({
 
   const eventData = Array.from(groupedByYear.entries()).map(([year, events]) => ({
     group: year.toString(),
-    items: events.map((event) => ({
+    items: events.map((event: RawTrailEvent) => ({
       value: event.id.toString(),
       label: event.headline,
       description: event.description,
@@ -141,7 +141,7 @@ export function EventSearch<T>({
     // Add suggestions group to eventData
     eventData.unshift({
       group: 'Suggestions',
-      items: suggestionEvents.map((event) => ({
+      items: suggestionEvents.map((event: RawTrailEvent) => ({
         value: `0${event.id.toString()}`,
         label: event.headline,
         description: event.description,
@@ -178,7 +178,7 @@ export function EventSearch<T>({
           renderOption={({ option }) => (
             <Stack gap={0}>
               <Text size="sm">{option.label}</Text>
-              <Text size="xs" color="dimmed" lineClamp={2}>
+              <Text size="xs" c="dimmed" lineClamp={2}>
                 {currentData.trailEvents[Number(option.value)].description}
               </Text>
             </Stack>

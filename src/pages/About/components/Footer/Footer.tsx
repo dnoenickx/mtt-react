@@ -1,5 +1,5 @@
 import { Text, Container } from '@mantine/core';
-import Logo from '../../../../components/Logo/Logo';
+import { Logo } from '../../../../components/Atomic';
 import classes from './Footer.module.css';
 
 type Link = {

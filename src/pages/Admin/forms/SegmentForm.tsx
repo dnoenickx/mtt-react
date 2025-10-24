@@ -200,7 +200,7 @@ const SegmentForm = () => {
         <Text size="sm" fw={500}>
           Geometry
         </Text>
-        <Text color="dimmed" size="12px" lh="14.4px">
+        <Text c="dimmed" size="12px" lh="14.4px">
           Open the editor to modify geometry, If you are having trouble, just describe the change in
           the description field above
         </Text>
@@ -248,7 +248,7 @@ const SegmentForm = () => {
         <Text size="sm" fw={500}>
           Timeline
         </Text>
-        <Text color="dimmed" size="12px" lh="14.4px">
+        <Text c="dimmed" size="12px" lh="14.4px">
           Create new timeline events or lookup existing ones to link them to this segment
         </Text>
 

@@ -1,6 +1,6 @@
 import { Text, Button, Group, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { EmailButton } from '../../../../components/Atomic/Atomic';
+import { EmailButton } from '../../../../components/Atomic';
 
 export function DisclaimerModal() {
   const [opened, { close }] = useDisclosure(sessionStorage.getItem('acceptedWelcome') !== 'true');

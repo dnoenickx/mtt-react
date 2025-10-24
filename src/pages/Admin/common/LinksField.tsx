@@ -58,7 +58,7 @@ const LinksField = ({ value = [], onChange, description, ...boxProps }: LinksFie
         </Button>
       </Text>
       {description && (
-        <Text color="dimmed" size="12px" lh="14.4px">
+        <Text c="dimmed" size="12px" lh="14.4px">
           {description}
         </Text>
       )}
@@ -127,16 +127,6 @@ const LinksField = ({ value = [], onChange, description, ...boxProps }: LinksFie
           </Droppable>
         </DragDropContext>
       </Box>
-      {/* <Group justify="center" mt="md">
-        <Button
-          size="compact-sm"
-          variant="outline"
-          onClick={addLink}
-          leftSection={<IconPlus size="1rem" />}
-        >
-          Add Link
-        </Button>
-      </Group> */}
     </Box>
   );
 };

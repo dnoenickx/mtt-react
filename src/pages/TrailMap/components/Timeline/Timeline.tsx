@@ -22,7 +22,7 @@ import {} from // IconExternalLink,
 import { formatDateWithPrecision } from '@/utils';
 
 import { TrailEvent } from '../../../../types';
-import { LinkGroup, MultiLineText } from '../../../../components/Atomic/Atomic';
+import { LinkGroup, MultiLineText } from '../../../../components/Atomic';
 
 // function getIcon(iconName: string) {
 //   const size = 14;

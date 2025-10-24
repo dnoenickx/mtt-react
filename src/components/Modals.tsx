@@ -43,7 +43,7 @@ export function ClearChangesModal() {
         </Group>
       ) : (
         <Group justify="flex-end" mt="md">
-          <Text size="sm" color="dimmed">
+          <Text size="sm" c="dimmed">
             Your changes have been submitted.
           </Text>
           <Button color="red" onClick={clearChanges}>
