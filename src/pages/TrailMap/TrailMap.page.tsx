@@ -7,9 +7,11 @@ import { DisclaimerModal } from './components/DisclaimerModal/DisclaimerModal';
 import { MapAside } from './components/MapAside';
 import { TrailMapComponent } from './components/TrailMapComponent';
 import { LayerManagerProvider } from './context/LayerManagerContext';
+import { useEmbedded } from '@/hooks/useEmbedded';
 
 export function TrailMapPage() {
   const [searchParams] = useSearchParams();
+  const isEmbedded = useEmbedded();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const mapRef = useRef<MapRef>(null);
 
@@ -18,8 +20,8 @@ export function TrailMapPage() {
 
   return (
     <LayerManagerProvider mapRef={mapRef}>
-      <div className={styles.container}>
-        <DisclaimerModal />
+      <div className={isEmbedded ? styles.embedded : styles.container}>
+        {!isEmbedded && <DisclaimerModal />}
 
         <MapAside
           activeTab={activeTab}

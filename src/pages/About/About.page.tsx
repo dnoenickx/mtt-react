@@ -9,6 +9,7 @@ import {
   Anchor,
   Button,
   Group,
+  Code,
 } from '@mantine/core';
 import { IconCircleCheck, IconCircleX, IconDownload, IconExternalLink } from '@tabler/icons-react';
 import { useDocumentTitle } from '@mantine/hooks';
@@ -192,6 +193,47 @@ export default function About() {
               </Button>
             </Accordion.Panel>
           </Accordion.Item>
+          <Accordion.Item value="linking" key="linking" mb="lg">
+            <Accordion.Control>How do I link to specific places on the map?</Accordion.Control>
+            <Accordion.Panel>
+              <Text mb="sm">You can create direct links to specific views and features on the map using URL parameters:</Text>
+              
+              <Title order={5} mt="md">Linking to a specific segment</Title>
+              <Text mb="sm">Highlight and zoom to a specific trail segment and show its details:</Text>
+              <Code block>{`https://masstrailtracker.com/map?segment=12345`}</Code>
+              
+              <Title order={5} mt="md">Linking to multiple segments</Title>
+              <Text mb="sm">Highlight and zoom to multiple segments, showing the details of the first one, by separating IDs with commas:</Text>
+              <Code block>{`https://masstrailtracker.com/map?segment=12345,67890,24680`}</Code>
+              
+              <Title order={5} mt="md">Linking to a specific trail</Title>
+              <Text mb="sm">Highlight and zoom to a specific trail:</Text>
+              <Code block>{`https://masstrailtracker.com/map?trail=12345`}</Code>
+
+              <Title order={5} mt="md">Linking to a specific town</Title>
+              <Text mb="sm">Zoom to a specific town:</Text>
+              <Code block>{`https://masstrailtracker.com/map?town=boston`}</Code>
+              
+              <Title order={5} mt="md">Linking to a specific map position</Title>
+              <Text mb="sm">Center the map at specific coordinates and zoom level:</Text>
+              <Code block>{`https://masstrailtracker.com/map?lat=42.3601&lon=-71.0589&zoom=12`}</Code>
+              
+              <Title order={5} mt="md">Combining parameters</Title>
+              <Text mb="sm">You can combine multiple parameters:</Text>
+              <Code block>{`https://masstrailtracker.com/map?segment=12345&town=boston`}</Code>
+              <Code block>{`https://masstrailtracker.com/map?segment=12345&trail=12345`}</Code>
+              <Code block>{`https://masstrailtracker.com/map?segment=12345&lat=42.3601&lon=-71.0589&zoom=12`}</Code>
+              
+              <Title order={5} mt="md">Embedding the map</Title>
+              <Text mb="sm">Add <Code>embed=1</Code> to hide the header and popups:</Text>
+              <Code block>{`<iframe src="https://masstrailtracker.com/map?embed=1&segment=12345" width="100%" height="500px"></iframe>`}</Code>
+              
+              <Title order={5} mt="md">Debug mode</Title>
+              <Text>Add <Code>debug=1</Code> to enable URL parameter updates as you pan/zoom the map (useful for getting coordinates):</Text>
+              <Code block>{`https://masstrailtracker.com/map?debug=1`}</Code>
+            </Accordion.Panel>
+          </Accordion.Item>
+          
           <Accordion.Item value="what-trails" key="what-trails" mb="lg">
             <Accordion.Control>What trails do you include/exclude?</Accordion.Control>
             <Accordion.Panel>

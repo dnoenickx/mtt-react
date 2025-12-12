@@ -4,6 +4,12 @@
   height: calc(100dvh - var(--app-shell-header-height));
 }
 
+.embedded {
+  display: flex;
+  height: 100vh;
+  height: 100dvh;
+}
+
 .body {
   background-color: #f2f3f1;
   flex-grow: 2;
