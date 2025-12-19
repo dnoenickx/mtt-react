@@ -39,6 +39,16 @@ export const updateSegmentFilters = (map: maplibregl.Map, visibleStates: string[
     return;
   }
 
+  // If no states are selected, hide all segments
+  if (visibleStates.length === 0) {
+    const hideAllFilter: any = ['==', ['get', 'state'], ''];
+    SEGMENTS_SYMBOLOGY_LAYER_IDS.forEach((layerId) => {
+      map.setFilter(layerId, hideAllFilter);
+    });
+    map.setFilter(SEGMENTS_INTERACTIVE_LAYER_ID, hideAllFilter);
+    return;
+  }
+
   // Create the state filter expression
   const stateFilter: any = ['match', ['get', 'state'], visibleStates, true, false];
 

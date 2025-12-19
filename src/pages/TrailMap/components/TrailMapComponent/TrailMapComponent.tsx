@@ -22,6 +22,7 @@ import { SegmentsLayer } from '@/components/MapLayers/Segments/Segments.layer';
 import { useLayerManager } from '../../context/LayerManagerContext';
 import { BikeShareLayer } from '@/components/MapLayers/BikeShare/BikeShare.layer';
 import { SubwayLayer } from '@/components/MapLayers/Subway/Subway.layer';
+import { DistrictsLayer } from '@/components/MapLayers/DistrictsLayer/Districts.layer';
 
 interface TrailMapComponentProps {
   navigateToTab: (tab: string) => void;
@@ -150,6 +151,8 @@ export function TrailMapComponent({ navigateToTab, mapRef }: TrailMapComponentPr
       <CommuterRailLayer mapRef={mapRef} />
       <SubwayLayer />
       <BikeShareLayer mapRef={mapRef} />
+      <DistrictsLayer mapRef={mapRef} districtType="house" />
+      <DistrictsLayer mapRef={mapRef} districtType="senate" />
       <SegmentsLayer
         mapRef={mapRef}
         onSegmentClick={(id) => {
