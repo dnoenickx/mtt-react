@@ -84,7 +84,7 @@ export function AdminForm({
               }}
             >
               <Button color="red" variant="outline" disabled={isCreating} fullWidth={isMobile}>
-                Delete Segment
+                {`Delete ${singular}`}
               </Button>
             </ConfirmationButton>
 

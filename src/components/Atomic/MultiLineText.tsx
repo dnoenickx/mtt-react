@@ -7,7 +7,7 @@ export interface MultiLineTextProps extends TextProps {
 export const MultiLineText = ({ text, ...rest }: MultiLineTextProps) => (
   <>
     {text.split('\n').map((str, index) => (
-      <Text m={0} key={index} {...rest}>
+      <Text mb={'xs'} key={index} {...rest}>
         {str}
       </Text>
     ))}

@@ -1,3 +1,5 @@
+const baseURL = import.meta.env.VITE_DEV ? "" : "https://protomaps.github.io/";
+
 export const lightStyle = {
   version: 8,
   sources: {
@@ -3485,8 +3487,8 @@ export const lightStyle = {
       },
     },
   ],
-  sprite: 'https://protomaps.github.io/basemaps-assets/sprites/v4/light',
-  glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+  sprite: `${baseURL}/basemaps-assets/sprites/v4/light`,
+  glyphs: `${baseURL}/basemaps-assets/fonts/{fontstack}/{range}.pbf`,
 };
 
 export const darkStyle = {
@@ -6939,6 +6941,6 @@ export const darkStyle = {
       },
     },
   ],
-  sprite: 'https://protomaps.github.io/basemaps-assets/sprites/v4/dark',
-  glyphs: 'https://protomaps.github.io/basemaps-assets/fonts/{fontstack}/{range}.pbf',
+  sprite: `${baseURL}/basemaps-assets/sprites/v4/dark`,
+  glyphs: `${baseURL}/basemaps-assets/fonts/{fontstack}/{range}.pbf`,
 };

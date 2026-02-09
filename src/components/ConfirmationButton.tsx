@@ -53,6 +53,7 @@ const ConfirmationButton: React.FC<ConfirmationButtonProps> = ({
             {cancelButtonText}
           </Button>
           <Button
+            data-autofocus
             color="red"
             onClick={handleConfirm}
             loading={isProcessing}
