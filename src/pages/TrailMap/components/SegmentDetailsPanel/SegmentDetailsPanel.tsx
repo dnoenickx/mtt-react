@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
-import { IconAlertCircle, IconPencil } from '@tabler/icons-react';
+import { IconAlertCircle, IconCopy, IconPencil, IconShare, IconShare3 } from '@tabler/icons-react';
 import {
   Accordion,
   Alert,
@@ -12,6 +12,11 @@ import {
   Text,
   Title,
   Tooltip,
+  Menu,
+  Popover,
+  Checkbox,
+  CopyButton,
+  Stack,
 } from '@mantine/core';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useDocumentTitle } from '@mantine/hooks';
@@ -23,6 +28,7 @@ import classes from './SegmentDetailsPanel.module.css';
 import { LinkGroup, MultiLineText } from '../../../../components/Atomic';
 import { useData } from '../../../../components/DataProvider/DataProvider';
 import { SEGMENT_STATES } from '@/pages/TrailMap/TrailMap.config';
+import { createSlug } from '@/utils';
 
 function TrailAccordion({ trails }: { trails: Trail[] }) {
   const items = trails.map(({ id, name, description, links }) => (
@@ -71,6 +77,100 @@ function TrailAccordion({ trails }: { trails: Trail[] }) {
     <Accordion classNames={classes} defaultValue={trails[0]?.name} key={trails[0]?.name}>
       {items}
     </Accordion>
+  );
+}
+
+function ShareMenu({ segment, trails }: { segment: number; trails: Trail[] }) {
+  const [includeSegment, setIncludeSegment] = useState(true);
+  const [selectedTrails, setSelectedTrails] = useState<Set<number>>(new Set());
+
+  // Toggle trail selection
+  const toggleTrail = (id: number) => {
+    setSelectedTrails((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  // Build share URL
+  const shareUrl = useMemo(() => {
+    const params = new URLSearchParams();
+
+    if (includeSegment) {
+      params.append('segment', String(segment));
+    }
+
+    trails.forEach((trail) => {
+      if (selectedTrails.has(trail.id)) {
+        params.append('trail', trail.slug ?? createSlug(trail.name));
+      }
+    });
+
+    const base = window.location.origin + window.location.pathname;
+    const query = params.toString();
+
+    return query ? `${base}?${query}` : base;
+  }, [includeSegment, selectedTrails, trails, segment]);
+
+  return (
+    <Popover width={220} position="bottom" withArrow shadow="md">
+      <Popover.Target>
+        <Button
+          variant="subtle"
+          leftSection={<IconShare3 style={{ width: '65%', height: '65%' }} />}
+          size="compact-xs"
+          styles={{
+            section: { marginRight: -2 },
+          }}
+          c="dimmed"
+        >
+          share
+        </Button>
+      </Popover.Target>
+
+      <Popover.Dropdown>
+        <Stack gap="xs">
+          <Checkbox
+            label={`Segment ${segment}`}
+            checked={includeSegment}
+            onChange={(e) => setIncludeSegment(e.currentTarget.checked)}
+          />
+
+          {trails.map(({ id, slug, name }) => (
+            <Checkbox
+              key={id}
+              label={name}
+              checked={selectedTrails.has(id)}
+              onChange={() => toggleTrail(id)}
+            />
+          ))}
+
+          <CopyButton value={shareUrl} timeout={2000}>
+            {({ copied, copy }) => (
+              <Button
+                variant="outline"
+                color={copied ? 'green' : 'gray'}
+                onClick={copy}
+                leftSection={<IconCopy style={{ width: '75%', height: '75%' }} />}
+                size="xs"
+                mt="xs"
+              >
+                {copied ? 'Link copied' : 'Copy Link'}
+              </Button>
+            )}
+          </CopyButton>
+
+          <Text size="xs" c="dimmed">
+            Selected items will be zoomed to and highlighted
+          </Text>
+        </Stack>
+      </Popover.Dropdown>
+    </Popover>
   );
 }
 
@@ -128,7 +228,8 @@ export function SegmentDetailsPanel() {
       </Flex>
       <MultiLineText m={0} text={segment.description} />
       <LinkGroup links={segment.links} />
-      <Group justify="flex-end">
+      <Group justify="flex-end" mt="xs">
+        <ShareMenu segment={segment.id} trails={segment.trails} />
         <Button
           variant="subtle"
           leftSection={<IconPencil style={{ width: '65%', height: '65%' }} />}
@@ -146,7 +247,7 @@ export function SegmentDetailsPanel() {
         </Button>
       </Group>
 
-      <Divider size="xs" style={{ marginTop: 20, marginBottom: 7 }} />
+      <Divider size="xs" style={{ marginTop: 7, marginBottom: 7 }} />
       <Title order={4} my="md" c="var(--mantine-color-trail-green-text)">
         Trails
       </Title>
