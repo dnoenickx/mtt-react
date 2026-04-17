@@ -121,7 +121,7 @@ function simplifyGeometries(segment) {
     });
 
     if (lines.length === 0) {
-      console.log('WARNING: A segment has no coordinates\n');
+      console.log(`WARNING: A segment has no coordinates (ID: ${segment.id})\n`);
       return segment;
     }
 
