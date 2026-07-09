@@ -61,11 +61,19 @@ function updateIDs(data) {
 
 // Helper function to log unlinked IDs
 function logUnlinkedIDs(data) {
+  const trailIDSet = new Set(data.trails.map((trail) => trail.id));
+
   const unlinkedTrailIDs = data.trails.filter(
     (trail) => !data.segments.some((segment) => segment.trails.includes(trail.id))
   );
   const unlinkedEventIDs = data.trailEvents.filter(
     (event) => !data.segments.some((segment) => segment.events.includes(event.id))
+  );
+
+  const danglingTrailRefs = data.segments.flatMap((segment) =>
+    segment.trails
+      .filter((trailID) => !trailIDSet.has(trailID))
+      .map((trailID) => ({ segmentID: segment.id, trailID }))
   );
 
   console.log(
@@ -76,6 +84,13 @@ function logUnlinkedIDs(data) {
     'Unlinked Event IDs:',
     unlinkedEventIDs.map((event) => event.id)
   );
+
+  if (danglingTrailRefs.length > 0) {
+    console.warn('\nWARNING: Segments referencing non-existent trail IDs:');
+    danglingTrailRefs.forEach(({ segmentID, trailID }) =>
+      console.warn(`  Segment ${segmentID} references missing trail ${trailID}`)
+    );
+  }
 }
 
 // Function to sort events within a segment in reverse chronological order (newest first)

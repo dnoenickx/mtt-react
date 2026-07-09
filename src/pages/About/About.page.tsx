@@ -44,8 +44,8 @@ export default function About() {
         geometry: geometry as GeoJSON.MultiLineString,
         properties: {
           state,
-          trails: trails.map((trailId) => currentData.trails[trailId].name),
-          trailIds: trails.map((trailId) => currentData.trails[trailId].id),
+          trails: trails.map((trailId) => currentData.trails[trailId]?.name).filter(Boolean),
+          trailIds: trails.map((trailId) => currentData.trails[trailId]?.id).filter(Boolean),
         },
       })),
     };
