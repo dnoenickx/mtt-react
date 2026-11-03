@@ -8,7 +8,17 @@ import Map, {
   ScaleControl,
   Source,
 } from 'react-map-gl/maplibre';
-import { Anchor, Checkbox, Paper, Stack, Text, useMantineColorScheme } from '@mantine/core';
+import {
+  Anchor,
+  Button,
+  Checkbox,
+  Collapse,
+  Paper,
+  Stack,
+  Text,
+  useMantineColorScheme,
+} from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { darkStyle, lightStyle } from '../TrailMap/MapStyle';
 import { HumpPopup, RoadPopup } from './SpeedHumpPopups';
 import {
@@ -35,11 +45,6 @@ function SourceNote({ lastUpdated }: { lastUpdated: string }) {
   );
 }
 
-const BOSTON_BOUNDS: [[number, number], [number, number]] = [
-  [-71.19, 42.23],
-  [-70.92, 42.4],
-];
-
 const sortKey: ExpressionSpecification = [
   'match',
   ['get', 'PopupLong'],
@@ -64,6 +69,10 @@ export function SpeedHumpsPage() {
   const [showHumps, setShowHumps] = useState(true);
   const [selection, setSelection] = useState<Selection>();
   const [cursor, setCursor] = useState('');
+  const isMobile = useMediaQuery('(max-width: 600px)');
+  const [legendOpen, setLegendOpen] = useState(true);
+  const showLegend = !isMobile || legendOpen;
+  const checkboxSize = isMobile ? 'md' : 'xs';
 
   const roadFilter = useMemo<ExpressionSpecification>(() => {
     const visible = STATUS_CATEGORIES.filter((c) => !hidden.has(c.id)).flatMap((c) => c.values);
@@ -96,7 +105,11 @@ export function SpeedHumpsPage() {
   return (
     <div className={styles.container}>
       <Map
-        initialViewState={{ bounds: BOSTON_BOUNDS, fitBoundsOptions: { padding: 20 } }}
+        initialViewState={
+          isMobile
+            ? { latitude: 42.26053, longitude: -71.0907, zoom: 10.93 }
+            : { latitude: 42.31623, longitude: -71.10917, zoom: 12.17 }
+        }
         minZoom={9}
         maxZoom={18}
         // @ts-ignore style objects are loosely typed
@@ -113,6 +126,8 @@ export function SpeedHumpsPage() {
           <Layer
             id="speed-humps-roads"
             type="line"
+            // First label layer in the base style, so street names draw on top of the lines.
+            beforeId="water_waterway_label"
             source-layer="eligibility"
             filter={roadFilter}
             layout={{ 'line-sort-key': sortKey, 'line-cap': 'round', 'line-join': 'round' }}
@@ -141,7 +156,9 @@ export function SpeedHumpsPage() {
               'circle-color': HUMP_COLOR,
               'circle-stroke-color': '#fff',
               'circle-stroke-width': 1,
-              'circle-radius': ['interpolate', ['linear'], ['zoom'], 9, 1.5, 12, 2.5, 15, 6, 17, 9],
+              'circle-radius': isMobile
+                ? ['interpolate', ['linear'], ['zoom'], 9, 2.5, 12, 3.5, 15, 7, 17, 10]
+                : ['interpolate', ['linear'], ['zoom'], 9, 1.5, 12, 2.5, 15, 6, 17, 9],
             }}
           />
         </Source>
@@ -151,7 +168,7 @@ export function SpeedHumpsPage() {
             longitude={selection.lng}
             latitude={selection.lat}
             onClose={() => setSelection(undefined)}
-            maxWidth="300px"
+            maxWidth={isMobile ? 'calc(100vw - 32px)' : '300px'}
           >
             {selection.kind === 'hump' ? (
               <HumpPopup hump={selection.props} />
@@ -162,56 +179,68 @@ export function SpeedHumpsPage() {
         )}
       </Map>
 
-      <Stack className={styles.legend} gap="sm">
-        <Paper shadow="md" p="sm" withBorder>
-          <Stack gap={6}>
-            <Text fw={600} size="sm">
-              Speed humps ({monthYear(meta.humps.lastUpdated)})
-            </Text>
-            <Text size="xs" c="dimmed">
-              Current locations
-            </Text>
-            <Checkbox
-              size="xs"
-              color={HUMP_COLOR}
-              checked={showHumps}
-              onChange={(e) => setShowHumps(e.currentTarget.checked)}
-              label="Speed hump installed"
-            />
-            <SourceNote lastUpdated={meta.humps.lastUpdated} />
-          </Stack>
-        </Paper>
-
-        <Paper shadow="md" p="sm" withBorder>
-          <Stack gap={6}>
-            <Text fw={600} size="sm">
-              Speed Hump Plan ({monthYear(meta.eligibility.lastUpdated)})
-            </Text>
-            <Text size="xs" c="dimmed">
-              Safety improvements the city{' '}
-              <Anchor
-                href="https://mass.streetsblog.org/2023/05/22/wu-admin-announces-safety-surge-of-traffic-calming-for-neighborhood-streets"
-                target="_blank"
-                rel="noopener noreferrer"
-                inherit
-              >
-                promised
-              </Anchor>
-            </Text>
-            {STATUS_CATEGORIES.map((c) => (
+      {isMobile && (
+        <Button
+          className={styles.legendToggle}
+          size="sm"
+          variant="default"
+          onClick={() => setLegendOpen((o) => !o)}
+        >
+          {legendOpen ? 'Hide layers' : 'Layers'}
+        </Button>
+      )}
+      <Collapse in={showLegend} className={styles.legend}>
+        <Stack gap="sm">
+          <Paper shadow="md" p="sm" withBorder>
+            <Stack gap={6}>
+              <Text fw={600} size="sm">
+                Speed humps ({monthYear(meta.humps.lastUpdated)})
+              </Text>
+              <Text size="xs" c="dimmed">
+                Current locations
+              </Text>
               <Checkbox
-                key={c.id}
-                size="xs"
-                color={c.color}
-                checked={!hidden.has(c.id)}
-                onChange={() => toggle(c.id)}
-                label={c.label}
+                size={checkboxSize}
+                color={HUMP_COLOR}
+                checked={showHumps}
+                onChange={(e) => setShowHumps(e.currentTarget.checked)}
+                label="Speed hump installed"
               />
-            ))}
-            <SourceNote lastUpdated={meta.eligibility.lastUpdated} />
-          </Stack>
-        </Paper>
-      </Stack>
+              <SourceNote lastUpdated={meta.humps.lastUpdated} />
+            </Stack>
+          </Paper>
+
+          <Paper shadow="md" p="sm" withBorder>
+            <Stack gap={6}>
+              <Text fw={600} size="sm">
+                Speed Hump Plan ({monthYear(meta.eligibility.lastUpdated)})
+              </Text>
+              <Text size="xs" c="dimmed">
+                Safety improvements the city{' '}
+                <Anchor
+                  href="https://mass.streetsblog.org/2023/05/22/wu-admin-announces-safety-surge-of-traffic-calming-for-neighborhood-streets"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  inherit
+                >
+                  promised
+                </Anchor>
+              </Text>
+              {STATUS_CATEGORIES.map((c) => (
+                <Checkbox
+                  key={c.id}
+                  size={checkboxSize}
+                  color={c.color}
+                  checked={!hidden.has(c.id)}
+                  onChange={() => toggle(c.id)}
+                  label={c.label}
+                />
+              ))}
+              <SourceNote lastUpdated={meta.eligibility.lastUpdated} />
+            </Stack>
+          </Paper>
+        </Stack>
+      </Collapse>
     </div>
   );
 }

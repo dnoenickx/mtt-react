@@ -12,6 +12,30 @@
   max-width: 250px;
 }
 
+.legendToggle {
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .legend {
+    top: auto;
+    left: 8px;
+    right: 8px;
+    bottom: 56px;
+    max-width: none;
+    max-height: 55dvh;
+    overflow-y: auto;
+  }
+
+  .legendToggle {
+    display: inline-flex;
+    position: absolute;
+    z-index: 2;
+    left: 8px;
+    bottom: 12px;
+  }
+}
+
 :global(.maplibregl-popup-content) {
   padding: 0 !important;
   background: var(--mantine-color-body);
