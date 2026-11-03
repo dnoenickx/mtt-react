@@ -11,25 +11,24 @@ A map application for viewing existing and planned trails across the Commonwealt
 
 3. Install dependencies: `yarn install`
 
-4. Setup local server for serving map tiles:
+4. Get the map tiles. `yarn dev` serves everything in `tiles/` on `localhost:8080` for you, but the files are gitignored, so you need to generate them once:
 
-    1. The pmtiles CLI tool is a single binary you can download at [GitHub Releases](https://github.com/protomaps/go-pmtiles/releases). You'll want to make sure that is moved to the correct location for your system; on my Mac that is `/usr/local/bin/pmtiles`
+    1. Install the pmtiles CLI, a single binary from [GitHub Releases](https://github.com/protomaps/go-pmtiles/releases); on my Mac it lives at `/usr/local/bin/pmtiles`. The speed humps script also needs [tippecanoe](https://github.com/felt/tippecanoe).
 
-    2. You can find daily basemap builds at [maps.protomaps.com/builds](maps.protomaps.com/builds). Just copy the name of the most recent one.
+    2. `yarn tiles:download` extracts the greater New England basemap (~650 MB) to `tiles/ma_region.pmtiles` from the latest Protomaps daily build. Pass a build date to pin one: `yarn tiles:download 20250610`.
 
-    3. Update the url in this command to have the most recent build, and run the command to download the a subset of the world covering greater New England
-    
-    `pmtiles extract https://build.protomaps.com/20250610.pmtiles ma_region.pmtiles --box=-74.563994,40.935011,-69.07083,43.405765 --maxzoom=17`
+    3. `yarn tiles:speed-humps` snapshots Boston's speed hump layers to `tiles/speed-humps.pmtiles`.
 
-    4. When the download is complete, serve the tiles `pmtiles serve . --cors=\* --public-url=http://localhost:8080`
+    Production copies of both live in `s3://tiles.masstrailtracker/` (see the script headers for publishing).
 
 5. Create your own `.env` file. See `.env.example` for the values you need.
 
-6. Start the app `yarn run dev`
+6. Start the app and tile server together with `yarn dev` (`yarn dev:app` runs Vite alone)
 
 ## Build and dev scripts
 
-- `dev` – start development server
+- `dev` – start the tile server (`tiles/` on :8080) and the Vite dev server
+- `dev:app` – start only the Vite dev server
 - `build` – build production version of the app
 - `preview` – locally preview production build
 

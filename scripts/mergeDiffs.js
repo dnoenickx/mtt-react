@@ -87,6 +87,47 @@ function detectAndMergeDiffs(originalData, diffs, diffFilenames) {
   return { mergedData, conflicts };
 }
 
+// Detect segments that overlap: any two segments sharing two consecutive points
+// (in either order). Sharing a single point is fine since trails often abut.
+function detectDuplicateGeometries(segments) {
+  const edgeOwners = new Map(); // undirected edge key -> Set of segment ids
+  const pointKey = (p) => `${p[0]},${p[1]}`;
+
+  segments.forEach((segment) => {
+    const geometry = segment.geometry;
+    if (!geometry || !geometry.coordinates) return;
+    const lines =
+      geometry.type === 'LineString' ? [geometry.coordinates] : geometry.coordinates;
+
+    lines.forEach((line) => {
+      for (let i = 0; i < line.length - 1; i++) {
+        const a = pointKey(line[i]);
+        const b = pointKey(line[i + 1]);
+        if (a === b) continue; // degenerate repeated point
+        const edgeKey = a < b ? `${a}|${b}` : `${b}|${a}`;
+        if (!edgeOwners.has(edgeKey)) edgeOwners.set(edgeKey, new Set());
+        edgeOwners.get(edgeKey).add(segment.id);
+      }
+    });
+  });
+
+  // Group by pair of segments, counting how many shared edges each pair has
+  const pairs = {};
+  edgeOwners.forEach((owners) => {
+    if (owners.size < 2) return;
+    const ids = [...owners].sort((x, y) => x - y);
+    for (let i = 0; i < ids.length; i++) {
+      for (let j = i + 1; j < ids.length; j++) {
+        const key = `${ids[i]}-${ids[j]}`;
+        pairs[key] = pairs[key] || { ids: [ids[i], ids[j]], sharedEdges: 0 };
+        pairs[key].sharedEdges++;
+      }
+    }
+  });
+
+  return Object.values(pairs);
+}
+
 function main() {
   // Read original JSON
   const dataPath = path.join(__dirname, '../src/data.json');
@@ -142,6 +183,20 @@ function main() {
     console.log('Review these changes carefully!');
   } else {
     console.log('No conflicts detected. All objects are modified by at most one file.');
+  }
+
+  // Check for overlapping segment geometries
+  const nameById = Object.fromEntries((mergedData.segments || []).map((s) => [s.id, s.name]));
+  const duplicates = detectDuplicateGeometries(mergedData.segments || []);
+  if (duplicates.length > 0) {
+    console.log('\nDUPLICATE GEOMETRY DETECTED: Segments sharing 2+ consecutive points\n');
+    duplicates.forEach(({ ids, sharedEdges }) => {
+      console.log(
+        `  - ${ids[0]} (${nameById[ids[0]]}) & ${ids[1]} (${nameById[ids[1]]}): ${sharedEdges} shared edge(s)`
+      );
+    });
+  } else {
+    console.log('\nNo duplicate segment geometries detected.');
   }
 
   console.log('\nJSON merge completed successfully!');

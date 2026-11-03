@@ -133,3 +133,5 @@ dist
 
 infra/.aws-sam/
 scripts/diffs/
+# Generated tile archives (see README)
+tiles/*.pmtiles

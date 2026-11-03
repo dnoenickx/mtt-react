@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { Root } from './pages/Root/Root.page';
 import { TrailMapPage } from './pages/TrailMap/TrailMap.page';
 import { NothingFoundBackground } from './pages/Error/Error';
+import { SpeedHumpsPage } from './pages/SpeedHumps/SpeedHumps.page';
 import About from './pages/About/About.page';
 import Admin from './pages/Admin/admin.page';
 import TrailForm from './pages/Admin/forms/TrailForm';
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: '/map',
         element: <TrailMapPage />,
+      },
+      {
+        path: '/speed-humps',
+        element: <SpeedHumpsPage />,
       },
       {
         path: '/about',

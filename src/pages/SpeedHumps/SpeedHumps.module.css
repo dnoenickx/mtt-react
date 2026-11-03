@@ -1,0 +1,18 @@
+.container {
+  position: relative;
+  height: calc(100vh - var(--app-shell-header-height));
+  height: calc(100dvh - var(--app-shell-header-height));
+}
+
+.legend {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 1;
+  max-width: 250px;
+}
+
+:global(.maplibregl-popup-content) {
+  padding: 0 !important;
+  background: var(--mantine-color-body);
+}
